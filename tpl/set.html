@@ -1,0 +1,19 @@
+<h1>{{title}}</h1>
+
+<a ng-click="newi()" href='' class="flatbtn"><i class="fa fa-plus-circle fa-lg"></i>&nbsp;&nbsp;{{lng.newitem}}</a>
+<div bindonce="items">
+<table cellpadding="0" cellspacing="0" class="table">
+	<tr><th class="thead" style="width: 50px;"></th><th class="thead" bo-text='lng.name'></th></tr>
+	<tr id="{{$index}}" ng-mouseenter="mouseenter( $index )" ng-mouseleave="mouseleave()" ng-repeat="item in items" class="strip">
+		<td style='text-align:right'><div class="fabtn-group" style="display:none;"><a href="" ng-click="editi()" class="fabtn"><i class="fa fa-pencil fa-fw"></i></a><div class="btnover fabtn" onMouseOver='js_menuover( this );' onMouseOut='js_menuout( this );'><i class="fa fa-ellipsis-h fa-fw"></i>
+			<div class="popover"><a href='' ng-click="delete()"><i class="fa fa-trash-o fa-fw"></i><span bo-text="lng.del"></span></a>
+			</div>
+		</div>
+
+		</div><span class="idtext" bo-text='item.iditem'></span></td>
+		<!--ng-bind-html>{item.out}}</ng-bind-html-->
+		 <!--td><span>{item.out}}</span></td-->
+		 <td style="text-align:left;">{{item.title}}</td>
+	</tr>
+</table>
+</div>

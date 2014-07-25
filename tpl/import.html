@@ -1,0 +1,13 @@
+<h1>{{lng.tblimport}}</h1>
+ 
+<form class="form" ng-submit="submit()">
+<table class="formtbl">
+		<tr><td class="formtxt">{{lng.existtbl}}: </td><td class="formval">
+			<input type="text" ng-model="form.tblname" required class="form-control wnormal"></td></tr>
+		<!--tr><td class="formtxt">{{lng.newtblname}}: </td><td class="formval">
+			<input type="text" ng-model="form.newtblname" class="form-control wnormal"></td></tr-->
+		<tr><td class="formtxt">{{lng.importdata}}: </td><td class="formval">
+			<div ge-check="form.importdata" ge-func="importdata"></div></td></tr>			
+		<tr><td></td><td class="formval"><input type="submit" value="{{lng.ok}}" class="btn btn-primary"></td></tr>
+</table>
+</form>
