@@ -13,12 +13,13 @@ if ( $result['success'] )
 		$columns = $db->getall("select * from ?n where idtable=?s", 
 	    	                              CONF_PREFIX.'_columns', $form['table'] );
 		$out = array();
+		$outext = '';
 		foreach ( $columns as &$icol )
 		{
 			$icol['idalias'] = alias( $icol );
 			$colname = $icol['idalias'];
 			if ( !empty( $FIELDS[ $icol['idtype']]['save'] ))
-				$FIELDS[ $icol['idtype']]['save']( $out, $form, $icol );
+				$FIELDS[ $icol['idtype']]['save']( $out, $form, $icol, $outext );
 			elseif ( isset( $form[$colname] ) && isset( $FIELDS[ $icol['idtype']]['sql'] ))
 				$out[ $colname ] = $form[$colname];
 		}
@@ -27,15 +28,18 @@ if ( $result['success'] )
 		{
 			if ( $out )
 			{
-				$result['success'] = $db->update( $dbname, $out, '', $form['id'] ); 
+				$result['success'] = $db->update( $dbname, $out, $outext, $form['id'] ); 
 				if ( $result['success'] )
 					api_log( $form['table'], $form['id'], 'edit' );
 			}
 		}
 		else
 		{
-			$result['success'] = $db->insert( $dbname, $out, 
-				  array( /*'_uptime=CURRENT_TIMESTAMP',*/ "_owner=$USER[id]" ), true ); 
+			if ( !$outext )
+				$outext = array( /*'_uptime=CURRENT_TIMESTAMP',*/ "_owner=$USER[id]" );
+			else
+				$outext[] = "_owner=$USER[id]";
+			$result['success'] = $db->insert( $dbname, $out, $outext, true ); 
 			if ( $result['success'] )
 				api_log( $form['table'], $result['success'], 'create' );
 		}

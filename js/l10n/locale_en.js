@@ -141,6 +141,7 @@ var lng = {
 	tblimport: 'Table import',
 	thumbimage: 'Thumb image',
 	thumbsize: 'Thumb image size',
+	timenow: 'Current time if it is empty',
 	title: 'Title',
 	truncate: 'Truncate',
 	truncatedb: 'Are you sure you want to truncate the table #temp#?',

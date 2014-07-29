@@ -54,7 +54,8 @@ var types = {
          extend: [ { name: 'date', title: lng.more, type: cnt.ET_COMBO, def: 2, 
                      list: [ {id: 1, title: lng.fdtime }, { title: lng.fdate, id: 2},
                       { title: 'Timestamp', id: 3}
-            ] } 
+            ] },
+            { name: 'timenow', type: cnt.ET_CHECK, def: 0 }  
         ] 
     },
     4 : { id: cnt.FT_TEXT, name: 'ftext', verify: number_verify,

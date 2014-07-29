@@ -13,7 +13,7 @@
 					<input ng-if="ext.type==cnt.ET_NUMBER" type="text" ng-model="form.extend[ext.name]" class="form-control wshort">
 					<select ng-if="ext.type==cnt.ET_COMBO" ng-model="form.extend[ext.name]" class=	"form-control">
 						<option ng-repeat="iset in ext.list" value="{{iset.id}}" ng-selected="form.extend[ext.name]==iset.id">{{iset.title}}</option></select>
-					<div ng-if="ext.type==cnt.ET_CHECK" ge-check="form.extend[ext.name]" ></div>
+					<div ng-if="ext.type==cnt.ET_CHECK" ge-field="{{ext.name}}" ge-func="setcheck" ge-check="form.extend[ext.name]" ></div>
 					<input ng-if="ext.type==cnt.ET_EDIT" type="text" ng-model="form.extend[ext.name]" class="form-control wbig">
 					<select ng-if="ext.type==cnt.ET_TABLE"  ng-model="form.extend[ext.name]" ng-change="getcols()" class="form-control">
 					<option ng-repeat="itables in tables" value="{{itables.id}}" ng-selected="form.extend[ext.name]==itables.id">{{itables.title}}</option></select>

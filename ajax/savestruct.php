@@ -31,7 +31,7 @@ function is_name( $val )
 }
 
 $pars = post( 'params' );
-
+//print_r( $_POST );
 $idi = $pars['id'];
 $aliases = array();
 $sort = 10;

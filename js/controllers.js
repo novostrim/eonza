@@ -1094,6 +1094,13 @@ function EdittableCtrl( $rootScope, $scope, $routeSegment, DbApi ) {
         $scope.form.istree = newval;
         callback();
     }
+    $rootScope.setcheck = function( newval, callback ) {
+        for ( tkey in newval )
+        {
+            $rootScope.form.extend[ tkey ] = newval[tkey];
+        }
+        callback();
+    }
     $rootScope.getcols = function() {
         DbApi( 'getstruct', { id: $rootScope.form.extend.table }, function( data ) {
                 $rootScope.linkcols = data.result.items;

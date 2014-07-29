@@ -141,6 +141,7 @@ var lng = {
 	tblimport: 'Импорт таблицы',
 	thumbimage: 'Превью',
 	thumbsize: 'Размер превью',
+	timenow: 'Текущее время если пусто',
 	title: 'Заголовок',
 	truncate: 'Очистить',
 	truncatedb: 'Вы действительно хотите очистить таблицу #temp#?',

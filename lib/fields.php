@@ -37,7 +37,8 @@ list - function which returns the pattern of the control for list mode. By defau
 $FIELDS = array(
    FT_NUMBER => array( 'pars'=>'range', 'sql' => 'number_sql' /*'sql' => 'int(10)' , 'number' => 1 */ ),
    FT_VAR => array( 'pars' => 'length', 'sql' => 'var_sql'/* 'varchar(%par%)' */ ),
-   FT_DATETIME => array( 'pars' => 'date', 'sql' => 'date_sql'/* 'varchar(%par%)' */ ),
+   FT_DATETIME => array( 'pars' => 'date,timenow', 'sql' => 'date_sql', /* 'varchar(%par%)' */
+                              'save' => 'date_save' ),
    FT_TEXT => array( 'pars' => 'weditor,bigtext', 'sql' => 'text_sql' ),
    FT_LINKTABLE => array( 'pars' => 'table,column,extbyte', 'sql' => 'linktable_sql',
                            'save' => 'linktable_save'),
@@ -170,7 +171,22 @@ function var_sql( $form )
 	return "varchar( $length ) NOT NULL";
 }
 
-function linktable_save( &$out, $form, $icol )
+function date_save( &$out, $form, $icol, &$outext )
+{
+	global $db;
+
+	$alias = alias( $icol );
+	$val = $form[$alias];
+	if ( empty( $val ))
+		if ( $outext )
+			$outext[] = $db->parse("$alias=NOW()", $alias );
+		else
+			$outext = array( $db->parse("?n=NOW()", $alias ));
+	else
+		$out[ $alias ] = $val;
+}
+
+function linktable_save( &$out, $form, $icol, &$outext )
 {
 	global $db;
 	
@@ -199,7 +215,7 @@ function linktable_save( &$out, $form, $icol )
 	$out[ $alias ] = empty( $form[$alias] ) ? 0 : $val;
 }
 
-function parent_save( &$out, $form, $icol )
+function parent_save( &$out, $form, $icol, &$outext )
 {
 	global $db;
 	
