@@ -5,9 +5,9 @@ require_once APP_EONZA.'lib/files.php';
 
 if ( $result['success'] )
 {
-	$pars = post( 'params' );
+    $pars = post( 'params' );
 
-	files_delfile( (int)$pars['id'], true );
+    files_delfile( (int)$pars['id'], true );
 }
 print json_encode( $result );
 ?>

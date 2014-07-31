@@ -1,8 +1,8 @@
 <?php 
 /*
-	Eonza 
-	(c) 2014 Novostrim, OOO. http://www.novostrim.com
-	License: MIT
+    Eonza 
+    (c) 2014 Novostrim, OOO. http://www.novostrim.com
+    License: MIT
 */
 
 define( 'APP_DB', 'enz_db');
@@ -14,16 +14,16 @@ define( 'APP_DOCROOT', $_SERVER['DOCUMENT_ROOT'] );
 
 if ( !defined( 'APP_ENTER' ))
 {
-	$dir = dirname( $_SERVER['SCRIPT_NAME'] );
-	define( 'APP_ENTER', ( $dir == '/' || $dir =="\\" ? '' : $dir ).'/' );
+    $dir = dirname( $_SERVER['SCRIPT_NAME'] );
+    define( 'APP_ENTER', ( $dir == '/' || $dir =="\\" ? '' : $dir ).'/' );
 }
 define( 'APP_DIR', '/eonza/');
 define( 'APP_EONZA', APP_DOCROOT.APP_DIR );
 
 $conf = array(
-	'appname' => 'Eonza',
-	'version' => '1.0',
-	'website' => 'www.novostrim.com',
+    'appname' => 'Eonza',
+    'version' => '1.0',
+    'website' => 'www.novostrim.com',
 );
 
 $langlist = array(

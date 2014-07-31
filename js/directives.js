@@ -1,5 +1,5 @@
 /*
-    Watcher4site 
+    Eonza 
     (c) 2014 Novostrim, OOO. http://www.novostrim.com
     License: MIT
 */

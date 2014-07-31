@@ -1,9 +1,9 @@
 <div class="workarea" ng-controller="IndexCtrl" >
 <div class="dashmenu">
-	<a href="{{imenu.href}}" class="imenu" ng-class="{iactive:$routeSegment.name == 'index.' + imenu.name}" ng-repeat="imenu in menu"><i ng-show="imenu.icon" class="fa fa-{{imenu.icon}} fa-fw"></i>&nbsp;&nbsp;{{imenu.title}}</a>
-</div>	
+    <a href="{{imenu.href}}" class="imenu" ng-class="{iactive:$routeSegment.name == 'index.' + imenu.name}" ng-repeat="imenu in menu"><i ng-show="imenu.icon" class="fa fa-{{imenu.icon}} fa-fw"></i>&nbsp;&nbsp;{{imenu.title}}</a>
+</div>    
 <div class="dashpage" app-view-segment="1" >
-	
-</div>	
+    
+</div>    
 <div class="clear"></div>
 </div> 

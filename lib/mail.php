@@ -1,13 +1,13 @@
 <?php
 /*
-	Watcher4site 
-	(c) 2014 Novostrim, OOO. http://www.novostrim.com
-	License: MIT
+    Eonza 
+    (c) 2014 Novostrim, OOO. http://www.novostrim.com
+    License: MIT
 */
 
 function header_encode( $str )
 {
-	$send_charset = 'utf-8';
+    $send_charset = 'utf-8';
    return '=?' . $send_charset . '?B?' . base64_encode($str) . '?=';
 }
 

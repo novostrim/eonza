@@ -6,19 +6,19 @@
 
 <div class="crumbs"><a href="#/?id={{crumb.id}}" ng-class="{crumblast:$last,crumb: !$last }" ng-repeat-start="crumb in crumbs">{{crumb.title}}</a> <i ng-repeat-end class="fa fa-angle-double-right" ng-if="!$last"></i> </div>
 <div class="ilist strip" ng-repeat="item in items" ind="{{item.id}}" ord="{{$index}}"><i ng-if="item.isfolder" class="fa fa-folder pull-left"></i>
-	
+    
   <div class="btn-group" onMouseOver='js_menuover( this );' onMouseOut='js_menuout( this );' >
     <a ng-if="item.isfolder != 1" ng-href="#/table?id={{item.id}}" class="btn btn-default">{{lng.view}}</a>
     <a ng-if="item.isfolder" ng-href="#/?id={{item.id}}" class="btn btn-default">{{lng.open}}</a>
-	   <div class="btnsubmenu">
-    	<a ng-if="item.isfolder != 1" ng-href="#/edittable?id={{item.id}}">{{lng.settings}}</a>
-    	<a ng-if="item.isfolder" ng-click="editfolder($index)">{{lng.settings}}</a>
-    	<nobr><a href='' ng-click="changefld( $index )">{{lng.changefld}}</a></nobr>
-    	<a href='' ng-click="droptable( $index )">{{lng.del}}</a>
+       <div class="btnsubmenu">
+        <a ng-if="item.isfolder != 1" ng-href="#/edittable?id={{item.id}}">{{lng.settings}}</a>
+        <a ng-if="item.isfolder" ng-click="editfolder($index)">{{lng.settings}}</a>
+        <nobr><a href='' ng-click="changefld( $index )">{{lng.changefld}}</a></nobr>
+        <a href='' ng-click="droptable( $index )">{{lng.del}}</a>
       <a ng-if="item.isfolder != 1" href="" ng-click="truncate( $index )">{{lng.truncate}}</a>
       <a ng-if="item.isfolder != 1" href="" ng-click="export2set( $index )">{{lng.export2set}}</a>
       <a ng-if="item.isfolder != 1" href="" ng-click="duplicate( $index )">{{lng.duplicate}}</a>
-  	</div>
+      </div>
     <button type="button" class="btn btn-default btnmenu">
       <i class="fa fa-caret-down"></i> 
     </button>

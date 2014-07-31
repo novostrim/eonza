@@ -60,7 +60,7 @@ $FIELDS = array(
    7 => array( "name" => 'fdate', 'sql' => 'date' ),
 
    8 => array( "name" => 'fenumset', 'sql' => 'tinyint(3) unsigned', 'list' => 'list_enumset',
-   	           'edit' => 'edit_enumset', 'number' => 1 ),
+                  'edit' => 'edit_enumset', 'number' => 1 ),
    9 => array( "name" => 'fsetset', 'sql' => 'int(10)', 'edit' => 'edit_setset', 'number' => 1,
                'savex' => 'save_setset' ),
    10 => array( "name" => 'fhtmlcont', 'sql' => 'text', 'edit' => 'edit_text', 'ptn_edit' => 'pattern_span' ),
@@ -73,171 +73,171 @@ $FIELDS = array(
 
 function check_sql( $form )
 {
-	return "tinyint(3) NOT NULL";
+    return "tinyint(3) NOT NULL";
 }
 
 function date_sql( $form )
 {
-	$dtype = (int)defval( $form['ext']['date'], 1 );
-	$type = $dtype == 1 ? 'datetime' : ( $dtype == 2 ? 'date' : 'timestamp default 0' );
-	return "$type NOT NULL";
+    $dtype = (int)defval( $form['ext']['date'], 1 );
+    $type = $dtype == 1 ? 'datetime' : ( $dtype == 2 ? 'date' : 'timestamp default 0' );
+    return "$type NOT NULL";
 }
 
 function enumset_sql( $form )
 {
-	return "tinyint(3) unsigned NOT NULL";
+    return "tinyint(3) unsigned NOT NULL";
 }
 
 function linktable_sql( $form )
 {
-	global $db;
+    global $db;
 
-	$colname = CONF_PREFIX."_columns";
-	$extbyte = $form['ext']['extbyte'];
+    $colname = CONF_PREFIX."_columns";
+    $extbyte = $form['ext']['extbyte'];
 
-	$maxid = $db->getone("select max(id) from ?n", api_dbname( $form['ext']['table'] ));
-	if ( $maxid < 250 )
-		$ftype = 'tinyint(3)';
-	elseif ( $maxid < 65000 )
-	{
-		$ftype = 'smallint(5)';
-		$extbyte = 1;
-	}
-	else
-	{
-		$ftype = 'mediumint(8)';
-		$extbyte = 2;
-	}
-	if ( $extbyte != $form['ext']['extbyte'] ) 
-	{
-		$form['ext']['extbyte'] = $extbyte;
-		$db->update( $colname, array('extend' => json_encode( $form[ext] )), '', $form['ext']['column'] );
-	}
-	return "$ftype unsigned NOT NULL";
+    $maxid = $db->getone("select max(id) from ?n", api_dbname( $form['ext']['table'] ));
+    if ( $maxid < 250 )
+        $ftype = 'tinyint(3)';
+    elseif ( $maxid < 65000 )
+    {
+        $ftype = 'smallint(5)';
+        $extbyte = 1;
+    }
+    else
+    {
+        $ftype = 'mediumint(8)';
+        $extbyte = 2;
+    }
+    if ( $extbyte != $form['ext']['extbyte'] ) 
+    {
+        $form['ext']['extbyte'] = $extbyte;
+        $db->update( $colname, array('extend' => json_encode( $form[ext] )), '', $form['ext']['column'] );
+    }
+    return "$ftype unsigned NOT NULL";
 }
 
 function number_sql( $form )
 {
-	$range = (int)defval( $form['ext']['range'], 7 );
-	if ( $range < 3 )
-		$type = 'tinyint(3)';
-	elseif ( $range < 5 )
-		$type = 'smallint(5)';
-	elseif ( $range < 7 )
-		$type = 'mediumint(9)';
-	else
-		$type = 'int(10)';
-	$unsigned = $range & 1 ? '' : 'unsigned';
-	return "$type $unsigned NOT NULL";
+    $range = (int)defval( $form['ext']['range'], 7 );
+    if ( $range < 3 )
+        $type = 'tinyint(3)';
+    elseif ( $range < 5 )
+        $type = 'smallint(5)';
+    elseif ( $range < 7 )
+        $type = 'mediumint(9)';
+    else
+        $type = 'int(10)';
+    $unsigned = $range & 1 ? '' : 'unsigned';
+    return "$type $unsigned NOT NULL";
 
 }
 
 function decimal_sql( $form )
 {
-	$dtype = (int)defval( $form['ext']['dtype'], 1 );
-	if ( $dtype == 2 )
-		$type = 'double';
-	else
-		$type = 'float';
-	if ( $form['ext']['dlen'] )
-		$type .= "(".$form['ext']['dlen'].")";
-	return "$type NOT NULL";
+    $dtype = (int)defval( $form['ext']['dtype'], 1 );
+    if ( $dtype == 2 )
+        $type = 'double';
+    else
+        $type = 'float';
+    if ( $form['ext']['dlen'] )
+        $type .= "(".$form['ext']['dlen'].")";
+    return "$type NOT NULL";
 
 }
 
 function setset_sql( $form )
 {
-	return "int(10) unsigned NOT NULL";
+    return "int(10) unsigned NOT NULL";
 }
 
 function sql_sql( $form )
 {
-	$def = $form['ext']['sqlcmd'];
-	if ( strtolower( $form['ext']['sqlcmd'] ) == 'timestamp' )
-		$def .= ' NOT NULL DEFAULT 0';
-	return $def;
+    $def = $form['ext']['sqlcmd'];
+    if ( strtolower( $form['ext']['sqlcmd'] ) == 'timestamp' )
+        $def .= ' NOT NULL DEFAULT 0';
+    return $def;
 }
 
 function text_sql( $form )
 {
-	$type = (int)defval( $form['ext']['bigtext'], 0 ) ? 'mediumtext' : 'text';
-	return "$type NOT NULL";
+    $type = (int)defval( $form['ext']['bigtext'], 0 ) ? 'mediumtext' : 'text';
+    return "$type NOT NULL";
 }
 
 function var_sql( $form )
 {
-	$length = (int)defval( $form['ext']['length'], 32 );
-	$length = min( 1024, max( 2, $length ));
-	return "varchar( $length ) NOT NULL";
+    $length = (int)defval( $form['ext']['length'], 32 );
+    $length = min( 1024, max( 2, $length ));
+    return "varchar( $length ) NOT NULL";
 }
 
 function date_save( &$out, $form, $icol, &$outext )
 {
-	global $db;
+    global $db;
 
-	$alias = alias( $icol );
-	$val = $form[$alias];
-	if ( empty( $val ))
-		if ( $outext )
-			$outext[] = $db->parse("$alias=NOW()", $alias );
-		else
-			$outext = array( $db->parse("?n=NOW()", $alias ));
-	else
-		$out[ $alias ] = $val;
+    $alias = alias( $icol );
+    $val = $form[$alias];
+    if ( empty( $val ))
+        if ( $outext )
+            $outext[] = $db->parse("$alias=NOW()", $alias );
+        else
+            $outext = array( $db->parse("?n=NOW()", $alias ));
+    else
+        $out[ $alias ] = $val;
 }
 
 function linktable_save( &$out, $form, $icol, &$outext )
 {
-	global $db;
-	
-	$alias = alias( $icol );
-	$val = $form[$alias];
-	$extend = json_decode( $icol['extend'], true );
-	$extbyte = $extend['extbyte'];
-	if ( ( $val > 65000 && $extbyte < 2 ) ||
-		 ( $val > 250 && $extbyte < 1 ))
-	{
-		$colname = CONF_PREFIX."_columns";
-		if ( $val > 65000 )
-		{
-			$ftype = 'mediumint(8)';
-			$extend['extbyte'] = 2;
-		}
-		else
-		{
-			$ftype = 'smallint(5)';
-			$extend['extbyte'] = 1;
-		}
-		$dbname = api_dbname( $icol['idtable'] );
-		if ( $db->query( "alter table ?n change ?n ?n $ftype unsigned NOT NULL", $dbname, $alias, $alias ))
-			$db->update( $colname, array('extend' => json_encode( $extend )), '', $icol['id'] );
-	}
-	$out[ $alias ] = empty( $form[$alias] ) ? 0 : $val;
+    global $db;
+    
+    $alias = alias( $icol );
+    $val = $form[$alias];
+    $extend = json_decode( $icol['extend'], true );
+    $extbyte = $extend['extbyte'];
+    if ( ( $val > 65000 && $extbyte < 2 ) ||
+         ( $val > 250 && $extbyte < 1 ))
+    {
+        $colname = CONF_PREFIX."_columns";
+        if ( $val > 65000 )
+        {
+            $ftype = 'mediumint(8)';
+            $extend['extbyte'] = 2;
+        }
+        else
+        {
+            $ftype = 'smallint(5)';
+            $extend['extbyte'] = 1;
+        }
+        $dbname = api_dbname( $icol['idtable'] );
+        if ( $db->query( "alter table ?n change ?n ?n $ftype unsigned NOT NULL", $dbname, $alias, $alias ))
+            $db->update( $colname, array('extend' => json_encode( $extend )), '', $icol['id'] );
+    }
+    $out[ $alias ] = empty( $form[$alias] ) ? 0 : $val;
 }
 
 function parent_save( &$out, $form, $icol, &$outext )
 {
-	global $db;
-	
-	$alias = alias( $icol );
-	$val = empty( $form[$alias] ) ? 0 : $form[$alias];
-	$dbname = api_dbname( $icol['idtable'] );
+    global $db;
+    
+    $alias = alias( $icol );
+    $val = empty( $form[$alias] ) ? 0 : $form[$alias];
+    $dbname = api_dbname( $icol['idtable'] );
 
-	if ( $form['id'] == $val )
-		return;
-	$root = $db->getone("select _parent from ?n where id=?s", $dbname, $form['id'] );
+    if ( $form['id'] == $val )
+        return;
+    $root = $db->getone("select _parent from ?n where id=?s", $dbname, $form['id'] );
 
-	$row = $db->getrow("select id, _parent from ?n where id=?s", $dbname, $val );
-	while ( $row['_parent'] )
-	{
-		if ( $row['_parent'] == $form['id'] )
-		{
-			$db->update( $dbname, array( '_parent' => $root ), '', $row['id']);
-			break;
-		}
-		$row = $db->getrow("select id, _parent from ?n where id=?s", $dbname, $row['_parent'] );
-	}
-	$out[ $alias ] = $val;
+    $row = $db->getrow("select id, _parent from ?n where id=?s", $dbname, $val );
+    while ( $row['_parent'] )
+    {
+        if ( $row['_parent'] == $form['id'] )
+        {
+            $db->update( $dbname, array( '_parent' => $root ), '', $row['id']);
+            break;
+        }
+        $row = $db->getrow("select id, _parent from ?n where id=?s", $dbname, $row['_parent'] );
+    }
+    $out[ $alias ] = $val;
 }
 
 

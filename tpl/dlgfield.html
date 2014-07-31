@@ -1,39 +1,39 @@
 <table class="formtbl">
-		<tr><td class="formtxt">{{lng.name}}: </td><td class="formval">
-			<input type="text" ng-model="form.title" class="form-control"></td></tr>
-		<tr><td class="formtxt">{{lng.comment}}: </td><td class="formval">
-			<input type="text" ng-model="form.comment" class="form-control wbig"></td></tr>
-		<tr><td class="formtxt extend">{{lng.type}}: </td><td class="formval extend"><select name="idtype" ng-model="form.idtype" class="form-control">
-			<option ng-repeat="itype in types" value="{{itype.id}}" ng-selected="form.idtype==itype.id">{{lng[itype.name]}}</option></select></td></tr>
-		<tr><td colspan="2" class="extend">
-			<table class="formtbl" style="margin: 0px 10px;">
-				<tr ng-repeat="ext in types[form.idtype].extend" ng-hide="ext.type==cnt.ET_HIDDEN"><td class="formtxt">
-					{{ext.title}}:
-				</td><td class="formval">
-					<input ng-if="ext.type==cnt.ET_NUMBER" type="text" ng-model="form.extend[ext.name]" class="form-control wshort">
-					<select ng-if="ext.type==cnt.ET_COMBO" ng-model="form.extend[ext.name]" class=	"form-control">
-						<option ng-repeat="iset in ext.list" value="{{iset.id}}" ng-selected="form.extend[ext.name]==iset.id">{{iset.title}}</option></select>
-					<div ng-if="ext.type==cnt.ET_CHECK" ge-field="{{ext.name}}" ge-func="setcheck" ge-check="form.extend[ext.name]" ></div>
-					<input ng-if="ext.type==cnt.ET_EDIT" type="text" ng-model="form.extend[ext.name]" class="form-control wbig">
-					<select ng-if="ext.type==cnt.ET_TABLE"  ng-model="form.extend[ext.name]" ng-change="getcols()" class="form-control">
-					<option ng-repeat="itables in tables" value="{{itables.id}}" ng-selected="form.extend[ext.name]==itables.id">{{itables.title}}</option></select>
-					<select ng-if="ext.type==cnt.ET_COLUMN" ng-model="form.extend[ext.name]" class="form-control">
-					<option ng-repeat="icols in linkcols" value="{{icols.id}}" ng-selected="form.extend[ext.name]==icols.id">{{icols.title}}</option></select>
-					<select ng-if="ext.type==cnt.ET_SET" ng-model="form.extend[ext.name]" class="form-control">
-					<option ng-repeat="iset in sets" value="{{iset.id}}" ng-selected="form.extend[ext.name]==iset.id">{{iset.title}}</option></select>
-				</td></tr>
-				<tr><td>
-				</td></tr>
+        <tr><td class="formtxt">{{lng.name}}: </td><td class="formval">
+            <input type="text" ng-model="form.title" class="form-control"></td></tr>
+        <tr><td class="formtxt">{{lng.comment}}: </td><td class="formval">
+            <input type="text" ng-model="form.comment" class="form-control wbig"></td></tr>
+        <tr><td class="formtxt extend">{{lng.type}}: </td><td class="formval extend"><select name="idtype" ng-model="form.idtype" class="form-control">
+            <option ng-repeat="itype in types" value="{{itype.id}}" ng-selected="form.idtype==itype.id">{{lng[itype.name]}}</option></select></td></tr>
+        <tr><td colspan="2" class="extend">
+            <table class="formtbl" style="margin: 0px 10px;">
+                <tr ng-repeat="ext in types[form.idtype].extend" ng-hide="ext.type==cnt.ET_HIDDEN"><td class="formtxt">
+                    {{ext.title}}:
+                </td><td class="formval">
+                    <input ng-if="ext.type==cnt.ET_NUMBER" type="text" ng-model="form.extend[ext.name]" class="form-control wshort">
+                    <select ng-if="ext.type==cnt.ET_COMBO" ng-model="form.extend[ext.name]" class=    "form-control">
+                        <option ng-repeat="iset in ext.list" value="{{iset.id}}" ng-selected="form.extend[ext.name]==iset.id">{{iset.title}}</option></select>
+                    <div ng-if="ext.type==cnt.ET_CHECK" ge-field="{{ext.name}}" ge-func="setcheck" ge-check="form.extend[ext.name]" ></div>
+                    <input ng-if="ext.type==cnt.ET_EDIT" type="text" ng-model="form.extend[ext.name]" class="form-control wbig">
+                    <select ng-if="ext.type==cnt.ET_TABLE"  ng-model="form.extend[ext.name]" ng-change="getcols()" class="form-control">
+                    <option ng-repeat="itables in tables" value="{{itables.id}}" ng-selected="form.extend[ext.name]==itables.id">{{itables.title}}</option></select>
+                    <select ng-if="ext.type==cnt.ET_COLUMN" ng-model="form.extend[ext.name]" class="form-control">
+                    <option ng-repeat="icols in linkcols" value="{{icols.id}}" ng-selected="form.extend[ext.name]==icols.id">{{icols.title}}</option></select>
+                    <select ng-if="ext.type==cnt.ET_SET" ng-model="form.extend[ext.name]" class="form-control">
+                    <option ng-repeat="iset in sets" value="{{iset.id}}" ng-selected="form.extend[ext.name]==iset.id">{{iset.title}}</option></select>
+                </td></tr>
+                <tr><td>
+                </td></tr>
 
-			</table>
-		</td></tr>
-	        
-		<tr><td class="formtxt">{{lng.visiblecol}}: </td><td class="formval">
-			<div ge-check="form.visible" ge-func="chvisible"></div></td></tr>
-		<tr><td class="formtxt">{{lng.alignment}}: </td><td class="formval">
-			<select name="align" ng-model="form.align" class="form-control">
-				<option ng-repeat="ialign in aligns" value="{{$index}}" ng-selected="form.align==$index">{{lng[ialign]}}</option></select>
-			</td></tr>
-		<tr ng-show="isalias"><td class="formtxt">{{lng.alias}}: </td><td class="formval"><input type="text" ng-model="form.alias" class="form-control"></td></tr>
-			
+            </table>
+        </td></tr>
+            
+        <tr><td class="formtxt">{{lng.visiblecol}}: </td><td class="formval">
+            <div ge-check="form.visible" ge-func="chvisible"></div></td></tr>
+        <tr><td class="formtxt">{{lng.alignment}}: </td><td class="formval">
+            <select name="align" ng-model="form.align" class="form-control">
+                <option ng-repeat="ialign in aligns" value="{{$index}}" ng-selected="form.align==$index">{{lng[ialign]}}</option></select>
+            </td></tr>
+        <tr ng-show="isalias"><td class="formtxt">{{lng.alias}}: </td><td class="formval"><input type="text" ng-model="form.alias" class="form-control"></td></tr>
+            
 </table>

@@ -1,65 +1,65 @@
   <h1>{{title}}</h1>
  
   <form class="form" ng-submit="submit()">
-	<table class="formtbl">
-		<tr><td class="formtxt">{{lng.name}}: </td><td class="formval"><input type="text" ng-model="form.title" required class="form-control"></td></tr>
-		<tr><td class="formtxt">{{lng.comment}}: </td><td class="formval"><input type="text" ng-model="form.comment" class="form-control wbig"></td></tr>
-		<tr ng-show="isalias"><td class="formtxt">{{lng.alias}}: </td><td class="formval"><input type="text" ng-model="form.alias" class="form-control"></td></tr>
-		<tr ><td class="formtxt">{{lng.hierdata}}: </td><td class="formval">
-			<div ge-check="form.istree" ge-func="istree" ></div>
-		</td></tr>
-		
-		<!--tr><td class="formtxt">{{lng.user}}: </td><td class="formval"><input type="text" ng-model="form.user" required class="form-control"></td></tr>
-		<tr><td class="formtxt">{{lng.password}}: </td><td class="formval"><input type="text" ng-model="form.pass" class="form-control"></td></tr>
-		<tr><td colspan="2"><h2>{{lng.signup}}</h2></td></tr>
-		<tr><td class="formtxt">{{lng.password}}: </td><td class="formval"><input class="form-control" type="text" ng-model="form.psw" required></td></tr-->
-		<tr><td colspan="2">
-			<h2>{{lng.listfields}}</h2>
-			<table class="fields" style="width: 600px;"><tbody id="fields">
-				<tr class="nosort"><th>{{lng.name}}</th><th></th><th>{{lng.type}}</th><th ng-show="isalias">{{lng.alias}}</th><th></th></tr>
-				<tr  ng-repeat="item in items" ind="{{item.id}}" ord="{{$index}}"><td>{{item.title}}</td><td><i class="fa fa-eye" ng-if="item.visible"></i></td><td>{{lng[types[item.idtype].name]}}</td>
-					<td ng-show="isalias">{{item.alias}}</td>
-					<td><div class="fabtn-group"><a class="fabtn" ng-click='editfield( $index )'><i class="fa fa-pencil fa-fw"></i></a>
-						<a class="fabtn" style="cursor: move;" ng-mousedown='sortfield( false )'><i class="fa fa-arrows-v fa-fw"></i></a>
-						<a class="fabtn" ng-click='removefield( $index )'><i class="fa fa-times fa-fw"></i></a></div></td></tr>
-				</tbody>
-			</table>
-			<!--tr class="nosort"><td>
-					<input class="form-control" type="text" ng-model="inew.name" name='name' value='' /></td>
-					<td><input class="form-control" type="text" ng-model="inew.comment" name='comment' value='' /></td>
-					<td><button class="btn btn-primary" ng-click="addfield()"><i class="fa fa-plus"></i>{{lng.add}}</button></td></tr-->
-			<div style="text-align:right;"><a class="btn btn-primary" ng-click="editfield()"><i class="fa fa-plus"></i>{{lng.add}}</a></div>
-		</td></tr>
-		<tr><td></td><td class="formval"><input type="submit" value="{{action}}" class="btn btn-primary btn-lg" ></td></tr>
-	</table>
+    <table class="formtbl">
+        <tr><td class="formtxt">{{lng.name}}: </td><td class="formval"><input type="text" ng-model="form.title" required class="form-control"></td></tr>
+        <tr><td class="formtxt">{{lng.comment}}: </td><td class="formval"><input type="text" ng-model="form.comment" class="form-control wbig"></td></tr>
+        <tr ng-show="isalias"><td class="formtxt">{{lng.alias}}: </td><td class="formval"><input type="text" ng-model="form.alias" class="form-control"></td></tr>
+        <tr ><td class="formtxt">{{lng.hierdata}}: </td><td class="formval">
+            <div ge-check="form.istree" ge-func="istree" ></div>
+        </td></tr>
+        
+        <!--tr><td class="formtxt">{{lng.user}}: </td><td class="formval"><input type="text" ng-model="form.user" required class="form-control"></td></tr>
+        <tr><td class="formtxt">{{lng.password}}: </td><td class="formval"><input type="text" ng-model="form.pass" class="form-control"></td></tr>
+        <tr><td colspan="2"><h2>{{lng.signup}}</h2></td></tr>
+        <tr><td class="formtxt">{{lng.password}}: </td><td class="formval"><input class="form-control" type="text" ng-model="form.psw" required></td></tr-->
+        <tr><td colspan="2">
+            <h2>{{lng.listfields}}</h2>
+            <table class="fields" style="width: 600px;"><tbody id="fields">
+                <tr class="nosort"><th>{{lng.name}}</th><th></th><th>{{lng.type}}</th><th ng-show="isalias">{{lng.alias}}</th><th></th></tr>
+                <tr  ng-repeat="item in items" ind="{{item.id}}" ord="{{$index}}"><td>{{item.title}}</td><td><i class="fa fa-eye" ng-if="item.visible"></i></td><td>{{lng[types[item.idtype].name]}}</td>
+                    <td ng-show="isalias">{{item.alias}}</td>
+                    <td><div class="fabtn-group"><a class="fabtn" ng-click='editfield( $index )'><i class="fa fa-pencil fa-fw"></i></a>
+                        <a class="fabtn" style="cursor: move;" ng-mousedown='sortfield( false )'><i class="fa fa-arrows-v fa-fw"></i></a>
+                        <a class="fabtn" ng-click='removefield( $index )'><i class="fa fa-times fa-fw"></i></a></div></td></tr>
+                </tbody>
+            </table>
+            <!--tr class="nosort"><td>
+                    <input class="form-control" type="text" ng-model="inew.name" name='name' value='' /></td>
+                    <td><input class="form-control" type="text" ng-model="inew.comment" name='comment' value='' /></td>
+                    <td><button class="btn btn-primary" ng-click="addfield()"><i class="fa fa-plus"></i>{{lng.add}}</button></td></tr-->
+            <div style="text-align:right;"><a class="btn btn-primary" ng-click="editfield()"><i class="fa fa-plus"></i>{{lng.add}}</a></div>
+        </td></tr>
+        <tr><td></td><td class="formval"><input type="submit" value="{{action}}" class="btn btn-primary btn-lg" ></td></tr>
+    </table>
 
   
-	</form>	<!--form class="form" ng-submit="submit()">
-	<table class="formtbl">
-		<tr><td class="formtxt">{{lng.title}}: </td><td class="formval">
-			<div ge-edit="form.title" ge-func="savedb" ge-field="name" ge-class="form-control wbig"></div>
-		</td></tr>
-		<tr><td class="formtxt">{{lng.language}}: </td><td class="formval"><select ng-model="form.lang"  class="form-control" ng-change="language()">
+    </form>    <!--form class="form" ng-submit="submit()">
+    <table class="formtbl">
+        <tr><td class="formtxt">{{lng.title}}: </td><td class="formval">
+            <div ge-edit="form.title" ge-func="savedb" ge-field="name" ge-class="form-control wbig"></div>
+        </td></tr>
+        <tr><td class="formtxt">{{lng.language}}: </td><td class="formval"><select ng-model="form.lang"  class="form-control" ng-change="language()">
 <option ng-repeat="item in langlist" value="{{item.code}}" ng-selected="item.code==lng.code">{{item.native}}</a> 
-		</select></td></tr>
-		<tr><td class="formtxt">{{lng.email}}: </td><td class="formval">
-			<div ge-edit="form.email" ge-func="saveusr" ge-field="email" class="popupedit" ge-class="form-control wnormal"></div>
-		</td></tr>
-		<tr><td class="formtxt">{{lng.nickname}}: </td><td class="formval">
-			<div ge-edit="form.login" ge-func="saveusr" class="popupedit" ge-field="login" ge-class="form-control wnormal"></div></td></tr>
-		<tr><td class="formtxt">{{lng.password}}: </td><td class="formval"><input type="text" ng-model="form.pass" class="form-control"></td></tr>
-	</table>
+        </select></td></tr>
+        <tr><td class="formtxt">{{lng.email}}: </td><td class="formval">
+            <div ge-edit="form.email" ge-func="saveusr" ge-field="email" class="popupedit" ge-class="form-control wnormal"></div>
+        </td></tr>
+        <tr><td class="formtxt">{{lng.nickname}}: </td><td class="formval">
+            <div ge-edit="form.login" ge-func="saveusr" class="popupedit" ge-field="login" ge-class="form-control wnormal"></div></td></tr>
+        <tr><td class="formtxt">{{lng.password}}: </td><td class="formval"><input type="text" ng-model="form.pass" class="form-control"></td></tr>
+    </table>
 
 
-	</form-->
+    </form-->
 
 <script type='text/javascript'>
-/*	$(document).ready(function() {
-		jQuery( "#fields" ).sortable( { axis: "y",
-			update: function( event, ui ) { 
-				 alert( ui.item.attr("ind") );
-			},
-			cancel: ".nosort" } );
-    	//$( "#sortable" ).disableSelection();
-	});*/
+/*    $(document).ready(function() {
+        jQuery( "#fields" ).sortable( { axis: "y",
+            update: function( event, ui ) { 
+                 alert( ui.item.attr("ind") );
+            },
+            cancel: ".nosort" } );
+        //$( "#sortable" ).disableSelection();
+    });*/
 </script>

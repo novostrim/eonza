@@ -3,15 +3,15 @@
  <a href="" ng-click="editset()" class="flatbtn"><i class="fa fa-plus-circle fa-lg"></i>&nbsp;&nbsp;{{lng.create}}</a>
 
 <div class="ilist strip" ng-repeat="item in items" ind="{{item.id}}" >
-	<div class="btn-group" onMouseOver='js_menuover( this );' onMouseOut='js_menuout( this );' >
+    <div class="btn-group" onMouseOver='js_menuover( this );' onMouseOut='js_menuout( this );' >
   <a ng-href="#/set?id={{item.id}}" class="btn btn-default">{{lng.view}}</a>
-	<div class="btnsubmenu">
+    <div class="btnsubmenu">
       <a href='' ng-click="editset( $index )">{{lng.settings}}</a>
-    	<a href='' ng-click="dropset( $index )">{{lng.del}}</a>
+        <a href='' ng-click="dropset( $index )">{{lng.del}}</a>
   </div>
   <button type="button" class="btn btn-default btnmenu"><i class="fa fa-caret-down"></i></button>
   </div>  
-	<a ng-href="#/set?id={{item.id}}">{{item.title}}</a>
+    <a ng-href="#/set?id={{item.id}}">{{item.title}}</a>
   <div class="clear"></div>
 </div>
 

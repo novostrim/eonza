@@ -157,10 +157,10 @@ function pass_generate( $i = 6 )
 
 function pass_md5( $pass, $full = false )
 {
-	if ( $full )
-		$pass = md5( $pass );
-		
-	return md5( md5( CONF_SALT ).$pass );
+    if ( $full )
+        $pass = md5( $pass );
+        
+    return md5( md5( CONF_SALT ).$pass );
 }
 
 function post_val( $val )
@@ -168,26 +168,26 @@ function post_val( $val )
 //   if ( !( $flag & DBF_NOHTML ))
    if ( is_array( $val ))
    {
-		foreach ( $val as &$ival )
-			$ival = post_val( $ival );
+        foreach ( $val as &$ival )
+            $ival = post_val( $ival );
    }
    else
    {
       if ( CONF_QUOTES )
          $val = stripslashes($val);
-//  		$val = htmlspecialchars( $val, ENT_QUOTES /*ENT_NOQUOTES*/, 'UTF-8' );
+//          $val = htmlspecialchars( $val, ENT_QUOTES /*ENT_NOQUOTES*/, 'UTF-8' );
    }
-	//stripslashes($val));
+    //stripslashes($val));
 //   $val = mysqli_real_escape_string( $val );
    return $val;
 }
 
 function post( $name, $default = '', $get = false )
 {
-	if ( $get )
-   	$val = ( !isset(  $_GET[ $name ] ) ? $default :  $_GET[ $name ] );
-	else
-   	$val = ( !isset(  $_POST[ $name ] ) ? $default :  $_POST[ $name ] );
+    if ( $get )
+       $val = ( !isset(  $_GET[ $name ] ) ? $default :  $_GET[ $name ] );
+    else
+       $val = ( !isset(  $_POST[ $name ] ) ? $default :  $_POST[ $name ] );
 
    return post_val( $val );
 }
@@ -235,22 +235,22 @@ function url_params( $ignore = '', $only = '' )
 /*
 function lib_posts( $names, $named = false )
 {
-	$aname = explode( ',', $names );
-	$ret = array();
-	foreach ( $aname as $aval )
-	{
-		$val =  isset( $_POST[ $aval ] ) ? lib_postval( $_POST[ $aval ] ) : '';
-		if ( $named )
-			$ret[ $aval ] = $val;
-		else
-			$ret[] = $val;
-	}
-	return $ret;
+    $aname = explode( ',', $names );
+    $ret = array();
+    foreach ( $aname as $aval )
+    {
+        $val =  isset( $_POST[ $aval ] ) ? lib_postval( $_POST[ $aval ] ) : '';
+        if ( $named )
+            $ret[ $aval ] = $val;
+        else
+            $ret[] = $val;
+    }
+    return $ret;
 }
 
 function lib_get( $name, $default = '' )
 {
-	return lib_post( $name, $default, true );
+    return lib_post( $name, $default, true );
 }
 */
 

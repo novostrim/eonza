@@ -1,8 +1,8 @@
 <?php
 /*
-	Eonza
-	(c) 2014 Novostrim, OOO. http://www.novostrim.com
-	License: MIT
+    Eonza
+    (c) 2014 Novostrim, OOO. http://www.novostrim.com
+    License: MIT
 */
 //print_r( $_SERVER );
 
@@ -10,6 +10,6 @@ require_once 'conf.inc.php';
 require_once $_SERVER['DOCUMENT_ROOT']."/eonza/app.inc.php";
 
 if ( isset( $_GET['request'] ))
-	require_once $_SERVER['DOCUMENT_ROOT']."/eonza/ajax/".$_GET['request'].".php";
+    require_once $_SERVER['DOCUMENT_ROOT']."/eonza/ajax/".$_GET['request'].".php";
 
 ?>
