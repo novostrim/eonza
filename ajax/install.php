@@ -18,6 +18,7 @@ $form = post( 'form' );
 
 $wspath = $_SERVER['DOCUMENT_ROOT'].APP_ENTER;
 $filename = $wspath.'conf.inc.php';
+$htaccess = $wspath.'.htaccess';
 
 $result = array( 'success'=> false, 'err' => 1, 'result' => 0 );
 if ( !file_exists( $filename ))
@@ -74,7 +75,10 @@ if ( !file_exists( $filename ))
         $passmd = pass_md5( $form['psw'], true );
         $form['psw'] = pass_generate();
         if ( empty( $form['storage']))
-            $form['storage'] = '/storage/';
+            $form['storage'] = '/storage';
+        $storage = addfname( $_SERVER['DOCUMENT_ROOT'], $form['storage'] );
+        if ( !is_dir( $storage ))
+        	mkdir( $storage );
         $lang = post( 'lang' );
         $settings = 
              '{ "title": { "value": "'.$conf['appname'].'", "lang":"title", "visible": 1, "ctrl": "input", "par": "normal" },
@@ -110,6 +114,9 @@ if ( !file_exists( $filename ))
                           $prefix.'_users', $iduser );
         $result['success'] = isset( $lines ) && file_put_contents( $filename, 
             "<?php \r\n".implode( "\r\n", $lines )."\r\n?>" ) ? 1 : 0;
+        @unlink( $htaccess );
+        file_put_contents( $htaccess, str_replace( '/eonza/', APP_ENTER, 
+        	       file_get_contents( $htaccess.'-i' )));
     }
     catch ( Exception $e )
     {

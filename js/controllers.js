@@ -103,7 +103,8 @@ geapp.controller( 'IndexCtrl', function IndexCtrl($scope, $http, $routeSegment )
 
 geapp.controller( 'InstallCtrl', function InstallCtrl($scope, $http ) {
     $scope.langlist = langlist;
-    $scope.form = { dbhost: 'localhost' };
+    $scope.form = { dbhost: 'localhost',
+                    storage: cfg.appenter + 'storage' };
     $scope.submit = function() {
         $http.post( cfg.appdir + 'ajax/waccess.php', { path: cfg.appenter }).success(function(data) {
             if ( data.success )
