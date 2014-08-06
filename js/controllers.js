@@ -375,7 +375,8 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
     $scope.linkpage = function( direct ) {
         var offset = direct == 0 ? 0 : Scope.link.offset + direct*15;
         DbApi( 'getlink', {offset: offset, id: Scope.columns[ rootScope.idlink ].id,
-                   search: rootScope.link.search, parent: Scope.link.parent }, 
+                   search: rootScope.link.search, 
+                   filter: rootScope.link.filter, parent: Scope.link.parent }, 
                  function( data ) {
             if ( data.success )
             {
@@ -390,7 +391,28 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
     }
     $scope.editlink = function( idcol ) {
         $rootScope.link = $scope.columns[idcol].link;
+        $rootScope.link.filter = 0;
         $rootScope.idlink = idcol;  
+        if ( parseInt( $scope.columns[idcol].extend.filter ) > 0 )
+        {
+            for ( var i = 0; i < $scope.columns.length; i++ )
+                if ( angular.isDefined( $scope.columns[i].extend.table ) &&
+                     parseInt($scope.columns[i].extend.table) == parseInt( $scope.columns[idcol].extend.filter ))
+                {
+                    if ( $scope.form[ $scope.columns[i].alias ] == 0 )                    
+                    {
+                        cfg.temp = $scope.columns[i].title;
+                        $rootScope.msg_warning( 'war_efilter' );
+                        return false;
+                    }
+                    else
+                    {
+                        $rootScope.link.filter = parseInt( $scope.form[ $scope.columns[i].alias ] ) + ':' +
+                                                    parseInt($scope.columns[idcol].extend.filtercol);
+                        $scope.linkpage( 0 );
+                    }
+                }
+        }
         $rootScope.msg( {  title: $scope.columns[idcol].title, template: tpl('editlink.html'),
                        btns: 
                        [ {text: lng.clear, func: function(){
@@ -1137,6 +1159,7 @@ function EdittableCtrl( $rootScope, $scope, $routeSegment, DbApi ) {
                     par.title = lng[par.name];
             }
         }
+        $rootScope.getcols();
         $rootScope.msg( { title: add ? lng.newitem : lng.edititem, template: tpl('dlgfield.html'),
               btns: [ {text: add ? lng.add : lng.save, func: $scope.savefield, class: 'btn-primary btn-near' },
                      {text: lng.cancel, class: 'btn-default btn-near' }

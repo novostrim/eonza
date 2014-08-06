@@ -300,6 +300,18 @@ var ModalInstanceCtrl = function( $scope, $modalInstance, dlg_opt ) {
 //                Scope.view[alias] = column.link.list[i].title;
             }
         }
+        for ( i = 0; i< Scope.columns.length; i++ )
+        {
+            if ( Scope.columns[i].idtype == cnt.FT_LINKTABLE &&
+                 Scope.columns[i].extend.filter == column.extend.table )
+            {
+                var ialias = Scope.columns[i].alias;
+                Scope.formlink[ialias] = '';
+                Scope.form[ialias] = 0;
+//                Scope.view[alias] = column.link.list[i].title;
+            }
+        }
+
         $modalInstance.close();
     }
     $scope.dlg = {

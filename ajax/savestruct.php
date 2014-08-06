@@ -14,7 +14,7 @@ require_once APP_EONZA.'lib/files.php';
     return $ret;
 }*/
 
-function column_query( $idfield, $ifield )
+function column_query( $idfield, &$ifield )
 {
     global $FIELDS;
 

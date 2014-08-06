@@ -9,7 +9,8 @@ if ( $result['success'] )
     if ( $icol )
     {
         $icol['extend'] = json_decode( $icol['extend'], true );
-        $result['result'] = get_linklist( $icol, (int)get( 'offset' ), get('search'), (int)get( 'parent' ));
+        $result['result'] = get_linklist( $icol, (int)get( 'offset' ), get('search'), 
+                    (int)get( 'parent' ), get( 'filter' ));
     }
     else
         api_error('Link table');

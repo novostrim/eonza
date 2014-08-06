@@ -70,7 +70,8 @@ var types = {
             edit: edit_linktable, view: view_linktable,
          extend: [  { name: 'table', type: cnt.ET_TABLE, def: 0 },  
             { name: 'column', type: cnt.ET_COLUMN, def: 0 },
-            { name: 'extbyte', type: cnt.ET_HIDDEN, def: 0 }
+            { name: 'extbyte', type: cnt.ET_HIDDEN, def: 0 },
+            { name: 'filter', title: lng.filter, type: cnt.ET_TABLE, def: 0 } 
         ] 
     },
     6 : { id: cnt.FT_CHECK, name: 'fcheck', verify: number_verify, number: 1,

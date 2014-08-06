@@ -107,7 +107,7 @@ function getitem( $table, $id )
     $result['result'][ 'table' ] = $table['id'];
 }            
 
-function get_linklist( $icol, $offset, $search = '', $parent = 0 )
+function get_linklist( $icol, $offset, $search = '', $parent = 0, $filter=0 )
 {
     global $db;
     //                $icol['link_table'] = api_dbname( $icol['extend']['table'] );
@@ -119,6 +119,12 @@ function get_linklist( $icol, $offset, $search = '', $parent = 0 )
 //                $link = $icol['id'];
 //                $alias = $collink.$link;
     $wsearch = $istree ? 'where _parent='.(int)$parent : 'where 1';
+    if ( $filter )
+    {
+        $fi = explode( ':', $filter );
+        if ( count( $fi ) == 2 )
+            $wsearch .= $db->parse( ' && ?n=?s', api_colname( (int)$fi[1] ), (int)$fi[0] );
+    }
     if ( $search )
         $wsearch .= $db->parse( ' && lower( ?n ) like lower( ?s )', $collink, $db->parse( '?p%', $search ));
     

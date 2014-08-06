@@ -40,7 +40,7 @@ $FIELDS = array(
    FT_DATETIME => array( 'pars' => 'date,timenow', 'sql' => 'date_sql', /* 'varchar(%par%)' */
                               'save' => 'date_save' ),
    FT_TEXT => array( 'pars' => 'weditor,bigtext', 'sql' => 'text_sql' ),
-   FT_LINKTABLE => array( 'pars' => 'table,column,extbyte', 'sql' => 'linktable_sql',
+   FT_LINKTABLE => array( 'pars' => 'table,column,extbyte,filter', 'sql' => 'linktable_sql',
                            'save' => 'linktable_save'),
    FT_CHECK => array( 'pars' => '', 'sql' => 'check_sql' ),
    FT_DECIMAL => array( 'pars'=>'dtype,dlen', 'sql' => 'decimal_sql' /*'sql' => 'int(10)' , 'number' => 1 */ ),
@@ -88,13 +88,13 @@ function enumset_sql( $form )
     return "tinyint(3) unsigned NOT NULL";
 }
 
-function linktable_sql( $form )
+function linktable_sql( &$form )
 {
     global $db;
 
     $colname = CONF_PREFIX."_columns";
     $extbyte = $form['ext']['extbyte'];
-
+    $extupd = false;
     $maxid = $db->getone("select max(id) from ?n", api_dbname( $form['ext']['table'] ));
     if ( $maxid < 250 )
         $ftype = 'tinyint(3)';
@@ -108,10 +108,37 @@ function linktable_sql( $form )
         $ftype = 'mediumint(8)';
         $extbyte = 2;
     }
+    if ( !empty( $form['ext']['filter'] ))
+    {
+        $links = $db->getall("select extend,id from ?n where idtable=?s && idtype=?s",
+                              $colname, $form['ext']['table'], FT_LINKTABLE );
+        $fltok = false;
+        foreach ( $links as $il )
+        {
+            $ext = json_decode( $il['extend'], true );
+            if ( (int)$ext['table'] == (int)$form['ext']['filter'] )
+            {
+                $fltok = true;
+                $form['ext']['filtercol'] = $il['id'];
+                $extupd = true;
+                break;
+            }
+        }
+        if ( !$fltok )
+        {
+            $form['ext']['filter'] = '0';
+            $extupd = true;
+        }
+    }
     if ( $extbyte != $form['ext']['extbyte'] ) 
     {
         $form['ext']['extbyte'] = $extbyte;
-        $db->update( $colname, array('extend' => json_encode( $form[ext] )), '', $form['ext']['column'] );
+        $extupd = true;
+    }
+    if ( $extupd )
+    {
+        $form['extend'] = json_encode( $form['ext'] );
+        $db->update( $colname, array('extend' => $form['extend'] ), '', $form['id'] );
     }
     return "$ftype unsigned NOT NULL";
 }

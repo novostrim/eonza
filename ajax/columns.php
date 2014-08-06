@@ -20,16 +20,16 @@ if ( $id && $result['success'] )
             if ( $icol['idtype'] == FT_LINKTABLE || $icol['idtype'] == FT_PARENT )
             {
                 $icol['link'] = get_linklist( $icol, 0 );
-               }
-               else
-               {
-                      if ( $icol['idtype'] == FT_ENUMSET || $icol['idtype'] == FT_SETSET )
-                   {
-                       $list = $db->getall('select iditem, title from ?n where idset=?s', 
-                                  CONF_PREFIX.'_sets', $icol['extend']['set'] );
-                       foreach ( $list as $il )
-                           $icol['list'][$il['iditem']] = $il['title'];
-                   }
+            }
+            else
+            {
+                if ( $icol['idtype'] == FT_ENUMSET || $icol['idtype'] == FT_SETSET )
+                {
+                   $list = $db->getall('select iditem, title from ?n where idset=?s', 
+                              CONF_PREFIX.'_sets', $icol['extend']['set'] );
+                   foreach ( $list as $il )
+                       $icol['list'][$il['iditem']] = $il['title'];
+                }
             }
 //        $alias = alias( $icol );
             $icol['alias'] =  alias( $icol );//$alias;
