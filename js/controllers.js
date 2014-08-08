@@ -477,6 +477,7 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
             {
                 $rootScope.curitem = data.success;
                 $scope.form = data.result;
+                $scope.action = lng.save;
                 for ( i = 0; i < $rootScope.uploads.length; i++ )
                 {
                     if ( $rootScope.uploads[i].queue.length > 0 )
