@@ -71,7 +71,8 @@ var types = {
          extend: [  { name: 'table', type: cnt.ET_TABLE, def: 0 },  
             { name: 'column', type: cnt.ET_COLUMN, def: 0 },
             { name: 'extbyte', type: cnt.ET_HIDDEN, def: 0 },
-            { name: 'filter', title: lng.filter, type: cnt.ET_TABLE, def: 0 } 
+            { name: 'aslink', title: lng.showaslink, type: cnt.ET_CHECK, def: 0 }, 
+            { name: 'filter', title: lng.filter, type: cnt.ET_TABLE, def: 0 }
         ] 
     },
     6 : { id: cnt.FT_CHECK, name: 'fcheck', verify: number_verify, number: 1,
@@ -290,7 +291,7 @@ function edit_setset( i, icol )
 
 function edit_linktable( i, icol )
 {
-    return "<div class='setitem' ng-if='formlink[columns."+i+".alias]' ng-bind='formlink[columns."+i+".alias]'></div>" +
+    return "<div class='setitem' ng-if='formlink[columns."+i+".alias]' ng-bind-html='formlink[columns."+i+".alias]'></div>" +
      '<a href="" class="formbtn" ng-click="editlink('+i+')"><i class="fa fa-fw fa-th-list"></i></a>';
 }
 

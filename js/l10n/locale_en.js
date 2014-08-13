@@ -131,6 +131,7 @@ var lng = {
     sets: 'Sets',
     settings: 'Settings',
     showalias: 'Show alias',
+    showaslink: 'Show as a link',
     signin: 'Sign in',
     signup: 'Sign up',
     size: 'Size',

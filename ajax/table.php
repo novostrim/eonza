@@ -44,7 +44,11 @@ if ( $id && $result['success'] )
                 $link = $icol['id'];
                 $collink = api_colname( (int)$extend['column'] );
                    $leftjoin .= $db->parse( " left join ?n as t$link on t$link.id=t.?p", $dblink, alias( $icol ));
-                $fields[] = (  $icol['idtype'] == FT_PARENT ? " t.`_parent` as `_parent_`," : '' )."ifnull( t$link.$collink, '' ) as `$icol[alias]`";
+                if ( empty( $extend['aslink'] ))
+                    $ext = "ifnull( t$link.$collink, '' ) as `$icol[alias]`";
+                else
+                    $ext = "if( t$link.$collink is NULL, '', concat('<a href=\"#/item?id=$icol[idtable]&idi=', t.id, '\">', t$link.$collink, '</a>')) as `$icol[alias]`";
+                $fields[] = (  $icol['idtype'] == FT_PARENT ? " t.`_parent` as `_parent_`," : '' ).$ext;
                        // $collink$link";
                }
                elseif ( $icol['idtype'] == FT_FILE || $icol['idtype'] == FT_IMAGE )

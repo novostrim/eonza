@@ -57,9 +57,12 @@ function getitem( $table, $id )
             $dblink = api_dbname( $extend['table'] );
             $link = $icol['id'];
             $collink = api_colname( (int)$extend['column'] );
-               $leftjoin .= $db->parse( " left join ?n as t$link on t$link.id=t.?p", $dblink, $icol['idalias']);
-            $fields[] = "ifnull( t$link.$collink, '' ) as `__$icol[idalias]`";//$collink$link";
-//                $icol['alias'] = $collink.$link;
+            $leftjoin .= $db->parse( " left join ?n as t$link on t$link.id=t.?p", $dblink, $icol['idalias']);
+            if ( empty( $extend['aslink'] ))
+                $fields[] = "ifnull( t$link.$collink, '' ) as `__$icol[idalias]`";
+            else
+                $fields[] = "if( t$link.$collink is NULL, '', concat('<a href=\"#/item?id=$icol[idtable]&idi=', t.id, '\">', t$link.$collink, '</a>')) as `__$icol[alias]`";
+            //                $icol['alias'] = $collink.$link;
         }
     }
     if ( $id )
