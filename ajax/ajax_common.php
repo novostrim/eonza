@@ -61,7 +61,7 @@ function getitem( $table, $id )
             if ( empty( $extend['aslink'] ))
                 $fields[] = "ifnull( t$link.$collink, '' ) as `__$icol[idalias]`";
             else
-                $fields[] = "if( t$link.$collink is NULL, '', concat('<a href=\"#/item?id=$icol[idtable]&idi=', t.id, '\">', t$link.$collink, '</a>')) as `__$icol[alias]`";
+                $fields[] = "if( t$link.$collink is NULL, '', concat('<a href=\"\" onclick=\"return js_card($extend[table], ', t$link.id, ' )\" >', t$link.$collink, '</a>')) as `__$icol[alias]`";
             //                $icol['alias'] = $collink.$link;
         }
     }

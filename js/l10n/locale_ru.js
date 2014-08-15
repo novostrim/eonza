@@ -8,6 +8,7 @@ var lng = {
     alignment: 'Выравнивание',
     allfiles: 'Всего файлов',
     apitoken: 'API ключ',
+    back: 'Назад',
     bigtext: 'Большой текст (>65000)',
     cancel: 'Отмена',
     card: 'Карточка',

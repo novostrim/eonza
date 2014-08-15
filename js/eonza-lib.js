@@ -4,6 +4,7 @@ var cnt = {
     M_VIEW: 1,
     M_EDIT: 2,
     M_NEW: 3,
+    M_CARD: 4,
 
 //  After Insert Update
     M_NEXT: 10,
@@ -644,6 +645,12 @@ function js_listselect( obj )
             Scope.listdel( ret );
     }
     $(obj).val(0);
+}
+
+function js_card( idtable, iditem )
+{
+    Scope.card( idtable, iditem );
+    return false;
 }
 
 function js_getchecked()

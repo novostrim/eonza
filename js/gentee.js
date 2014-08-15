@@ -18,16 +18,17 @@ var geapp = angular.module('genteeApp',  [ 'ngCookies', 'ngSanitize',/*'ui.route
 
 geapp
 .config( [ '$httpProvider', function( $httpProvider ) {    
-        // Use x-www-form-urlencoded Content-Type
-        $httpProvider.defaults.headers.post[ 'Content-Type' ] = 'application/x-www-form-urlencoded;charset=utf-8';
-        // Override $http service's default transformRequest
-        $httpProvider.defaults.transformRequest = function( data ) {
-            return angular.isObject( data ) && String( data ) !== '[object File]' ? angular.toParam( data ) : data;
-        };
-    }])
-
-
-geapp.config( function($routeSegmentProvider, $routeProvider) {
+    // Use x-www-form-urlencoded Content-Type
+    $httpProvider.defaults.headers.post[ 'Content-Type' ] = 'application/x-www-form-urlencoded;charset=utf-8';
+    // Override $http service's default transformRequest
+    $httpProvider.defaults.transformRequest = function( data ) {
+        return angular.isObject( data ) && String( data ) !== '[object File]' ? angular.toParam( data ) : data;
+    };
+}])
+.config(['$sceProvider', function($sceProvider) {
+    $sceProvider.enabled(false);
+}])
+.config( function($routeSegmentProvider, $routeProvider) {
     $routeSegmentProvider.options.autoLoadTemplates = true;
     $routeSegmentProvider
           .when('/',            'index.tables' )

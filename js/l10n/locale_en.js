@@ -8,6 +8,7 @@ var lng = {
     alignment: 'Alignment',
     allfiles: 'All files',
     apitoken: 'API token',
+    back: 'Back',
     bigtext: 'Big text (>65000)',
     cancel: 'Cancel',
     card: 'Card',

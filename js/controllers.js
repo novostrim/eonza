@@ -296,6 +296,7 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
     $scope.listitems = '';
     $scope.edititems = '';
     $scope.viewitems = '';
+    $scope.carditems = '';
 //    $scope.cookies= $cookies;
 
     $rootScope.cheditform = function( obj, callback ) {
@@ -508,60 +509,49 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
             }
         });
     }    
-    $scope.formtoview = function() {
+    $scope.formtoview = function( columns ) {
+        if ( angular.isUndefined( columns ))
+            columns = $scope.columns;
         $scope.view = { id: $scope.form.id };
-        var i = $scope.columns.length;
+        var i = columns.length;
         while ( i-- )
         {
-            var icol = $scope.columns[i];
+            var icol = columns[i];
             var alias = icol['alias'];
-/*            if ( angular.isDefined( $scope.form[ '__' + alias ] ) && $scope.form[ '__' + alias ] )
+
+            $scope.view[ alias ] = '';
+            switch ( parseInt( icol['idtype'] ))
             {
-                if ( parseInt( icol['idtype'] ) == cnt.FT_LINKTABLE )
-                {
-                    $scope.view[ alias ]  = '<span class="setitem">' + $scope.form[ '__' + alias] + '</span>';
-                }
-                else
-                    $scope.view[ alias ] = $scope.form[ '__' + alias ]; 
+                 case cnt.FT_ENUMSET:
+                    var idi = parseInt( $scope.form[alias] );
+                    if ( idi > 0 && angular.isDefined( icol['list'][idi] ))
+                        $scope.view[ alias ] = icol['list'][idi];
+                    break;
+                case cnt.FT_LINKTABLE:
+                case cnt.FT_PARENT:
+                    if ( $scope.formlink[ alias ].length > 0 )
+                        $scope.view[ alias ]  = '<span class="setitem">' + $scope.formlink[alias] + '</span>';
+                    break;
+                case cnt.FT_SETSET:
+                    $scope.view[ alias ]  = '<span class="setitem">' + js_getset( $scope.form[alias], alias ).join('</span><span class="setitem">') + '</span>';
+                    break;                        
+                case cnt.FT_FILE:
+                case cnt.FT_IMAGE:
+                    $scope.view[ alias ] = $scope.form[ alias ];
+                    break;
+                case cnt.FT_CHECK:
+                    $scope.view[ alias ] = $scope.form[ alias ] == '1' ? lng.yes : lng.no;
+                    break;
+                default:
+                    $scope.view[ alias ] = $scope.form[ alias ];
+                    if ( $scope.view[ alias ] == '0' && icol.number )
+                        $scope.view[ alias ] = '';
+//                    else
+//                        $scope.view[alias] = $sce.trustAsHtml( $scope.view[alias] );
+                    break;
             }
-            else
-            {*/
-                $scope.view[ alias ] = '';
-                switch ( parseInt( icol['idtype'] ))
-                {
-                     case cnt.FT_ENUMSET:
-                        var idi = parseInt( $scope.form[alias] );
-                        if ( idi > 0 && angular.isDefined( icol['list'][idi] ))
-                            $scope.view[ alias ] = icol['list'][idi];
-                        break;
-                    case cnt.FT_LINKTABLE:
-                    case cnt.FT_PARENT:
-                        if ( $scope.formlink[ alias ].length > 0 )
-                            $scope.view[ alias ]  = '<span class="setitem">' + $scope.formlink[alias] + '</span>';
-                        break;
-                    case cnt.FT_SETSET:
-                        $scope.view[ alias ]  = '<span class="setitem">' + js_getset( $scope.form[alias], alias ).join('</span><span class="setitem">') + '</span>';
-                        break;                        
-                    case cnt.FT_FILE:
-                    case cnt.FT_IMAGE:
-                        $scope.view[ alias ] = $scope.form[ alias ];
-                        break;
-                    case cnt.FT_CHECK:
-                        $scope.view[ alias ] = $scope.form[ alias ] == '1' ? lng.yes : lng.no;
-                        break;
-                    default:
-                        $scope.view[ alias ] = $scope.form[ alias ];
-                        if ( $scope.view[ alias ] == '0' && icol.number )
-                            $scope.view[ alias ] = '';
-                        else
-                        {
-                            $scope.view[alias] = $sce.trustAsHtml( $scope.view[alias] );
-                        }
-                        break;
-                }
-//            }
         }
-        var iclass = angular.isDefined( cfg.htmleditor ) ? cfg.htmleditor.class : 'redactor';
+/*        var iclass = angular.isDefined( cfg.htmleditor ) ? cfg.htmleditor.class : 'redactor';
         $( "."+iclass ).each( function() {
             var attr = $(this).attr('name');
             var value =  $scope.form[ attr ];
@@ -569,7 +559,7 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
                 CKEDITOR.instances['id-'+attr].setData( value );
             else
                 $(this).redactor('set', value );
-        })
+        })*/
     }
     $scope.loaditem = function() {
         if ( $scope.mode != cnt.M_NEW )
@@ -606,6 +596,15 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
                 $scope.formlink = data.link;
                 if ( $scope.mode == cnt.M_VIEW )
                     $scope.formtoview();
+                var iclass = angular.isDefined( cfg.htmleditor ) ? cfg.htmleditor.class : 'redactor';
+                $( "."+iclass ).each( function() {
+                    var attr = $(this).attr('name');
+                    var value =  $scope.form[ attr ];
+                    if ( angular.isDefined( cfg.htmleditor ))
+                        CKEDITOR.instances['id-'+attr].setData( value );
+                    else
+                        $(this).redactor('set', value );
+                });
             }
         });
     }
@@ -613,6 +612,8 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
     $scope.setmode = function( mode ) { 
         if ( $scope.mode == mode )
             return;
+        if ( $scope.mode == cnt.M_CARD )
+            $scope.cardback();
         $scope.mode = mode;
         // For example, if we use CKeditor, ckeditor.js has not been loaded before compiling lisitems.
         if ( $scope.edititems == '' )
@@ -644,6 +645,60 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
             $("#card").show();
         }
     };
+    $scope.card = function( idtable, iditem )
+    {
+        $scope.prevmode = $scope.mode;
+        $scope.mode = cnt.M_CARD;
+        $("#list").hide();
+        $("#card").hide();
+        $scope.carditems = '';
+        $scope.prevcolumns = angular.copy( $scope.columns );
+        $scope.prevform = angular.copy( $scope.form );
+        $scope.prevformlink = angular.copy( $scope.formlink );
+        $scope.prevview = angular.copy( $scope.view );
+        DbApi( 'columns', {id: idtable}, function( data ) {
+            if ( data.success )
+            {
+                var i = 0;
+                var columns = data.columns; 
+                $scope.colnames = {};
+                while ( i <  data.columns.length )
+                {
+                    var column = data.columns[i];
+                    if ( column.idtype == cnt.FT_PARENT )
+                        column.title = lng.parent;
+                    column.number = angular.isDefined( types[column.idtype].number );
+                    column.class += $rootScope.aligns[ column.align] + ' ';
+//                    $scope.colnames[ column.alias ] = column;
+                    $scope.carditems += js_viewpattern( i, data.columns, 'card' );
+                    i++;
+                }
+                $scope.columns = columns;
+                DbApi( 'getitem', {id: iditem, table: idtable }, function( data ) {
+                    if ( data.success )
+                    {
+                        $scope.form = data.result;
+                        $scope.formlink = data.link;
+                        $scope.formtoview( columns );
+                    }
+                });
+                $("#linkcard").show();
+            }
+        });
+    }
+    $scope.cardback = function()
+    {
+        $scope.columns = $scope.prevcolumns;
+        $scope.form = $scope.prevform;
+        $scope.formlink = $scope.prevformlink;
+        $scope.view = $scope.prevview;
+        $scope.mode = $scope.prevmode;
+        if ( $scope.mode == cnt.M_LIST )
+            $("#list").show();
+        else
+            $("#card").show();
+        $("#linkcard").hide();
+    }
     $scope.move = function( shift ) { // -1 or 1
 //        $scope.clearuploads();
         if ( shift > 0 )
@@ -746,6 +801,8 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
         return false;
     }
     $scope.update = function( latest ) {
+        if ( $scope.mode == cnt.M_CARD )
+            $scope.cardback();
         DbApi( 'table', $scope.params, function( data ) {
             if ( data.success )
             {
@@ -769,8 +826,6 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
                     if ( data.result[i].id == $rootScope.curitem )
                         $scope.currow = i + 1;
                     js_list( data.result[i] );
-                   // $scope.items[i].name = '<b>' + $scope.items[i].name + '</b>';
-                   // $sce.trustAsHtml( $scope.items[i].name );
                 }
                 $scope.items = data.result;
                 $scope.pages = data.pages;

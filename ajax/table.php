@@ -47,7 +47,7 @@ if ( $id && $result['success'] )
                 if ( empty( $extend['aslink'] ))
                     $ext = "ifnull( t$link.$collink, '' ) as `$icol[alias]`";
                 else
-                    $ext = "if( t$link.$collink is NULL, '', concat('<a href=\"#/item?id=$icol[idtable]&idi=', t.id, '\">', t$link.$collink, '</a>')) as `$icol[alias]`";
+                    $ext = "if( t$link.$collink is NULL, '', concat('<a href=\"\" onclick=\"return js_card($extend[table], ', t$link.id, ' )\">', t$link.$collink, '</a>')) as `$icol[alias]`";
                 $fields[] = (  $icol['idtype'] == FT_PARENT ? " t.`_parent` as `_parent_`," : '' ).$ext;
                        // $collink$link";
                }
