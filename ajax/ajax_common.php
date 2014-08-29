@@ -165,11 +165,6 @@ $db = new ExtMySQL( array( 'host' => defined( 'CONF_DBHOST' ) ? CONF_DBHOST : 'l
                  'pass' => defined( 'CONF_PASS' ) ? CONF_PASS : '' ));
 login();
 
-function stripslashes_gpc(&$value)
-{
-   $value = stripslashes($value);
-}
-
 if ( CONF_QUOTES ) {
      array_walk_recursive($_GET, 'stripslashes_gpc');
      array_walk_recursive($_POST, 'stripslashes_gpc');

@@ -52,18 +52,14 @@ if ( file_exists( APP_DOCROOT.APP_ENTER."conf.inc.php"))
 else
 {
     $langs = array( 'en', 'ru');
-    $ulang = explode( ';', $_SERVER['HTTP_ACCEPT_LANGUAGE'] );
+    $ulang = explode( ',', $_SERVER['HTTP_ACCEPT_LANGUAGE'] );
     foreach ( $ulang as $iul )
     {
-        $ul = explode( ',', $iul );    
-        foreach ( $ul as $iu )
-            if ( in_array( $iu, $langs ))
-            {
-                $lang = $iu;
-                break;
-            }
-        if ( $lang )
+        if ( in_array( strpos( $iul, 0, 2 ), $langs ))
+        {
+            $lang = $iu;
             break;
+        }
     }
     $conf['module'] = 'install';
     $conf['title'] = '';

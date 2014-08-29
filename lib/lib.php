@@ -93,7 +93,6 @@ function pages( $query, $page, $link )
   */
 
    $result = array();
-   $pages = 1;
    $count = ( is_numeric( $query ) ? $query : $db->getOne( $query ));
    $onpage = max( 1, isset( $page['onpage'] ) ? $page['onpage'] : 50 );
    $pages = max( 1, ceil( $count/$onpage ));
@@ -150,16 +149,12 @@ function pages( $query, $page, $link )
 function pass_generate( $i = 6 )
 {
    $newpass = '';
+   $rep = '#$%&+-(){';
    while ( $i-- )
    {
-      do
-      {
-         $char = chr(mt_rand( 0x32, 0x7A )); 
-         if ( !is_bool(strrpos( 'l10OoI', $char )))
-            $char = '='; 
-      } while (( $char > '9' && $char < 'A' ) ||
-               ( $char > 'Z' && $char < 'a' ));
-      $newpass .= $char;
+        $char = chr(mt_rand( 0x32, 0x7A )); 
+        $pos = strrpos( 'lOoIDJ`:;', $char );
+        $newpass .= $pos === false ? $char : $rep[$pos];
    }
    return $newpass;
 }
@@ -213,6 +208,11 @@ function pars_list( $list, $src )
    foreach ( $alist as $ival )
       $ret[ $ival ] = isset( $src[ $ival ] ) ? $src[ $ival ] : '';
    return $ret;
+}
+
+function stripslashes_gpc(&$value)
+{
+   $value = stripslashes($value);
 }
 
 function url_params( $ignore = '', $only = '' )
