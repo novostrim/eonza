@@ -17,13 +17,14 @@ if ( !defined( 'APP_ENTER' ))
     $dir = dirname( $_SERVER['SCRIPT_NAME'] );
     define( 'APP_ENTER', ( $dir == '/' || $dir =="\\" ? '' : $dir ).'/' );
 }
-define( 'APP_DIR', '/eonza/');
+$appdir = basename( dirname( __FILE__ ));
+define( 'APP_DIR', basename( APP_DOCROOT ) == $appdir ? '/' : "/$appdir/");
 define( 'APP_EONZA', APP_DOCROOT.APP_DIR );
 
 $conf = array(
     'appname' => 'Eonza',
     'version' => '1.0',
-    'website' => 'www.novostrim.com',
+    'website' => 'www.eonza.org',
 );
 
 $langlist = array(

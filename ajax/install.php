@@ -78,7 +78,10 @@ if ( !file_exists( $filename ))
             $form['storage'] = '/storage';
         $storage = addfname( $_SERVER['DOCUMENT_ROOT'], $form['storage'] );
         if ( !is_dir( $storage ))
+        {
         	mkdir( $storage );
+            chmod( $storage, 0666 );
+        }
         $lang = post( 'lang' );
         $settings = 
              '{ "title": { "value": "'.$conf['appname'].'", "lang":"title", "visible": 1, "ctrl": "input", "par": "normal" },

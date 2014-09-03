@@ -6,6 +6,7 @@
 */
 
 require_once 'ajax_common.php';
+
 $form = post( 'form' );
 $USER = $db->getrow( "select id, login,lang from ?n where pass=?s", 
                           CONF_PREFIX.'_users', pass_md5( $form['psw'], true ));
