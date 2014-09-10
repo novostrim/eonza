@@ -55,7 +55,8 @@ else
     $ulang = explode( ',', $_SERVER['HTTP_ACCEPT_LANGUAGE'] );
     foreach ( $ulang as $iul )
     {
-        if ( in_array( strpos( $iul, 0, 2 ), $langs ))
+        $iu = substr( $iul, 0, 2 );
+        if ( in_array( $iu, $langs ))
         {
             $lang = $iu;
             break;

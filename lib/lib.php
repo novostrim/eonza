@@ -31,10 +31,10 @@ function cookie( $name, $default = '' )
    return isset( $_COOKIE[ $icook ] ) ? $_COOKIE[ $icook ] : $default;
 }
 
-function cookie_set( $name, $value='', $time = 1 )
+function cookie_set( $name, $value='', $time = 1, $domain = APP_ENTER )
 {
    $icook = CONF_PREFIX.'_'.$name;
-   setcookie( $icook, $value, $value ? time() + 3600*$time : 0, APP_ENTER );
+   setcookie( $icook, $value, $value ? time() + 3600*$time : 0, $domain );
    if ( $value )
       $_COOKIE[ $icook ] = $value;
    elseif ( isset( $_COOKIE[ $icook ] ))
