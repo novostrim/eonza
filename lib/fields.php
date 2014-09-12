@@ -18,9 +18,13 @@ define('FT_SETSET', 9 );
 define('FT_PARENT', 10 );
 define('FT_FILE', 11 );
 define('FT_IMAGE', 12 );
+define('FT_SPECIAL', 13 );
 define('FT_SQL', 99 );
 
-
+define('FTM_WEBSITE', 1 );
+define('FTM_EMAIL', 2 );
+define('FTM_PHONE', 3 );
+define('FTM_HASH', 4 );
 //define('FT_DATE', 7 );
 //define('FT_HTML', 10 );
 //define('FT_UBYTE', 80 );
@@ -50,6 +54,8 @@ $FIELDS = array(
                            'save' => 'parent_save'),
    FT_FILE => array( 'pars' => 'storedb' ),
    FT_IMAGE => array( 'pars' => 'storedb,max,min,ratio,side,thumb,thumb_ratio,thumb_side' ),
+   FT_SPECIAL => array( 'pars' => 'type', 'sql' => 'special_sql', 
+                              'save' => 'special_save' ),
    FT_SQL => array( 'pars' => 'sqlcmd', 'sql' => 'sql_sql' ),
 /*   3 => array( "name" => 'fdatetime', 'sql' => 'datetime' ),
    4 => array( "name" => 'ftext', 'sql' => 'text', 'edit' => 'edit_text' ),
@@ -80,6 +86,20 @@ function date_sql( $form )
 {
     $dtype = (int)defval( $form['ext']['date'], 1 );
     $type = $dtype == 1 ? 'datetime' : ( $dtype == 2 ? 'date' : 'timestamp default 0' );
+    return "$type NOT NULL";
+}
+
+function special_sql( $form )
+{
+    $dtype = (int)defval( $form['ext']['type'], 1 );
+
+    switch ( $dtype ) {
+        case FTM_EMAIL: $type = 'varchar(48)';break;
+        case FTM_PHONE: $type = 'bigint';break;
+        case FTM_HASH: $type = 'binary(16)';break;
+        default: 
+            $type = 'varchar(256)';
+    }
     return "$type NOT NULL";
 }
 
@@ -204,13 +224,51 @@ function date_save( &$out, $form, $icol, &$outext )
 
     $alias = alias( $icol );
     $val = $form[$alias];
-    if ( empty( $val ))
+    $extend = json_decode( $icol['extend'], true );
+    if ( empty( $val ) && $extend['timenow'])
         if ( $outext )
-            $outext[] = $db->parse("$alias=NOW()", $alias );
+            $outext[] = $db->parse("?n=NOW()", $alias );
         else
             $outext = array( $db->parse("?n=NOW()", $alias ));
     else
         $out[ $alias ] = $val;
+}
+
+function special_save( &$out, $form, $icol, &$outext )
+{
+    global $db;
+
+    require_once "utf.php";
+
+    $alias = alias( $icol );
+    $val = $form[$alias];
+    $extend = json_decode( $icol['extend'], true );
+    switch ( $extend['type'] ) {
+        case FTM_EMAIL: $val = utf_lower( $val );break;
+        case FTM_PHONE: 
+            $len = strlen( $val );
+            $tmp = '';
+            for ( $i=0; $i < $len; $i++ )
+                if ( $val[$i] >='0' && $val[$i] <= '9' )
+                    $tmp .= $val[$i];
+            $val = $tmp;
+            break;
+        case FTM_HASH: 
+            unset( $out[ $alias ] );
+            if ( !$val )
+                $val = time();
+            if ( strlen($val) == 32 )
+                return;
+            $tmp = $db->parse("?n=?p", $alias, "X'".md5( $val )."'" );
+            if ( $outext )
+                $outext[] = $tmp;
+            else
+                $outext = array( $tmp );
+            break;
+        default: 
+            $val = str_replace('http://', '', utf_lower( $val ));
+    }    
+    $out[ $alias ] = $val;
 }
 
 function linktable_save( &$out, $form, $icol, &$outext )

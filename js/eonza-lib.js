@@ -24,6 +24,7 @@ var cnt = {
     FT_PARENT: 10,
     FT_FILE: 11,
     FT_IMAGE: 12,
+    FT_SPECIAL: 13,
     FT_SQL: 99,
 
 // Extend
@@ -122,6 +123,13 @@ var types = {
                     ] },
                  ] 
     },
+    13 : { id: cnt.FT_SPECIAL, name: 'fspecial', verify: number_verify,
+         extend: [ { name: 'type', title: lng.more, type: cnt.ET_COMBO, def: 1, 
+                     list: [ {id: 1, title: lng.website }, { title: lng.email, id: 2},
+                      { title: lng.phone, id: 3}, { title: lng.fhash, id: 4}
+            ] }
+        ] 
+    },    
     99 : { id: cnt.FT_SQL, name: 'fsql', verify: sql_verify,
          extend: [ { name: 'sqlcmd', title: lng.fsql, type: cnt.ET_EDIT, def: '' } ] 
     },

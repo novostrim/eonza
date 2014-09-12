@@ -63,6 +63,8 @@ if ( $id && $result['success'] )
                 {
                     $fields[] = "LEFT( t.$icol[alias], 128 ) as `$icol[alias]`";
                 }
+                elseif ($icol['idtype'] == FT_SPECIAL && $extend['type'] == FTM_HASH )
+                    $fields[] = "HEX( t.$icol[alias] ) as `$icol[alias]`";
                 else
                     $fields[] = "t.$icol[alias]";
             }

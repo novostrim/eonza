@@ -95,7 +95,7 @@ function getitem( $table, $id )
             else
                 $result['link'][ $icol['idalias'] ] = '';
         }
-        if ( $icol['idtype'] == FT_IMAGE || $icol['idtype'] == FT_FILE )
+        elseif ( $icol['idtype'] == FT_IMAGE || $icol['idtype'] == FT_FILE )
         {
             $files = array();
             if ( $id )
@@ -105,6 +105,12 @@ function getitem( $table, $id )
                 $files = files_result( $table['id'], $icol, $id );
             }
             $result['result'][ $icol['idalias']] = $files;
+        }
+        elseif ( $icol['idtype'] == FT_SPECIAL )
+        {
+            $extend = json_decode( $icol['extend'], true );
+            if ( $extend['type'] == FTM_HASH )
+                $result['result'][ $icol['idalias'] ] = bin2hex($result['result'][ $icol['idalias'] ] );
         }
     }
     $result['result'][ 'table' ] = $table['id'];
