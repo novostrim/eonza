@@ -517,10 +517,10 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
         while ( i-- )
         {
             var icol = columns[i];
-            var alias = icol['alias'];
+            var alias = icol.alias;
 
             $scope.view[ alias ] = '';
-            switch ( parseInt( icol['idtype'] ))
+            switch ( parseInt( icol.idtype ))
             {
                  case cnt.FT_ENUMSET:
                     var idi = parseInt( $scope.form[alias] );
@@ -541,6 +541,24 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
                     break;
                 case cnt.FT_CHECK:
                     $scope.view[ alias ] = $scope.form[ alias ] == '1' ? lng.yes : lng.no;
+                    break;
+                case cnt.FT_SPECIAL:
+                    switch ( parseInt( icol.extend.type ))
+                    {
+                        case cnt.FTM_WEBSITE:
+                            var url = ( $scope.form[ alias ].substr( 0, 4 ) == 'http' ? '' : 'http://' ) + $scope.form[ alias ];
+                            $scope.view[ alias ] = '<a href="'+ url +'" >' + $scope.form[ alias ] + '</a>';
+                            break;
+                        case cnt.FTM_EMAIL:
+                            $scope.view[ alias ] = '<a href="mailto:'+ $scope.form[ alias ] +'" >' + $scope.form[ alias ] + '</a>';
+                            break;
+                        case cnt.FTM_PHONE:
+                            var phone = js_phone( $scope.form[ alias ] );
+
+                            $scope.view[ alias ] = phone.length > 0 ? '<a href="tel:+'+ $scope.form[ alias ] +'" class="phonelink">' + 
+                                        phone + '</a>' : phone;
+                            break;
+                    }
                     break;
                 default:
                     $scope.view[ alias ] = $scope.form[ alias ];

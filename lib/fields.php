@@ -259,7 +259,7 @@ function special_save( &$out, $form, $icol, &$outext )
                 $val = time();
             if ( strlen($val) == 32 )
                 return;
-            $tmp = $db->parse("?n=?p", $alias, "X'".md5( $val )."'" );
+            $tmp = $db->parse("?n=?p", $alias, "X'".pass_md5( $val, true )."'" );
             if ( $outext )
                 $outext[] = $tmp;
             else

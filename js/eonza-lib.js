@@ -27,6 +27,12 @@ var cnt = {
     FT_SPECIAL: 13,
     FT_SQL: 99,
 
+// Subtypes
+    FTM_WEBSITE: 1,
+    FTM_EMAIL: 2,
+    FTM_PHONE: 3,
+    FTM_HASH: 4,
+
 // Extend
     ET_NUMBER: 1,
     ET_COMBO: 2, 
@@ -123,7 +129,7 @@ var types = {
                     ] },
                  ] 
     },
-    13 : { id: cnt.FT_SPECIAL, name: 'fspecial', verify: number_verify,
+    13 : { id: cnt.FT_SPECIAL, name: 'fspecial', verify: number_verify, /*view: view_special,*/
          extend: [ { name: 'type', title: lng.more, type: cnt.ET_COMBO, def: 1, 
                      list: [ {id: 1, title: lng.website }, { title: lng.email, id: 2},
                       { title: lng.phone, id: 3}, { title: lng.fhash, id: 4}
@@ -250,6 +256,24 @@ function js_list( item )
                 if ( item[key] == '0' )
                     item[key] = '';
                 break;
+            case cnt.FT_SPECIAL:
+                switch ( parseInt( colnames[key].extend.type ))
+                {
+                    case cnt.FTM_WEBSITE:
+                        var url = ( item[key].substr( 0, 4 ) == 'http' ? '' : 'http://' ) + item[key];
+                        item[key] = '<a href="'+ url +'" >' + item[key] + '</a>';
+                        break;
+                    case cnt.FTM_EMAIL:
+                        item[key] = '<a href="mailto:'+ item[key] +'" >' + item[key] + '</a>';
+                        break;
+                    case cnt.FTM_PHONE:
+                        var phone = js_phone( item[key] );
+
+                        item[key] = phone.length > 0 ? '<a href="tel:+'+ item[key] +'" class="phonelink">' + 
+                                    phone + '</a>' : phone;
+                        break;
+                }
+                break;
         }
         if ( item[key] == '0' && colnames[key]['number'] )
             item[key] = '';
@@ -359,6 +383,7 @@ function view_default( i, icol )
     //"+icol['alias']+"
     return "<div class='view-control' ng-bind-html='view."+icol.alias+"'></div>";
 }
+
 
 function common_file( isview, icol )
 {
