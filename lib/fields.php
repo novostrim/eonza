@@ -264,7 +264,7 @@ function special_save( &$out, $form, $icol, &$outext )
                 $outext[] = $tmp;
             else
                 $outext = array( $tmp );
-            break;
+            return;
         default: 
             $val = str_replace('http://', '', utf_lower( $val ));
     }    

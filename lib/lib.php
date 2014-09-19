@@ -167,38 +167,47 @@ function pass_md5( $pass, $full = false )
     return md5( md5( CONF_SALT ).$pass );
 }
 
-function post_val( $val )
+function post_val( $val, $strict = false )
 {
 //   if ( !( $flag & DBF_NOHTML ))
    if ( is_array( $val ))
    {
         foreach ( $val as &$ival )
-            $ival = post_val( $ival );
+            $ival = post_val( $ival, $strict );
    }
    else
    {
-      if ( CONF_QUOTES )
-         $val = stripslashes($val);
-//          $val = htmlspecialchars( $val, ENT_QUOTES /*ENT_NOQUOTES*/, 'UTF-8' );
+        if ( CONF_QUOTES )
+            $val = stripslashes($val);
+        if ( $strict )
+            $val = htmlspecialchars( $val, ENT_QUOTES /*ENT_NOQUOTES*/, 'UTF-8' );
    }
-    //stripslashes($val));
-//   $val = mysqli_real_escape_string( $val );
    return $val;
 }
 
-function post( $name, $default = '', $get = false )
+function post( $name, $default = '', $get = false, $strict = false )
 {
     if ( $get )
        $val = ( !isset(  $_GET[ $name ] ) ? $default :  $_GET[ $name ] );
     else
        $val = ( !isset(  $_POST[ $name ] ) ? $default :  $_POST[ $name ] );
 
-   return post_val( $val );
+   return post_val( $val, $strict );
 }
 
-function get( $name, $default = '' )
+function poststrict( $name )
 {
-   return post( $name, $default, true );
+    return post( $name, '', false, true );
+}
+
+function get( $name, $default = '', $strict = false )
+{
+   return post( $name, $default, true, $strict );
+}
+
+function getstrict( $name )
+{
+    return post( $name, '', true, true );
 }
 
 function pars_list( $list, $src )
