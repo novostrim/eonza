@@ -17,3 +17,18 @@ function js_phone( phone )
         result = result.insert( -4, '-' ).insert( -2 , '-' );
     return ( len > 10 ? '+' : '' ) + result;
 }
+
+function js_required( name, resource, callback )
+{
+    var result = true;
+    $('.' + name ).each( function(){
+        if ( $(this).val() == '' )
+        {
+            var text = resource.replace( '#temp#', $(this).attr( name ));
+            result = false;
+            $(this).focus();
+            return callback( text );
+        }
+    });
+    return result;
+}

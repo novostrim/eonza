@@ -195,6 +195,14 @@ function post( $name, $default = '', $get = false, $strict = false )
    return post_val( $val, $strict );
 }
 
+function postall( $strict = false )
+{
+    $result = array();
+    foreach ( $_POST as $ikey => $ipost )
+        $result[ $ikey ] = post( $ikey, '', false, $strict );
+    return $result;
+}
+
 function poststrict( $name )
 {
     return post( $name, '', false, true );
