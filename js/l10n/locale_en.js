@@ -89,7 +89,7 @@ var lng = {
     info: "Eonza is a free open-source hosted application to store and manage your information.",
     inform: 'Information',
     install: 'Install',
-    installing: 'Installing ' + cfg.appname,
+    installing: 'Installing Eonza',
     itemadded: 'The item has been successfully inserted.',
     itemdel: 'The item has been successfully deleted.',
     itemupdated: 'The item has been successfully updated.',
