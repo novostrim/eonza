@@ -32,7 +32,7 @@ geapp.directive( 'geLink', function( $compile, $document, $rootScope )
                         $rootScope.checks.push( { id: i, state: !!($scope.geSet & ( 1<<i )), title: cols[ i+1] } );
                  $rootScope.msg( { title: lng.set, template: tpl('editset.html'),
                        btns: 
-                       [ {text: lng.save, func: function(){
+                       [ {text: lng.savejs, func: function(){
                             var newVal = 0;
                             for ( var k=0; k < $rootScope.checks.length; k++ )
                                 if ( $rootScope.checks[k].state )
@@ -74,7 +74,7 @@ geapp.directive( 'geSet', function( $compile, $document, $rootScope )
                         $rootScope.checks.push( { id: i, state: !!($scope.geSet & ( 1<<i )), title: cols[ i+1] } );
                  $rootScope.msg( { title: lng.set, template: tpl('editset.html'),
                        btns: 
-                       [ {text: lng.save, func: function(){
+                       [ {text: lng.savejs, func: function(){
                             var newVal = 0;
                             for ( var k=0; k < $rootScope.checks.length; k++ )
                                 if ( $rootScope.checks[k].state )
@@ -271,7 +271,7 @@ geapp.directive( 'geEdit', function( $compile, $document, $rootScope, $timeout, 
 
                     $scope.newvalue = $scope.geEdit;
                     $scope.tempHTML = angular.element("<div class='popupdiv'><input type='text' class='{{geClass}}' ng-model='newvalue'><br>" +
-                        "<nobr><button class='btn btn-primary' ng-click='mysave()'>" + lng.save + "</btn>" +
+                        "<nobr><button class='btn btn-primary' ng-click='mysave()'>" + lng.savejs + "</btn>" +
                         "<button class='btn' ng-click='myedit()'>" + lng.cancel + "</btn></nobr></div>" );
 
                     $compile( $scope.tempHTML.contents() )( $scope );

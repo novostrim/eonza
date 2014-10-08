@@ -1,7 +1,7 @@
 <table class="formtbl">
         <tr><td class="formtxt">{{lng.name}}: </td><td class="formval">
             <input type="text" ng-model="form.title" class="form-control"></td></tr>
-        <tr><td class="formtxt">{{lng.comment}}: </td><td class="formval">
+        <tr><td class="formtxt">{{lng.commentjs}}: </td><td class="formval">
             <input type="text" ng-model="form.comment" class="form-control wbig"></td></tr>
         <tr><td class="formtxt extend">{{lng.type}}: </td><td class="formval extend"><select name="idtype" ng-model="form.idtype" class="form-control">
             <option ng-repeat="itype in types" value="{{itype.id}}" ng-selected="form.idtype==itype.id">{{lng[itype.name]}}</option></select></td></tr>

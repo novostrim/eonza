@@ -3,7 +3,7 @@
 
     <form class="form" >
     <table class="formtbl">
-        <tr><td class="formtxt">{{lng.language}}: </td><td class="formval"><select ng-model="form.lang"  class="form-control" ng-change="language()">
+        <tr><td class="formtxt">{{lng.languagejs}}: </td><td class="formval"><select ng-model="form.lang"  class="form-control" ng-change="language()">
 <option ng-repeat="item in langlist" value="{{item.code}}" ng-selected="item.code==lng.code">{{item.native}}</a>
         </select></td></tr>
         <tr><td class="formtxt">{{lng.email}}: </td><td class="formval">

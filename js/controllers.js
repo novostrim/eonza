@@ -216,7 +216,7 @@ function TablesCtrl($scope, $rootScope, $routeSegment, DbApi ) {
                 $rootScope.form = { idparent: $scope.items[ index].idparent, id: $scope.items[ index].id,
                                       dbname: 'tables' };
                 $rootScope.msg( { title: lng.changefld, template: tpl('changefld.html'),
-                   btns: [ {text: lng.save, func: function(){
+                   btns: [ {text: lng.savejs, func: function(){
                          DbApi( 'changefld', $rootScope.form, function( data ) {
                             if ( data.success )
                                 document.location = '#\?id='+ $rootScope.form.idparent;
@@ -246,7 +246,7 @@ function TablesCtrl($scope, $rootScope, $routeSegment, DbApi ) {
         var add = angular.isUndefined( index );
         function foldermsg() {
            $rootScope.msg( { title: add ? lng.newfld : lng.editfld, template: tpl('dlgfolder.html'),
-                   btns: [ {text: add ? lng.add : lng.save, func: $scope.savefolder, class: 'btn-primary btn-near' },
+                   btns: [ {text: add ? lng.add : lng.savejs, func: $scope.savefolder, class: 'btn-primary btn-near' },
                            {text: lng.cancel, class: 'btn-default btn-near' }
                ]  })
         }
@@ -448,7 +448,7 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
             $rootScope.form = data;//angular.copy( data );
             $rootScope.msg( { title: lng.fileinfo, template: tpl('editfile.html'),
                        btns: $scope.mode == cnt.M_EDIT ?
-                       [ {text: lng.save, func: function(){
+                       [ {text: lng.savejs, func: function(){
                              DbApi( 'editfile', $rootScope.form, function( data ) {
                                 if ( data.success )
                                 {
@@ -478,7 +478,7 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
             {
                 $rootScope.curitem = data.success;
                 $scope.form = data.result;
-                $scope.action = lng.save;
+                $scope.action = lng.savejs;
                 for ( i = 0; i < $rootScope.uploads.length; i++ )
                 {
                     if ( $rootScope.uploads[i].queue.length > 0 )
@@ -610,7 +610,7 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
             if ( data.success )
             {
                 $scope.form = data.result;
-                $scope.action = $scope.form.id != 0 ? lng.save : lng.add;
+                $scope.action = $scope.form.id != 0 ? lng.savejs : lng.add;
                 $scope.formlink = data.link;
                 if ( $scope.mode == cnt.M_VIEW )
                     $scope.formtoview();
@@ -960,7 +960,7 @@ function EdititemCtrl($scope, $routeSegment, DbApi, $rootScope ) {
             $scope.form = data.result;
             if ( $scope.form.id != 0 )
             {
-                $scope.action = lng.save;
+                $scope.action = lng.savejs;
             }
             else
                 $scope.action = lng.add;
@@ -999,7 +999,7 @@ function MenuCtrl($scope, $routeSegment, DbApi, $rootScope ) {
             else
                 title = add ? lng.newfld : lng.editfld;
            $rootScope.msg( { title: title, template: tpl( it ? 'dlgmenu.html' : 'dlgfolder.html' ),
-                   btns: [ {text: add ? lng.add : lng.save, func: $scope.savemenu, class: 'btn-primary btn-near' },
+                   btns: [ {text: add ? lng.add : lng.savejs, func: $scope.savemenu, class: 'btn-primary btn-near' },
                            {text: lng.cancel, class: 'btn-default btn-near' }
                ]  })
         }
@@ -1144,7 +1144,7 @@ function EdittableCtrl( $rootScope, $scope, $routeSegment, DbApi ) {
     $scope.form = {};
     if ( angular.isDefined( $routeSegment.$routeParams.id ))
     {
-        $scope.action = lng.save;
+        $scope.action = lng.savejs;
         $scope.title = lng.edittbl;
         $scope.id = $routeSegment.$routeParams.id;
     }
@@ -1235,7 +1235,7 @@ function EdittableCtrl( $rootScope, $scope, $routeSegment, DbApi ) {
         }
         $rootScope.getcols();
         $rootScope.msg( { title: add ? lng.newitem : lng.edititem, template: tpl('dlgfield.html'),
-              btns: [ {text: add ? lng.add : lng.save, func: $scope.savefield, class: 'btn-primary btn-near' },
+              btns: [ {text: add ? lng.add : lng.savejs, func: $scope.savefield, class: 'btn-primary btn-near' },
                      {text: lng.cancel, class: 'btn-default btn-near' }
         ]  } );
 
@@ -1307,7 +1307,7 @@ function ImportCtrl($scope, $routeSegment, DbApi ) {
             $scope.form = data.result;
             if ( $scope.form.id != 0 )
             {
-                $scope.action = lng.save;
+                $scope.action = lng.savejs;
             }
             else
                 $scope.action = lng.add;
@@ -1356,7 +1356,7 @@ function SetsCtrl($scope, $rootScope, $routeSegment, DbApi ) {
         var add = angular.isUndefined( index );
         function setmsg() {
            $rootScope.msg( { title: add ? lng.create : lng.edit, template: tpl('dlgset.html'),
-                   btns: [ {text: add ? lng.add : lng.save, func: $scope.saveset, class: 'btn-primary btn-near' },
+                   btns: [ {text: add ? lng.add : lng.savejs, func: $scope.saveset, class: 'btn-primary btn-near' },
                            {text: lng.cancel, class: 'btn-default btn-near' }
                ]  })
         }
@@ -1411,7 +1411,7 @@ function SetCtrl($scope, $routeSegment, DbApi, $rootScope, $sce ) {
         var add = angular.isUndefined( index );
         function setmsg() {
            $rootScope.msg( { title: add ? lng.create : lng.edit, template: tpl('dlgset.html'),
-                   btns: [ {text: add ? lng.add : lng.save, func: $scope.savesetitem, class: 'btn-primary btn-near' },
+                   btns: [ {text: add ? lng.add : lng.savejs, func: $scope.savesetitem, class: 'btn-primary btn-near' },
                            {text: lng.cancel, class: 'btn-default btn-near' }
                ]  })
         }

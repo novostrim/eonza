@@ -3,7 +3,7 @@
   <form class="form" ng-submit="submit()">
     <table class="formtbl">
         <tr><td class="formtxt">{{lng.name}}: </td><td class="formval"><input type="text" ng-model="form.title" required class="form-control"></td></tr>
-        <tr><td class="formtxt">{{lng.comment}}: </td><td class="formval"><input type="text" ng-model="form.comment" class="form-control wbig"></td></tr>
+        <tr><td class="formtxt">{{lng.commentjs}}: </td><td class="formval"><input type="text" ng-model="form.comment" class="form-control wbig"></td></tr>
         <tr ng-show="isalias"><td class="formtxt">{{lng.alias}}: </td><td class="formval"><input type="text" ng-model="form.alias" class="form-control"></td></tr>
         <tr ><td class="formtxt">{{lng.hierdata}}: </td><td class="formval">
             <div ge-check="form.istree" ge-func="istree" ></div>
@@ -11,7 +11,7 @@
         
         <!--tr><td class="formtxt">{{lng.user}}: </td><td class="formval"><input type="text" ng-model="form.user" required class="form-control"></td></tr>
         <tr><td class="formtxt">{{lng.password}}: </td><td class="formval"><input type="text" ng-model="form.pass" class="form-control"></td></tr>
-        <tr><td colspan="2"><h2>{{lng.signup}}</h2></td></tr>
+        <tr><td colspan="2"><h2>{{lng.signupjs}}</h2></td></tr>
         <tr><td class="formtxt">{{lng.password}}: </td><td class="formval"><input class="form-control" type="text" ng-model="form.psw" required></td></tr-->
         <tr><td colspan="2">
             <h2>{{lng.listfields}}</h2>
@@ -36,10 +36,10 @@
   
     </form>    <!--form class="form" ng-submit="submit()">
     <table class="formtbl">
-        <tr><td class="formtxt">{{lng.title}}: </td><td class="formval">
+        <tr><td class="formtxt">{{lng.titlejs}}: </td><td class="formval">
             <div ge-edit="form.title" ge-func="savedb" ge-field="name" ge-class="form-control wbig"></div>
         </td></tr>
-        <tr><td class="formtxt">{{lng.language}}: </td><td class="formval"><select ng-model="form.lang"  class="form-control" ng-change="language()">
+        <tr><td class="formtxt">{{lng.languagejs}}: </td><td class="formval"><select ng-model="form.lang"  class="form-control" ng-change="language()">
 <option ng-repeat="item in langlist" value="{{item.code}}" ng-selected="item.code==lng.code">{{item.native}}</a> 
         </select></td></tr>
         <tr><td class="formtxt">{{lng.email}}: </td><td class="formval">
