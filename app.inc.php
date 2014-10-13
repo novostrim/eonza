@@ -30,5 +30,4 @@ $conf = array(
 $langlist = array(
     array( 'code' => 'en', 'native'=> 'English' ),
     array( 'code' => 'ru', 'native'=> 'Русский' ),
-)
-?>
+);

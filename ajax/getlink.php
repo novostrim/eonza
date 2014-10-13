@@ -16,4 +16,3 @@ if ( $result['success'] )
         api_error('Link table');
 }
 print json_encode( $result );
-?>

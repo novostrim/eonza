@@ -7,4 +7,3 @@ if ( $result['success'] )
     require_once 'menu_common.php';
 }
 print json_encode( $result );
-?>

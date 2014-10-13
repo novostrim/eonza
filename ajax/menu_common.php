@@ -12,4 +12,3 @@
         if ( isset( $children[ $value['id']] ))
             $value['children'] = $children[ $value['id']];
     }
-?>

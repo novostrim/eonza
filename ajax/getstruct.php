@@ -23,4 +23,3 @@ if ( $result['success'] )
     }
 }
 print json_encode( $result );
-?>

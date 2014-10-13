@@ -15,4 +15,3 @@ if ( $id && $result['success'] )
 }
 
 print json_encode( $result );
-?>

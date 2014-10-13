@@ -10,7 +10,7 @@ if ( empty( $_POST['path'] ))
 $wspath = $_SERVER['DOCUMENT_ROOT'].$_POST['path'];//dirname( dirname( $_SERVER['SCRIPT_FILENAME'] ));
 
 $result = array( 'success'=> false, 'err' => 1, 'result' => 0 );
-if ( file_put_contents( $wspath.'test.inc.php', "<?php \r\n\r\n?>" ))
+if ( file_put_contents( $wspath.'test.inc.php', "<?php \r\n\r\n" ))
 {
     $result['success'] = true;
     unlink( $wspath.'test.inc.php' );
@@ -23,4 +23,4 @@ else
 
 }
 print json_encode( $result );
-?>
+

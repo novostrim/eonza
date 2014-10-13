@@ -10,4 +10,3 @@ if ( $result['success'] )
     files_delfile( (int)$pars['id'], true );
 }
 print json_encode( $result );
-?>

@@ -20,4 +20,3 @@ if ( $result['success'] )
 //                APP_DB, $fields, CONF_DBID, pass_md5( CONF_PSW, true ));
 
 print json_encode( $result );
-?>

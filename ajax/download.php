@@ -12,4 +12,3 @@ require_once APP_EONZA.'lib/files.php';
 if ( $result['success'] )
     files_download( $id, !empty( $_GET['view'] ), !empty( $_GET['thumb'] ));
 
-?>

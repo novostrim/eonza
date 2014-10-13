@@ -34,4 +34,3 @@ function send_mail( $name_to, $email_to, $subject, $body,
 }
 
 
-?>

@@ -280,4 +280,3 @@ function lib_get( $name, $default = '' )
 }
 */
 
-?>

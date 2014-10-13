@@ -26,4 +26,3 @@ if ( $result['success'] )
     $result['result'] = subfolder( 0, '' );
 }
 print json_encode( $result );
-?>

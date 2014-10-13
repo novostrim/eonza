@@ -11,5 +11,3 @@ require_once "app.inc.php";
 
 if ( isset( $_GET['request'] ))
     require_once APP_EONZA."ajax/".$_GET['request'].".php";
-
-?>

@@ -302,4 +302,3 @@ if ( $result['success'] )
     $result['result']['idparent'] = $idi ? $curtbl['idparent'] : $pars['form']['idparent'];
 */    
 print json_encode( $result );
-?>

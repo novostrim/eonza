@@ -9,4 +9,3 @@ if ( $result['success'] )
     $result['success']  = files_edit( $form );
 }
 print json_encode( $result );
-?>

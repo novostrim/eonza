@@ -101,5 +101,3 @@ header('Cache-Control: no-store, no-cache, must-revalidate, post-check=0, pre-ch
 header('Pragma: no-cache'); 
 
 print str_replace( $afrom, $ato, $template );
-
-?>

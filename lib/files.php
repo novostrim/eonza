@@ -167,4 +167,3 @@ function files_result( $idtable, $col, $iditem, $full = false )
         $idtable, $col['id'], $iditem );    
 }
 
-?>

@@ -326,4 +326,3 @@ function parent_save( &$out, $form, $icol, &$outext )
 }
 
 
-?>

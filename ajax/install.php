@@ -116,7 +116,7 @@ if ( !file_exists( $filename ))
         $result['user'] = $db->getrow( "select id, login,lang from ?n where id=?s", 
                           $prefix.'_users', $iduser );
         $result['success'] = isset( $lines ) && file_put_contents( $filename, 
-            "<?php \r\n".implode( "\r\n", $lines )."\r\n?>" ) ? 1 : 0;
+            "<?php \r\n".implode( "\r\n", $lines )."\r\n" ) ? 1 : 0;
         @unlink( $htaccess );
         file_put_contents( $htaccess, str_replace( '/eonza/', APP_ENTER, 
         	       file_get_contents( $htaccess.'-i' )));
@@ -133,4 +133,4 @@ if ( !file_exists( $filename ))
     }
 }
 print json_encode( $result );
-?>
+

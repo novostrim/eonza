@@ -20,4 +20,4 @@ else
     cookie_set( 'iduser', $USER['id'], 120 );
 }
 print json_encode( $result );
-?>
+
