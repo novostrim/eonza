@@ -45,4 +45,4 @@ if ( $id && $result['success'] )
         }*/
     }
 }
-print json_encode( $result, JSON_NUMERIC_CHECK );
+print json_encode( $result );

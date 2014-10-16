@@ -29,4 +29,4 @@ if ( $result['success'] )
             $result['crumbs'] = array_reverse( $crumbs );
     }
 }
-print json_encode( $result, JSON_NUMERIC_CHECK );
+print json_encode( $result );
