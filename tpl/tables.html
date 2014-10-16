@@ -22,7 +22,7 @@
     <button type="button" class="btn btn-default btnmenu">
       <i class="fa fa-caret-down"></i> 
     </button>
-  </div><a ng-if="item.isfolder" ng-href="#/?id={{item.id}}">{{item.title}}</a> <a ng-if="item.isfolder != 1" ng-href="#/table?id={{item.id}}">{{item.title}}</a> 
+  </div><a ng-if="item.isfolder" ng-href="#/?id={{item.id}}">{{item.title}}</a> <a ng-if="!item.isfolder" ng-href="#/table?id={{item.id}}">{{item.title}}</a> 
   <span ng-if="item.comment"><br><i><small>{{item.comment}}</small></i></span> 
   <span ng-show="isalias">{{item.alias}}</span><div class="clear"></div>
 </div>

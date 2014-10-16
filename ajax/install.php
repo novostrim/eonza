@@ -44,7 +44,7 @@ if ( !file_exists( $filename ))
             $form['dbhost'] = susbtr( $form['dbhost'], 0, $offdot );
         }
         $options = array( 'errmode' => 'exception',
-                  'host' => $form['dbhost'] ? $form['dbhost'] : 'localhost' );
+            'host' => $form['dbhost'] ? $form['dbhost'] : 'localhost' );
         foreach ( array( 'db', 'user', 'pass', 'port' ) as $iv )
             if ( !empty( $form[ $iv ]))
                 $options[ $iv ] = $form[ $iv ];
@@ -95,7 +95,7 @@ if ( !file_exists( $filename ))
         }
         $lang = post( 'lang' );
         $settings = 
-             '{ "title": { "value": "'.$conf['appname'].'", "lang":"title", "visible": 1, "ctrl": "input", "par": "normal" },
+             '{ "title": { "value": "'.$conf['appname'].'", "lang":"titlejs", "visible": 1, "ctrl": "input", "par": "normal" },
                "isalias": { "value": 0, "lang": "showalias", "visible": 1, "ctrl": "switch" },
                "perpage": { "value": 25, "lang": "perpage", "visible": 1, "ctrl": "input", "par": "number" },
                "dblang": { "value": "'.$lang.'", "lang": "language", "visible": 0, "ctrl": "select" },
