@@ -38,7 +38,18 @@ if ( !file_exists( $filename ))
     $sql ='';
     try
     {
-        $db = new ExtMySQL( array_merge( $form, array( 'errmode' => 'exception' )) );
+        if ( $offdot = strpos( $form['dbhost'], ':' ) )
+        {
+            $form['port'] = susbtr( $form['dbhost'], $offdot + 1 );
+            $form['dbhost'] = susbtr( $form['dbhost'], 0, $offdot );
+        }
+        $options = array( 'errmode' => 'exception',
+                  'host' => $form['dbhost'] ? $form['dbhost'] : 'localhost' );
+        foreach ( array( 'db', 'user', 'pass', 'port' ) as $iv )
+            if ( !empty( $form[ $iv ]))
+                $options[ $iv ] = $form[ $iv ];
+
+        $db = new ExtMySQL( $options );
         $step = 'err_create';
         define( 'CONF_DB', $form['db'] );
         $tables = $db->tables();

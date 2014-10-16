@@ -14,9 +14,14 @@ if ( file_exists( APP_DOCROOT.APP_ENTER."conf.inc.php"))
     require_once APP_DOCROOT.APP_ENTER."conf.inc.php";
     require_once "lib/extmysql.class.php";
 
-    $db = new ExtMySQL( array( 'host' => defined( 'CONF_DBHOST' ) ? CONF_DBHOST : 'localhost', 
-                        'db' => CONF_DB, 'user' => defined( 'CONF_USER' ) ? CONF_USER : '',
-                        'pass' => defined( 'CONF_PASS' ) ? CONF_PASS : '' ));
+    $options = array(
+        'host' => defined( 'CONF_DBHOST' ) ? CONF_DBHOST : 'localhost',
+        'port' => defined( 'CONF_PORT' ) ? CONF_PORT : NULL,
+        'db'   => CONF_DB,
+        'user' => defined( 'CONF_USER' ) ? CONF_USER : '',
+        'pass' => defined( 'CONF_PASS' ) ? CONF_PASS : '',
+    );
+    $db = new ExtMySQL( $options );
 
     $dbpar = $db->getrow( "select * from ?n where id=?s && pass=?s", APP_DB, 
                           CONF_DBID, pass_md5( CONF_PSW, true ));
