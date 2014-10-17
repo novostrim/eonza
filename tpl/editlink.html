@@ -9,7 +9,7 @@
 </div>
 <div ng-if="link.istree" class="linkcrumbs">
 <a href='' ng-click="linkparent(0)" ><i class="fa fa-home fa-fw"></i></a>    
-<span ng-repeat-start="icrumb in link.crumbs">/</span><a href='' ng-click="linkparent( icrumb.1 )"  ng-repeat-end>{{icrumb.0}}</a>
+<span ng-repeat-start="icrumb in link.crumbs">/</span><a href='' ng-click="linkparent( icrumb[1] )"  ng-repeat-end>{{icrumb[0]}}</a>
 </div>
 <div ng-repeat="ilist in link.list" ng-class="{treelink: link.istree==1}">
 <a href='' ng-click="linkparent( ilist.id )" ng-if="ilist.count" class="folder" ><i class="fa fa-folder fa-fw"></i> {{ilist.count}}</a>

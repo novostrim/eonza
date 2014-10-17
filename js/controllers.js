@@ -135,13 +135,12 @@ geapp.controller( 'InstallCtrl', function InstallCtrl($scope, $http ) {
 });
 
 geapp.controller( 'LoginCtrl', function LoginCtrl($scope, $http ) {
+//    $scope.login_top = rootScope.cfg.login_top || '';
     $scope.form = {};
     $scope.submit = function() {
         $http.post( /*'/admin/ajax.php?request=login'*/ajax('login'), { form: $scope.form }).success(function(data) {
             if ( data.success )
-            {
                 document.location = '';
-            }
             else
                 $scope.msg_error( $scope.lng[ data.err ] );
         })

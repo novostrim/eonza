@@ -87,8 +87,8 @@ geapp
                 .up()
 });    
 
-geapp.controller( 'GenteeCtrl', function GenteeCtrl($scope, $location, $cookies, 
-    $rootScope, $modal, $timeout, DbApi, $sce ) {
+geapp.controller( 'GenteeCtrl', function GenteeCtrl($scope, $location, 
+    $rootScope, $modal, DbApi, $sce, $http ) {
 
 //    angular.extend( cfg, conf );
     if ( typeof( cfg.module ) != 'undefined' )
@@ -129,11 +129,16 @@ geapp.controller( 'GenteeCtrl', function GenteeCtrl($scope, $location, $cookies,
     }
     $scope.logout = function()
     {
-        $cookies.enz_pass = '';
+/*        $cookies.enz_pass = '';
         cfg.user = '';
-        $timeout( function() { document.location = ''; },  200 );
+        $timeout( function() { document.location = ''; },  200 );*/
 //        $state.go( 'login' );
-
+        $http.post( ajax('logout')).success(function(data) {
+            if ( data.success )
+                document.location = '';
+            else
+                $scope.msg_error( $scope.lng[ data.err ] );
+        })
     }
     $rootScope.msg = function( dlg_opt )
     {
@@ -360,6 +365,7 @@ geapp.factory( 'DbApi', function( $rootScope, $http ) {
         $rootScope.cfg.temp = data.temp;
         if ( data.success )
         {
+            json2num( data );
             if ( angular.isDefined( callback ))
                 callback( data );
         }

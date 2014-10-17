@@ -63,8 +63,8 @@ function login()
 
 // id=1 &&  TIMESTAMPDIFF( HOUR, uptime, NOW()) as lastdif
    $USER = $db->getrow( "select id, login, email, 
-      ( DATE_ADD( uptime, INTERVAL 1 HOUR ) < NOW()) as lastdif, lang from ?n where pass=?s", 
-                        CONF_PREFIX.'_users', pass_md5( cookie('pass')));
+      ( DATE_ADD( uptime, INTERVAL 1 HOUR ) < NOW()) as lastdif, lang from ?n where pass=?s && id=?s", 
+                        CONF_PREFIX.'_users', pass_md5( cookie('pass')), cookie('iduser'));
    if ( $USER )
    {
       $USER['access'] = array();

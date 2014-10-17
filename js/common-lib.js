@@ -32,3 +32,18 @@ function js_required( name, resource, callback )
     });
     return result;
 }
+
+function json2num( obj )
+{
+    for (var key in obj ) {
+       if (obj.hasOwnProperty(key) && !!obj[key] ) {
+            var objkey = obj[key];
+            if ( objkey instanceof Array && objkey.length )
+                objkey.forEach( json2num );
+            else if ( objkey.constructor === Object )    
+                json2num( objkey );
+            else if ( typeof objkey == 'string' && objkey == Number( objkey ))
+                obj[key] = Number( objkey );
+        }
+    }
+}

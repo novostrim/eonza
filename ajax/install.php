@@ -99,6 +99,7 @@ if ( !file_exists( $filename ))
                "isalias": { "value": 0, "lang": "showalias", "visible": 1, "ctrl": "switch" },
                "perpage": { "value": 25, "lang": "perpage", "visible": 1, "ctrl": "input", "par": "number" },
                "dblang": { "value": "'.$lang.'", "lang": "language", "visible": 0, "ctrl": "select" },
+               "loginshort":{"value": 1,"lang":"loginshort","visible":1,"ctrl":"switch"},
                "apitoken": { "value": "", "visible": 0, "protect": 1, "ctrl": "input", "par": "wide" },
                "keeplog": { "value": 0, "lang": "keeplog", "visible": 1, "ctrl": "switch" }
             }';

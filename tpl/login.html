@@ -1,13 +1,11 @@
 <div class="workarea" ng-controller="LoginCtrl" >
+    <div ng-bind-html="::cfg.login_top"></div>
     <form class="form" ng-submit="submit()">
-
-    <table class="formtbl">
-        <tr><td colspan="2"><h2>{{lng.signinjs}}</h2></td></tr>
-        <tr><td class="formtxt">{{lng.password}}: </td><td class="formval"><input type="password" class="form-control" ng-model="form.psw" required></td></tr>
-        <tr><td></td><td class="formval"><input type="submit" class="btn btn-primary" value="{{lng.loginjs}}"></td></tr>
-    </table>
-
- 
+        <table class="formtbl">
+            <tr><td colspan="2"><h2>{{lng.signinjs}}</h2></td></tr>
+            <tr ng-if="!cfg.loginshort"><td class="formtxt">{{lng.username}}: </td><td class="formval"><input type="text" class="form-control" ng-model="form.login" required></td></tr>
+            <tr><td class="formtxt">{{lng.password}}: </td><td class="formval"><input type="password" class="form-control" ng-model="form.psw" required></td></tr>
+            <tr><td></td><td class="formval"><input type="submit" class="btn btn-primary" value="{{lng.loginjs}}"></td></tr>
+        </table>
     </form>
-
 </div>

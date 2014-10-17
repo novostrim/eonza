@@ -290,7 +290,7 @@ function edit_default( i, icol )
         if ( icol.idtype == cnt.FT_VAR ) 
         {
             if ( length >128 )
-                return "<textarea name='"+icol.alias+"' ng-model='form[columns."+i+".alias]' class='form-control whuge' style='height: 5em;'></textarea>";
+                return "<textarea name='"+icol.alias+"' ng-model='form[columns["+i+"].alias]' class='form-control whuge' style='height: 5em;'></textarea>";
             else
                 if ( length >= 80 )
                     iclass = 'whuge'; 
@@ -298,17 +298,17 @@ function edit_default( i, icol )
                     if ( length >=40)
                         iclass = 'wbig'; 
         } 
-    return "<input type='text' name='"+icol.alias+"' ng-model='form[columns."+i+".alias]' class='form-control " + iclass + "'>";
+    return "<input type='text' name='"+icol.alias+"' ng-model='form[columns["+i+"].alias]' class='form-control " + iclass + "'>";
 }
 
 function edit_check( i, icol )
 {
-    return "<div ge-check='form[columns."+i+".alias]' ge-func='cheditform' ge-field='"+icol.alias+"'></div>";
+    return "<div ge-check='form[columns["+i+"].alias]' ge-func='cheditform' ge-field='"+icol.alias+"'></div>";
 }
 
 function edit_enumset( i, icol )
 {
-    var out = "<select name='"+icol['alias']+"' ng-model='form[columns."+i+".alias]' class='form-control'>";
+    var out = "<select name='"+icol['alias']+"' ng-model='form[columns["+i+"].alias]' class='form-control'>";
     out += "<option value='0'></option>";
     for ( var i in icol['list'] )
     {
@@ -319,18 +319,18 @@ function edit_enumset( i, icol )
 
 function edit_setset( i, icol )
 {
-    return "<div ge-key='"+icol.alias+"' ge-set='form[columns."+i+".alias]'></div>";
+    return "<div ge-key='"+icol.alias+"' ge-set='form[columns["+i+"].alias]'></div>";
 }
 
 function edit_linktable( i, icol )
 {
-    return "<div class='setitem' ng-if='formlink[columns."+i+".alias]' ng-bind-html='formlink[columns."+i+".alias]'></div>" +
+    return "<div class='setitem' ng-if='formlink[columns["+i+"].alias]' ng-bind-html='formlink[columns["+i+"].alias]'></div>" +
      '<a href="" class="formbtn" ng-click="editlink('+i+')"><i class="fa fa-fw fa-th-list"></i></a>';
 }
 
 function edit_parent( i, icol )
 {
-    return "<div class='setitem' ng-if='formlink[columns."+i+".alias]' ng-bind='formlink[columns."+i+".alias]'></div>" +
+    return "<div class='setitem' ng-if='formlink[columns["+i+"].alias]' ng-bind='formlink[columns["+i+"].alias]'></div>" +
      '<a href="" class="formbtn" ng-click="editlink('+i+')"><i class="fa fa-fw fa-th-list"></i></a>';
 }
 
@@ -338,10 +338,10 @@ function edit_text( i, icol )
 {
     var alias = icol.alias;
     if ( icol.extend.weditor < 2 )
-        return "<textarea name='"+alias +"' ng-model='form[columns."+i+".alias]' class='form-control whuge' style='height: 5em;'></textarea>";
+        return "<textarea name='"+alias +"' ng-model='form[columns["+i+"].alias]' class='form-control whuge' style='height: 5em;'></textarea>";
 
     var iclass = angular.isDefined( cfg.htmleditor ) ? cfg.htmleditor.class : 'redactor';
-    var out = "<textarea class='"+iclass+"' id='id-"+alias+"' name='"+alias + "' ng-model='form[columns."+i+".alias]' style='width: 90%;height: 400px;'></textarea>";
+    var out = "<textarea class='"+iclass+"' id='id-"+alias+"' name='"+alias + "' ng-model='form[columns["+i+"].alias]' style='width: 90%;height: 400px;'></textarea>";
     if ( angular.isUndefined( cfg.htmleditor ))
         out += '<script type="text/javascript">$("textarea[name=\''+ alias +'\']").redactor({plugins: [\'fullscreen\']});</script>';
     return out;    
@@ -422,39 +422,39 @@ function view_linktable( i, icol )
 
 function pattern_default( i, control, icol )
 {
-    return "<tr valign='top'><td class='formtxt'>{{columns."+i+".title}}:</td><td class='formval'>"+control+"</td></tr>";
+    return "<tr valign='top'><td class='formtxt'>{{columns["+i+"].title}}:</td><td class='formval'>"+control+"</td></tr>";
 }
 
 function pattern_wide( i, control, icol )
 {
     if ( icol.extend.weditor > 1 )
-        return "<tr><td class='formtxt'>{{columns."+i+".title}}:</td><td></td></tr><tr><td colspan='2' class='formval'>" + control + "</td></tr>";
+        return "<tr><td class='formtxt'>{{columns["+i+"].title}}:</td><td></td></tr><tr><td colspan='2' class='formval'>" + control + "</td></tr>";
     else
         return pattern_default( i, control, icol );
 }
 
 function pattern_file( i, control, icol )
 {
-    return "<tr><td class='formtxt'>{{columns."+i+".title}}:</td><td></td></tr><tr><td colspan='2' class='formval'>" +
+    return "<tr><td class='formtxt'>{{columns["+i+"].title}}:</td><td></td></tr><tr><td colspan='2' class='formval'>" +
      control + "</td></tr>";
 }
 
 function patternview_file( i, control, icol )
 {
-    return "<tr ng-if='view[columns."+i+".alias]'><td class='formtxt'>{{columns."+i+".title}}:</td><td></td></tr>" +
-           "<tr ng-if='view[columns."+i+".alias]'><td colspan='2' class='formval'>" + control + "</td></tr>";
+    return "<tr ng-if='view[columns["+i+"].alias]'><td class='formtxt'>{{columns["+i+"].title}}:</td><td></td></tr>" +
+           "<tr ng-if='view[columns["+i+"].alias]'><td colspan='2' class='formval'>" + control + "</td></tr>";
 }
 
 function patternview_default( i, control, icol )
 {
-    return "<tr ng-if='view[columns."+i+".alias]' valign='top'><td class='formtxt'>{{columns."+i+".title}}:</td><td class='formval'>"+control+"</td></tr>";
+    return "<tr ng-if='view[columns["+i+"].alias]' valign='top'><td class='formtxt'>{{columns["+i+"].title}}:</td><td class='formval'>"+control+"</td></tr>";
 }
 
 function patternview_wide( i, control, icol )
 {
     if ( icol.extend.weditor > 1 )
-        return "<tr ng-if='view[columns."+i+".alias]'><td class='formtxt'>{{columns."+i+".title}}:</td><td></td></tr>" +
-           "<tr ng-if='view[columns."+i+".alias]'><td colspan='2' class='formval'>" + control + "</td></tr>";
+        return "<tr ng-if='view[columns["+i+"].alias]'><td class='formtxt'>{{columns["+i+"].title}}:</td><td></td></tr>" +
+           "<tr ng-if='view[columns["+i+"].alias]'><td colspan='2' class='formval'>" + control + "</td></tr>";
     else
         return patternview_default( i, control, icol );
 }
