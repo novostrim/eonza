@@ -340,38 +340,33 @@ geapp.factory( 'DbApi', function( $rootScope, $http ) {
         $rootScope.loading = false;
         $rootScope.msg_error(  this.lng[ 'err_server' ] + ' [' + status + ']' );
     }
-    function ajaxpost( params, ajaxname, callback )
+    var ajaxfunc;
+    function ajaxcallback( data, status )
     {
-        $rootScope.loading = true;
-        $http.post( ajax( ajaxname ), { params: params }).
-                    success(function ( data, status ) {
-        $rootScope.loading = false;
-        $rootScope.cfg.temp = data.temp;
-        if ( data.success )
-        {
-            if ( angular.isDefined( callback ))
-               callback( data );
-        } 
-        else
-            $rootScope.msg_error( data.err );
-        }).error( ajaxerror );
-    }
-    function ajaxget( params, ajaxname, callback )
-    {
-        $rootScope.loading = true;
-        $http.get( ajax( ajaxname ), { params: params }).
-                    success(function ( data, status ) {
         $rootScope.loading = false;
         $rootScope.cfg.temp = data.temp;
         if ( data.success )
         {
             json2num( data );
-            if ( angular.isDefined( callback ))
-                callback( data );
-        }
+            if ( angular.isDefined( ajaxfunc ))
+               ajaxfunc( data );
+        } 
         else
             $rootScope.msg_error( data.err );
-        }).error( ajaxerror );
+    }
+    function ajaxpost( params, ajaxname, callback )
+    {
+        $rootScope.loading = true;
+        ajaxfunc = callback;
+        $http.post( ajax( ajaxname ), { params: params }).
+                    success( ajaxcallback ).error( ajaxerror );
+    }
+    function ajaxget( params, ajaxname, callback )
+    {
+        $rootScope.loading = true;
+        ajaxfunc = callback;
+        $http.get( ajax( ajaxname ), { params: params }).
+                    success( ajaxcallback ).error( ajaxerror );
     }
 /*   POST methods
     var post = [ 'changefld', 'delfile', 'delmenu', 'dropitem', 'dropset', 'dropsetitem', 'droptable', 'dupitem',
