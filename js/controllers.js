@@ -389,6 +389,38 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
         Scope.link.parent = parent;
         $scope.linkpage( 0 );
     }
+    $scope.editdate = function( date, idcol ) {
+        if ( angular.isString( date ))
+        {
+            var pars = $scope.form[ $scope.columns[ idcol ].alias ].split(' ');
+            pars[0] = date;
+            $scope.form[ $scope.columns[ idcol ].alias ] = pars.join( ' ' );
+            $scope.$apply();
+        }
+        else
+        {
+            var itime = moment();
+            if ( date > 5 && !!$scope.form[ $scope.columns[ idcol ].alias ] )
+            {
+                itime = moment( $scope.form[ $scope.columns[ idcol ].alias ], 'YYYY-MM-DD' );
+                if ( !itime.isValid())
+                    itime = moment();
+            }
+            switch ( date )
+            {   
+                case 1: itime.subtract(1, 'days' ); break;
+                case 3: itime.add(1, 'days' ); break;
+                case 4: $scope.form[ $scope.columns[ idcol ].alias ] = itime.format('YYYY-MM-DD HH:mm'); return false;
+                case 5: $scope.form[ $scope.columns[ idcol ].alias ] = ''; return false;
+                case 6: itime.add( 1, 'days' ); break;
+                case 7: itime.add( 1, 'weeks' ); break;
+                case 8: itime.add( 1, 'months' ); break;
+                case 9: itime.add( 1, 'years' ); break;
+            }
+            $scope.form[ $scope.columns[ idcol ].alias ] = itime.format('YYYY-MM-DD');
+        }
+        return false;
+    }
     $scope.editlink = function( idcol ) {
         $rootScope.link = $scope.columns[idcol].link;
         $rootScope.link.filter = 0;
@@ -525,6 +557,9 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
                     var idi = parseInt( $scope.form[alias] );
                     if ( idi > 0 && angular.isDefined( icol['list'][idi] ))
                         $scope.view[ alias ] = icol['list'][idi];
+                    break;
+                case cnt.FT_DATETIME:
+                    $scope.view[ alias ] = js_moment( $scope.form[alias], icol.extend.date );   
                     break;
                 case cnt.FT_LINKTABLE:
                 case cnt.FT_PARENT:

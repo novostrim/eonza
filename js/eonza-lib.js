@@ -33,6 +33,12 @@ var cnt = {
     FTM_PHONE: 3,
     FTM_HASH: 4,
 
+// Date
+    FTM_DATETIME: 1,
+    FTM_DATE: 2,
+    FTM_TIMESTAMP: 3,
+    FTM_CALENDAR: 4,
+
 // Extend
     ET_NUMBER: 1,
     ET_COMBO: 2, 
@@ -59,9 +65,10 @@ var types = {
          extend: [ { name: 'length', type: cnt.ET_NUMBER, def: 32 } ] 
     },
     3 : { id: cnt.FT_DATETIME, name: 'fdatetime', verify: number_verify,
+            edit: edit_datetime,
          extend: [ { name: 'date', title: lng.more, type: cnt.ET_COMBO, def: 2, 
                      list: [ {id: 1, title: lng.fdtime }, { title: lng.fdate, id: 2},
-                      { title: 'Timestamp', id: 3}
+                      { title: 'Timestamp', id: 3}, { title: lng.calendar, id: 4 }
             ] },
             { name: 'timenow', type: cnt.ET_CHECK, def: 0 }  
         ] 
@@ -211,6 +218,35 @@ function js_treechange( id ) {
     return false;
 }
 
+function js_moment( value, type )
+{
+    var ret;
+    if ( parseInt( value ))
+    {
+        var m = moment( value );
+        switch ( type )    
+        {
+            case cnt.FTM_DATE:
+                ret = m.format('L');
+                break;
+            case cnt.FTM_DATETIME:
+                ret = m.format('L LT');
+                break;
+            case cnt.FTM_TIMESTAMP:
+                ret = m.format('L H:mm:ss');
+                break;
+            case cnt.FTM_CALENDAR:
+                ret = m.calendar();
+                break;
+            default:
+                ret = value;
+        }
+    }
+    else
+        ret = '';
+    return ret;
+}
+
 function js_list( item )
 {
     var colnames = Scope.colnames;
@@ -231,6 +267,13 @@ function js_list( item )
                 item[key] = item[key].replace( /<[^>]+>/ig,"" );
 //                item[key] = jQuery(item[key]).text()
                 break;
+            case cnt.FT_DATETIME:
+                item[key] = js_moment( item[key], colnames[key].extend.date );
+/*                var filter = 'short';
+                if ( colnames[key].extend.date == cnt.FTM_DATE )
+                    filter = 'shortDate';
+                item[key] = rootScope.filter('date')( item[key].replace(' ', "T"), filter );*/
+                break;                
             case cnt.FT_PARENT:
                 var tmp = item._children == '0' ? '' :
                     '<a href="" onclick="return js_treechange(' + item.id + ')"><i class="fa fa-fw fa-folder"></i>' + item._children + '</a>';
@@ -347,6 +390,35 @@ function edit_text( i, icol )
     return out;    
 }
 
+function edit_datetime( i, icol )
+{
+    function ahref( id, txt )
+    {
+        return '&nbsp;<a href="" class="softlink" ng-click="editdate( '+id+', '+i+')">'+lng[txt].toLowerCase()+'</a>';
+    }
+    var iclass = 'wnormal';
+    var ext = '<a href="" class="formbtn" onclick="return js_editdate(this, ' + i + ')"><i class="fa fa-fw fa-calendar"></i></a>'
+    switch ( icol.extend.date )
+    {
+        case cnt.FTM_DATE:
+            iclass = 'wshort';
+            ext = ext + ahref( 1, 'yesterday') + ahref( 2, 'today') + ahref( 3, 'tomorrow');
+            break;
+        case cnt.FTM_CALENDAR:
+            iclass = 'wshort';
+            ext = ext + '<i class="fa fa-plus fa-fw" style="margin: 0px 5px;"></i>' 
+                       + ahref( 6, 'day') + ahref( 7, 'week') 
+                       + ahref( 8, 'month') + ahref( 9, 'year'); 
+            break;
+        case cnt.FTM_TIMESTAMP:
+            ext = '';
+        case cnt.FTM_DATETIME:
+            ext = ext + ahref( 4, 'now') + ahref( 5, 'clear');
+            break;
+        default:
+    }
+    return "<input type='text' name='"+icol.alias+"' ng-model='form[columns["+i+"].alias]' class='form-control " + iclass + "' >" + ext;
+}
 
 function edit_file( i, icol )
 {
@@ -684,6 +756,37 @@ function js_card( idtable, iditem )
 {
     Scope.card( idtable, iditem );
     return false;
+}
+
+function js_closeback( obj )
+{
+    $(obj).prev().remove();
+    $(obj).remove();
+}
+
+function js_editdate( obj, ind )
+{
+    var start = '';
+    var calendar = $(obj).after('<div class="calendar"></div><div onclick="js_closeback(this)" class="modal-backdrop"></div>').next();
+    var val = $(obj).prev().val();
+    if ( !!val )
+    {        
+        start = moment( val.substr( 0, 10 ), 'YYYY-MM-DD' );
+        if ( !start.isValid())
+            start = '';
+    }
+    calendar.ionCalendar( {
+        //lang: moment.locale(),
+        sundayFirst: moment.localeData()._week.dow != 1,
+        startDate: start,
+        years: '1900-' + moment().add( 2, 'y').format( 'YYYY' ),
+        format: 'YYYY-MM-DD',
+        onClick: function(date){        // клик по дням вернет сюда дату
+            Scope.editdate( date, ind );
+            calendar.next().remove();
+            calendar.remove();
+        }
+    });
 }
 
 function js_getchecked()

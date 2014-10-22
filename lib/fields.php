@@ -85,7 +85,7 @@ function check_sql( $form )
 function date_sql( $form )
 {
     $dtype = (int)defval( $form['ext']['date'], 1 );
-    $type = $dtype == 1 ? 'datetime' : ( $dtype == 2 ? 'date' : 'timestamp default 0' );
+    $type = $dtype == 1 ? 'datetime' : ( $dtype == 2 || $dtype==4 ? 'date' : 'timestamp default 0' );
     return "$type NOT NULL";
 }
 

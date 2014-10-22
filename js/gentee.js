@@ -88,7 +88,7 @@ geapp
 });    
 
 geapp.controller( 'GenteeCtrl', function GenteeCtrl($scope, $location, 
-    $rootScope, $modal, DbApi, $sce, $http ) {
+    $rootScope, $modal, DbApi, $sce, $http, $filter ) {
 
 //    angular.extend( cfg, conf );
     if ( typeof( cfg.module ) != 'undefined' )
@@ -101,6 +101,7 @@ geapp.controller( 'GenteeCtrl', function GenteeCtrl($scope, $location,
     
 //    cfg.apphead = $sce.trustAsHtml( cfg.appname );
     rootScope = $rootScope;
+    $rootScope.filter = $filter;
     $rootScope.cfg = cfg; 
     $rootScope.lng = lng;
     $rootScope.loading = false;
@@ -337,36 +338,32 @@ var ModalInstanceCtrl = function( $scope, $modalInstance, dlg_opt ) {
 geapp.factory( 'DbApi', function( $rootScope, $http ) {
     function ajaxerror( data, status )
     {
-        $rootScope.loading = false;
         $rootScope.msg_error(  this.lng[ 'err_server' ] + ' [' + status + ']' );
     }
-    var ajaxfunc;
-    function ajaxcallback( data, status )
+    function ajaxcallback( data, status, callback )
     {
         $rootScope.loading = false;
         $rootScope.cfg.temp = data.temp;
         if ( data.success )
         {
             json2num( data );
-            if ( angular.isDefined( ajaxfunc ))
-               ajaxfunc( data );
+            if ( angular.isDefined( callback ))
+               callback( data );
         } 
         else
             $rootScope.msg_error( data.err );
     }
     function ajaxpost( params, ajaxname, callback )
     {
-        $rootScope.loading = true;
-        ajaxfunc = callback;
-        $http.post( ajax( ajaxname ), { params: params }).
-                    success( ajaxcallback ).error( ajaxerror );
+        $http.post( ajax( ajaxname ), { params: params })
+            .success( function( data, status ){ ajaxcallback( data, status, callback )})
+            .error( ajaxerror );
     }
     function ajaxget( params, ajaxname, callback )
     {
-        $rootScope.loading = true;
-        ajaxfunc = callback;
-        $http.get( ajax( ajaxname ), { params: params }).
-                    success( ajaxcallback ).error( ajaxerror );
+        $http.get( ajax( ajaxname ), { params: params })
+            .success( function( data, status ){ ajaxcallback( data, status, callback )})
+            .error( ajaxerror );
     }
 /*   POST methods
     var post = [ 'changefld', 'delfile', 'delmenu', 'dropitem', 'dropset', 'dropsetitem', 'droptable', 'dupitem',
@@ -385,6 +382,7 @@ geapp.factory( 'DbApi', function( $rootScope, $http ) {
                 ispost = false;
                 break;
             }
+        $rootScope.loading = true;
         if ( ispost )
             ajaxpost( params, method, callback );
         else

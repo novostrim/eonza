@@ -13,6 +13,7 @@ var lng = {
 	apitoken: 'API token',
 	back: 'Back',
 	bigtext: 'Big text (>65000)',
+	calendar: 'Calendar',
 	cancel: 'Cancel',
 	card: 'Card',
 	center: 'Center',
@@ -25,6 +26,7 @@ var lng = {
 	copysuf: 'copy',
 	create: 'Create',
 	dashboard: 'Dashboard',
+	day: 'Day',
 	dbconnect: 'Connect to MySQL database',
 	dbname: 'Database',
 	decdouble: 'Double',
@@ -112,6 +114,7 @@ var lng = {
 	maxsize: 'Maximum size',
 	menu: 'Menu',
 	minsize: 'Minimum size',
+	month: 'Month',
 	more: 'More details',
 	name: 'Name',
 	newfld: 'New folder',
@@ -120,6 +123,7 @@ var lng = {
 	next: 'Next',
 	no: 'No',
 	nosel: 'There are no items selected!',
+	now: 'Now',
 	ok: 'OK',
 	open: 'Open',
 	owner: 'Created and maintained by Novostrim, OOO',
@@ -153,6 +157,8 @@ var lng = {
 	thumbsize: 'Thumb image size',
 	timenow: 'Current time if it is empty',
 	titlejs: 'Title',
+	today: 'Today',
+	tomorrow: 'Tomorrow',
 	truncate: 'Truncate',
 	truncatedb: 'Are you sure you want to truncate the table #temp#?',
 	type: 'Type',
@@ -167,8 +173,22 @@ var lng = {
 	war_ename: 'Name is the required field!',
 	website: 'Website',
 	weditor: 'WYSIWYG Editor',
+	week: 'Week',
 	width: 'Width',
 	withsel: 'With selected',
+	year: 'Year',
 	yes: 'Yes',
+	yesterday: 'Yesterday',
 
-}
+};
+
+moment.locale('en', {
+    calendar : {
+        lastDay : '[Yesterday]',
+        sameDay : '[Today]',
+        nextDay : '[Tomorrow]',
+        lastWeek : '[last] dddd',
+        nextWeek : 'dddd',
+        sameElse : 'L'
+    }
+});
