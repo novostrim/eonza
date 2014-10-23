@@ -195,11 +195,11 @@ function post( $name, $default = '', $get = false, $strict = false )
    return post_val( $val, $strict );
 }
 
-function postall( $strict = false )
+function postall( $strict = false, $get = false )
 {
     $result = array();
     foreach ( $_POST as $ikey => $ipost )
-        $result[ $ikey ] = post( $ikey, '', false, $strict );
+        $result[ $ikey ] = post( $ikey, '', $get, $strict );
     return $result;
 }
 
@@ -216,6 +216,11 @@ function get( $name, $default = '', $strict = false )
 function getstrict( $name )
 {
     return post( $name, '', true, true );
+}
+
+function getall( $strict = false )
+{
+    return postall( $strict, true );
 }
 
 function pars_list( $list, $src )
