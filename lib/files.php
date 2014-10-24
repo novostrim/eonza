@@ -1,9 +1,9 @@
 <?php
 
-define( 'STORAGE', APP_DOCROOT.CONF_STORAGE );
+define( 'STORAGE', APP_DOCROOT.CONF_STORAGE.( substr( CONF_STORAGE, -1 ) != '/' ? '/' : '' ));
 define( 'TBL_FILES', CONF_PREFIX."_files" );
 
-function files_download( $id, $browser = false, $thumb = false )
+function files_download( $id, $browser = false, $thumb = false, $public = '' )
 {
     global $db;
 
@@ -12,7 +12,7 @@ function files_download( $id, $browser = false, $thumb = false )
                     left join ?n as m on m.id=f.mime
                     where f.id=?s",
                         TBL_FILES, CONF_PREFIX.'_mimes', $id );
-    if ( !$file )
+    if ( !$file || ( $public && !in_array( $file['idtable'], $public )))
         return;
 
     // сбрасываем буфер вывода PHP, чтобы избежать переполнения памяти выделенной под скрипт
