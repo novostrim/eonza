@@ -424,11 +424,11 @@ function edit_file( i, icol )
 {
     var out = common_file( 'form', icol );
 
-    out = out + '<div ng-controller="UploadCtrl" ng-file-drop><div class="drop-zone" ng-show="uploader.isHTML5">'+
-            '<div ng-file-over ng-file-drop="{idcol:' + icol.id + ' }" >'+
+    out = out + '<div ng-controller="UploadCtrl" uploader="uploader" ><div class="drop-zone" ng-show="uploader.isHTML5">'+
+            '<div nv-file-over nv-file-drop options="{idcol:' + icol.id + ' }" uploader="uploader">'+
                 '<i class="fa fa-upload"></i>&nbsp;&nbsp;{{lng.dropzone}}'+
             '</div>'+
-        '</div><input ng-file-select="{idcol:' + icol.id + ' }" id="zxc" type="file" multiple />'+
+        '</div><input nv-file-select options="{idcol:' + icol.id + ' }" uploader="uploader" id="zxc" type="file" multiple />'+
         '<table class="toupload"><tr><th>{{lng.filename}}</th><th>{{lng.size}}</th><th></th><th>&nbsp;</th></tr>'+
         '<tr ng-repeat="item in uploader.queue"><td>{{item.file.name}}</td><td>{{item.file.size/1024/1024|number:2}} Mb</td>'+
         '<td><div ng-show="uploader.isHTML5"><div class="item-progress-box">'+

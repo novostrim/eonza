@@ -91,6 +91,7 @@ var lng = {
 	htmleditor: 'HTML editor',
 	import: 'Import',
 	importdata: 'Import Data',
+	indexes: 'Indexes',
 	info: 'Eonza is a free open-source hosted application to store and manage your information.',
 	inform: 'Information',
 	install: 'Install',

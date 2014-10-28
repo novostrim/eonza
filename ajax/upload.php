@@ -3,6 +3,8 @@
 require_once 'ajax_common.php';
 require_once APP_EONZA.'lib/files.php';
 
+//print_r( $_POST );
+//print_r( $_FILES );
 if ( $result['success'] )
 {
     if ( !isset( $_POST['idcol']) || !isset( $_POST['iditem']) || empty( $_FILES ) ||

@@ -23,9 +23,28 @@
         </td></tr>
         <tr><td></td><td class="formval"><input type="submit" value="{{action}}" class="btn btn-primary btn-lg" ></td></tr>
     </table>
-
-  
-    </form>    
+    </form> 
+    <form class="form">
+    <h2 ng-if="id">{{lng.indexes}}</h2>
+    <table class="formtbl fields" ng-if="id">
+        <tr  ng-repeat="ind in index" ord="{{$index}}"><td colspan="3" align="left">{{ind[1]}}</td>
+                    <td><div class="fabtn-group">
+                        <a class="fabtn" ng-click='dropindex( $index )'><i class="fa fa-times fa-fw"></i></a></div></td></tr>
+        <tr><td><select ng-model="index1" >
+            <option value=""></option>
+            <option ng-repeat="ifield in items" value="{{ifield.id}}">{{ifield.title}}</option>
+        </select>
+        </td><td>
+        <select ng-model="index2" >
+            <option value=""></option>
+            <option ng-repeat="ifield in items" value="{{ifield.id}}">{{ifield.title}}</option>
+        </select>
+    </td><td><select ng-model="index3" >
+            <option value=""></option>
+            <option ng-repeat="ifield in items" value="{{ifield.id}}">{{ifield.title}}</option>
+        </select></td><td><a class="btn btn-primary" ng-click="addindex( index1, index2, index3 )"><i class="fa fa-plus"></i>{{lng.add}}</a></td></tr>
+    </table>
+    </form>
 <script type='text/javascript'>
 /*    $(document).ready(function() {
         jQuery( "#fields" ).sortable( { axis: "y",

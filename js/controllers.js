@@ -1,7 +1,7 @@
-geapp.controller('UploadCtrl', function ($scope, $fileUploader) {
+geapp.controller('UploadCtrl', function ($scope, FileUploader) {
         'use strict';
         // create a uploader with options
-        var uploader = $scope.uploader = $fileUploader.create({
+        var uploader = $scope.uploader = new FileUploader({
             scope: $scope,                          // to automatically update the html. Default: $rootScope
             url: ajax( 'upload' ),
             removeAfterUpload: true,
@@ -9,15 +9,28 @@ geapp.controller('UploadCtrl', function ($scope, $fileUploader) {
             queueLimit: 100
         });
         // ADDING FILTERS
-        uploader.filters.push(function(item /*{File|HTMLInput}*/) { // user filter
+        uploader.filters.push({
+            name: 'customFilter',
+            fn: function( item /*{File|FileLikeObject}*/, options) {
+                if ( item.size > 10*1024*1024 ) {
+                    var text = lng['err_filesize'].replace( '#temp#', '10 Mb' );
+                    rootScope.msg_warning( text );
+                    return false;
+                }
+    //            console.info('filter1');
+                return true;
+//                return this.queue.length < 10;
+            }
+        });
+
+/*        uploader.filters.push(function(item ) { // user filter
             if ( item.size > 10*1024*1024 ) {
                 var text = lng['err_filesize'].replace( '#temp#', '10 Mb' );
                 rootScope.msg_warning( text );
                 return false;
             }
-//            console.info('filter1');
             return true;
-        });
+        });*/
         rootScope.uploads.push( uploader );
         // REGISTER HANDLERS
 /*        uploader.bind('afteraddingfile', function (event, item) {
@@ -32,11 +45,11 @@ geapp.controller('UploadCtrl', function ($scope, $fileUploader) {
             console.info('After adding all files', items);
         });
 */
-        uploader.bind('beforeupload', function (event, item) {
+        uploader.onBeforeUploadItem = function(item) {
             item.formData.push( {idcol : item.idcol, iditem: 
                           angular.isDefined( uploader.iditem ) ? uploader.iditem : rootScope.curitem } );
            // console.info('Before upload', item);
-        });
+        };
 
 /*        uploader.bind('progress', function (event, item, progress) {
             console.info('Progress: ' + progress, item);
@@ -55,7 +68,7 @@ geapp.controller('UploadCtrl', function ($scope, $fileUploader) {
 //            console.info('Error', xhr, item, response);
         });
 */
-        uploader.bind('complete', function (event, xhr, item, response) {
+        uploader.onCompleteItem = function(item, response, status, headers) {
             if ( uploader.queue.length == 1 && angular.isDefined( uploader.iditem ))
                 uploader.iditem = undefined;
 //            console.info('Complete', xhr, item, response);
@@ -68,7 +81,7 @@ geapp.controller('UploadCtrl', function ($scope, $fileUploader) {
                     Scope.$apply();
                 }
             }
-        });
+        };
 /*
         uploader.bind('progressall', function (event, progress) {
             console.info('Total progress: ' + progress);
@@ -1189,6 +1202,18 @@ function EdittableCtrl( $rootScope, $scope, $routeSegment, DbApi ) {
         $scope.id = 0;
     }
     $scope.items = [];
+    $scope.addindex = function( ind1, ind2, ind3 ) {
+        DbApi( 'addindex', { id: $scope.id, fields: [ind1, ind2, ind3] }, function( data ) {
+            if ( data.success )
+                $scope.index = data.index;
+        });
+    }
+    $scope.dropindex = function( ind ) {
+        DbApi( 'dropindex', { id: $scope.id, field: $scope.index[ind][0] }, function( data ) {
+            if ( data.success )
+                $scope.index = data.index;
+        });
+    }
     $scope.submit = function() {
 
         if ( !$scope.items.length )
@@ -1306,6 +1331,7 @@ function EdittableCtrl( $rootScope, $scope, $routeSegment, DbApi ) {
     DbApi( 'getstruct', { id: $scope.id }, function( data ) {
         $scope.items = data.result.items;
         $scope.form = data.result.form;
+        $scope.index = data.result.index;
     });
     DbApi( 'gettables', { parent: -1 }, function( data ) {
         $rootScope.tables = data.result;
