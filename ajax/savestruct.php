@@ -93,7 +93,7 @@ if ( $result['success'] )
               if ( !empty( $pars['form']['istree'] ))
               {
                   $query .= "  `_parent` int(10) unsigned NOT NULL,\r\n";
-                  $treeindex = "\r\n   KEY `_parent` (`_parent`,`_uptime`)";
+                  $treeindex = ",\r\n   KEY `_parent` (`_parent`,`_uptime`)";
               }
             foreach ( $pars['items'] as $ifield )
             {

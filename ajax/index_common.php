@@ -9,7 +9,7 @@ function index_list( $dbname, $fields )
     $last = '';
     foreach ( $index as $ind )
     {
-        if ( $ind['Key_name'] == 'PRIMARY' or $ind['Key_name'] == '_uptime')
+        if ( in_array( $ind['Key_name'], array( 'PRIMARY', '_uptime', '_parent' )))
             continue;
         if ( $last == $ind['Key_name'] )
             $indexret[ count( $indexret ) - 1 ][1] .= ', '.$fields[ $ind['Column_name'] ];
@@ -33,7 +33,7 @@ function index_list_table( $table )
                                    CONF_PREFIX.'_columns', $table['id'], FT_PARENT, 'sort' );
     foreach ( $items as $iext )
         $fields[ alias( $iext )] = $iext['title'];
-    $ret = index_list( $table['alias'] ? $table['alias'] : CONF_PREFIX."_$idtable", $fields );
+    $ret = index_list( $table['alias'] ? $table['alias'] : CONF_PREFIX."_$table[id]", $fields );
 
     return $ret;
 }

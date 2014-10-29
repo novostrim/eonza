@@ -932,24 +932,6 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
         });
         return false;
     }
-/*    $scope.iselect = function( index ){
-        $scope.items[index].selected = !$scope.items[index].selected;
-        if ( $scope.items[index].selected )
-            $scope.selectlist[ $scope.items[index].id ] = true;
-        else
-            $scope.selectlist.splice( $scope.items[index].id, 1 );
-        var i = $scope.selectlist.length;
-        alert( angular.toJson(  $scope.selectlist ));
-        var out = [];
-//        $scope.cookies[ $scope.db.id ].join(',');
-//        alert( $scope.cookies[ $scope.db.id ]);
-//        alert( $scope.items[index].selected );
-        var i = $scope.items.length;
-        while ( i-- )
-        {
-            $scope.items[i].selected = true;
-        }
-    }*/
     $scope.over = 0;
     $scope.$watch('currow', function(){
         $scope.allcur = parseInt($scope.offset) + parseInt( $scope.currow ); // for EDIT & VIEW
@@ -1037,8 +1019,8 @@ function MenuCtrl($scope, $routeSegment, DbApi, $rootScope ) {
     $scope.savemenu = function() {
         $rootScope.savemenu();
     }
-    $scope.editfolder = function( index, isitem ) {
-        var add = angular.isUndefined( index );
+    $scope.editfolder = function( ind, isitem ) {
+        var add = angular.isUndefined( ind );
         var it = angular.isDefined( isitem );
         function foldermsg() {
             if ( it )
@@ -1065,9 +1047,9 @@ function MenuCtrl($scope, $routeSegment, DbApi, $rootScope ) {
         }
         else
         {
-            obj = $rootScope.indmenu[index];
+            obj = $rootScope.indmenu[ind];
             $rootScope.form = {title: obj.title, idparent: obj.idparent, id: obj.id, 
-                               index: index, isfolder: obj.isfolder };
+                               index: ind, isfolder: obj.isfolder };
             if ( it )
                 angular.extend( $rootScope.form, { url: obj.url, hint: obj.hint } );    
             foldermsg();
@@ -1237,10 +1219,10 @@ function EdittableCtrl( $rootScope, $scope, $routeSegment, DbApi ) {
     $scope.savefield = function() {
 
         types[  $rootScope.form.idtype ].verify( $rootScope.form );
-        if ( $scope.index < 0 )
+        if ( $scope.indf < 0 )
             $scope.items.push( angular.copy( $rootScope.form ));
         else
-            $scope.items[$scope.index] = $rootScope.form;
+            $scope.items[$scope.indf] = $rootScope.form;
     }
     $rootScope.chvisible = function( newval, callback ) {
         $rootScope.form.visible = newval;
@@ -1262,21 +1244,21 @@ function EdittableCtrl( $rootScope, $scope, $routeSegment, DbApi ) {
                 $rootScope.linkcols = data.result.items;
             });
     }
-    $scope.editfield = function( index ) {
+    $scope.editfield = function( ind ) {
         
-        var add = angular.isUndefined( index );
+        var add = angular.isUndefined( ind );
 
         $rootScope.isalias = cfg.isalias;
         if ( add )
         {
             $rootScope.form = {title: '', comment: '', visible: 1, id: 0, idtype: 1, 
                          alias: '', align: 0 };
-            $scope.index  = -1;
+            $scope.indf  = -1;
         }
         else
         {
-            $rootScope.form = angular.copy( $scope.items[index] );
-            $scope.index  = index;
+            $rootScope.form = angular.copy( $scope.items[ind] );
+            $scope.indf  = ind;
         }
         if ( angular.isUndefined( $rootScope.form.extend ))
             $rootScope.form.extend = {};

@@ -1,6 +1,7 @@
 <?php
 
 require_once 'enz_format.php';
+
 /*  $pars parameters
     output - output folder
     filename - output filename, it can contain strftime format.
@@ -17,20 +18,44 @@ function packstr( &$out )
     }
 }
 
+function index_export( $table, $columns )
+{
+    global $db;
+
+    $index = $db->getall("show index from ?n", $table['alias'] ? $table['alias'] : CONF_PREFIX."_$table[id]" );
+    $indexret = array();
+    $last = '';
+    foreach ( $index as $ind )
+    {
+        if ( in_array( $ind['Key_name'], array( 'PRIMARY', '_uptime', '_parent' )))
+            continue;
+        if ( $last == $ind['Key_name'] )
+            $indexret[ count( $indexret ) - 1 ][1][] = $ind['Column_name'];
+        else
+        {
+            $indexret[] = array( $ind['Index_type'] == 'FULLTEXT' ? 'FULLTEXT' : 'INDEX', 
+                                 array( $ind['Column_name'] ));
+            $last = $ind['Key_name'];
+        }
+    }
+    return $indexret;
+}
+
 function export( $pars )
 {
     global $db;
 
-    $filename = "$pars[output]/".strftime($pars['filename']).'.enz';
-
-    $out = '';
+//    $filename = "$pars[output]/".strftime($pars['filename']).'.enz';
+    $filename = strftime($pars['filename']).'.enz';
+    $out = pack('a3Cv2a*', 'enz', 0, ENZ_VERSION, ENZ_HEADSIZE, strftime( '%Y%m%d%H%M%S'));
     foreach ( $pars['table'] as $tid )
     {
         $cmd = '';
         $table = $db->getrow("select * from ?n where id=?s", CONF_PREFIX.'_tables', $tid );
         $cmd .= pack( 'V2C', $table['id'], strtotime( $table['_uptime'] ), $table['istree'] );
         packstr( $cmd, $table['title'], $table['alias'], $table['comment'] );
-        $columns = $db->getall("select * from ?n where idtable=?s order by `sort`", CONF_PREFIX.'_columns', $tid );
+        $columns = $db->getall("select * from ?n where idtable=?s && idtype!=?s order by `sort`", 
+                           CONF_PREFIX.'_columns', $tid, FT_PARENT );
         $cmd .= pack( 'v', count( $columns ));
         foreach ( $columns as $cid )
         {
@@ -38,10 +63,25 @@ function export( $pars )
             packstr( $col, $cid['title'], $cid['alias'], $cid['comment'], $cid['extend'] );
             $cmd .= pack( 'v', strlen( $col )).$col;
         }
+        $indexes = index_export( $table, $columns );
+        $cmd .= pack( 'v', count( $indexes ));
+        foreach ( $indexes as $ind )
+        {
+            $index = '';
+            packstr( $index, "$ind[0] (`".join('`,`', $ind[1]).'`)' );
+            $cmd .= $index;
+        }
         $out .= pack( 'CV', CMD_TABLE, strlen( $cmd ));
         $out .= $cmd;
     }
-    file_put_contents( $_SERVER['DOCUMENT_ROOT'].$filename, $out );
+//    header( 'Content-type:application/x-gzip' );
+    header( 'Content-type:application/octet-stream' );
+    header( "Content-Disposition: attachment; filename=$filename" );
+    header( 'Content-Description: File Transfer' );
+    header( 'Content-Transfer-Encoding: binary');
+    print $out; //gzencode( $out, 5 );
+    exit();
+//    file_put_contents( $_SERVER['DOCUMENT_ROOT'].$filename, $out );
 /*    $zip = new ZipArchive(); 
     $zipok = $zip->open( $_SERVER['DOCUMENT_ROOT'].$filename, ZipArchive::CREATE ); 
     if ( !$zipok )

@@ -34,10 +34,17 @@ function import( $pars )
 {
     global $db, $USER, $FIELDS;
 
-    $filename = "$pars[output]/".strftime($pars['filename']).'.enz';
-    $in = file_get_contents( $_SERVER['DOCUMENT_ROOT'].$filename );
+//    $filename = "$pars[output]/".strftime($pars['filename']);
+//    $filename = "$pars[output]/".strftime($pars['filename']);
+    $filename = strftime($pars['filename']);
+    $in = file_get_contents( $_SERVER['DOCUMENT_ROOT']."$pars[output]/".$filename );
+//    if ( substr( $filename, -2 ) == 'gz' )
+//        $int = gzdecode( $in );
+
     $len = strlen( $in );
-    $off = 0;
+    $head = unpack( 'a4/vver/vsize/a14time', $in );
+    $off = $head['size'];
+//    print_r( $head );
     while ( $off < $len )
     {
         $cmd = unpack( 'Ccmd/Vsize', substr( $in, $off, 5 ));
@@ -63,8 +70,15 @@ function import( $pars )
                     $col['ext'] = json_decode($col['extend'], true );
                     $tbl['columns'][] = $col;
                 }
-                $tblcur = $db->getone("select id from ?n where ( alias != '' && alias=?s ) || title=?s", 
-                     CONF_PREFIX.'_tables', $tbl['alias'], $tbl['title'] );
+                $indcount = unpack( 'vcount', substr( $in, $off, 2 ));
+                $off += 2;
+                $indlist = array();
+                while ( $indcount['count']-- )
+                {
+                    $off = unpackstr( $indlist, "$indcount[count]", $in, $off );
+                }                
+                $tblcur = $db->getone("select id from ?n where ( alias != '' && alias=?s )", 
+                     CONF_PREFIX.'_tables', $tbl['alias'] );
                 if ( $tblcur || ( $tbl['alias'] && in_array( $tbl['alias'], $db->tables() ) ))
                 {
                     print "SKIP table<br>";
@@ -84,7 +98,7 @@ function import( $pars )
                     if ( $tbl['istree'] )
                     {
                         $query .= "  `_parent` int(10) unsigned NOT NULL,\r\n";
-                        $treeindex = "\r\n   KEY `_parent` (`_parent`,`_uptime`)";
+                        $treeindex = ",\r\n   KEY `_parent` (`_parent`,`_uptime`)";
                     }
                     foreach ( $tbl['columns'] as $ifield )
                     {
@@ -102,12 +116,18 @@ function import( $pars )
                         print "Error creating $tbl[alias]";
                         exit();
                     }
+                    foreach ( $indlist as $ilist )
+                    {
+                        $qindex = $db->parse( "alter table ?n add ?p", $tbl['alias'], $ilist );
+                        if ( !$db->query( "?p", $qindex ))
+                            print "Error creating index $qindex <br>";
+                    }
                 }
 //                print_r( $tbl );
                 break;
             default:
                 print "Unknownd cmd $cmd[cmd] off=$off";
-                break;
+                exit();
         }
 //        $off += $cmd['size'];
     }
