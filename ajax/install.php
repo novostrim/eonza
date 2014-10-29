@@ -90,8 +90,8 @@ if ( !file_exists( $filename ))
         $storage = addfname( $_SERVER['DOCUMENT_ROOT'], $form['storage'] );
         if ( !is_dir( $storage ))
         {
-        	mkdir( $storage );
-            chmod( $storage, 0666 );
+        	mkdir( $storage, 0777 );
+//            chmod( $storage, 0666 );
         }
         $lang = post( 'lang' );
         $settings = 
