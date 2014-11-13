@@ -38,8 +38,15 @@ view - function which returns the pattern of the control for edit mode. By defau
 list - function which returns the pattern of the control for list mode. By default: list_default
 */
 
+$COMPARE = array(
+    1 => array( "f_ = 'v_'", "f_ != 'v_'" ),
+    2 => array( "f_ > 'v_'", "f_ <= 'v_'" ),
+    3 => array( "f_ < 'v_'", "f_ >= 'v_'" ),
+    4 => array( "f_ = 0", "f_ != 0" ),
+    );
+
 $FIELDS = array(
-   FT_NUMBER => array( 'pars'=>'range', 'sql' => 'number_sql' /*'sql' => 'int(10)' , 'number' => 1 */ ),
+   FT_NUMBER => array( 'pars'=>'range', 'sql' => 'number_sql'  /*'sql' => 'int(10)' , 'number' => 1 */ ),
    FT_VAR => array( 'pars' => 'length', 'sql' => 'var_sql'/* 'varchar(%par%)' */ ),
    FT_DATETIME => array( 'pars' => 'date,timenow', 'sql' => 'date_sql', /* 'varchar(%par%)' */
                               'save' => 'date_save' ),

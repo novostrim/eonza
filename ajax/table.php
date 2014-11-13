@@ -14,13 +14,24 @@ function pagelink( $page )
     return $ret.( $urlparam ? '&' : '?').'p='.$page;
 }
 
+function fltcompare( $field, $not, $compare, $value )
+{
+    global $names, $COMPARE;
+
+    if ( !isset( $COMPARE[ $compare ]) || !isset( $names[ $field ]) )
+        return '';
+    return str_replace( array('f_', 'v_'), array( $names[ $field ], $value ), $COMPARE[$compare][$not] );
+}
 
 $id = get( 'id' );
 if ( $id && $result['success'] )
 {
     $urlparam = url_params( 'p' );
     $sort = (int)get( 'sort' );
+    $filter = get('filter');
     $order = 't._uptime desc';
+    $names = array( '-1' => 't.id' );
+    $result['filter'] = array();
     $result['db'] = $db->getrow("select * from ?n where id=?s", CONF_PREFIX.'_tables', $id );
     if ( $result['db'] )
     {
@@ -33,6 +44,7 @@ if ( $id && $result['success'] )
         {
             $icol['class'] = '';
             $icol['alias'] = alias( $icol );
+            $names[ $icol['id']] = 't.'.$icol['alias'];
             $extend = json_decode( $icol['extend'], true );
                if ( $icol['idtype'] == FT_PARENT )
                {
@@ -91,6 +103,31 @@ if ( $id && $result['success'] )
             }
              $result['crumbs'] = array_reverse( $crumbs );
         }
+        if ( $filter )
+        {
+            $flt = explode( '!', $filter );
+            if ( !$qwhere )
+                $qwhere .= $db->parse("where 1");                
+            foreach ( $flt as $ifilter )
+            {
+                $logic = hexdec( $ifilter[0] );
+                $not = (int)$ifilter[1];
+                $compare = hexdec( substr( $ifilter, 2, 2 ));
+                $fld = substr( $ifilter, 4, 4 );
+                $field = $fld[0] == 'f' ? -hexdec( substr( $fld, 1 )) : hexdec( $fld );
+                $value = substr( $ifilter, 8 );
+                if ( !$compare || !$field )
+                    continue;
+                $fout = fltcompare( $field, $not, $compare, $value );
+                if ( $fout )
+                {
+                    $qwhere .= $db->parse(" ?p ?p", $logic == 1 ? '||' : '&&', $fout );
+                    $result['filter'][] = array( 'logic' => $logic, 'field' => $field, 'not' => $not ? true : false,
+                                   'compare' => $compare, 'value' => $value );
+                }
+            }
+        }
+
         $query = $db->parse( "select count(`id`) from ?n as t ?p", $dbname, $qwhere );
         $onpage = $OPTIONS['perpage'];
         if ( $onpage < 1 )
@@ -102,10 +139,9 @@ if ( $id && $result['success'] )
         $order = 'order by '.$order;
         $result['result'] = $db->getall("select ?p from ?n as t ?p ?p ?p ?p", implode( ',', $fields ), $dbname,
                 $leftjoin, $qwhere, $order, $result['pages']['limit'] );
-        $result['filter'] = array( array( 'logic' => 0, 'field' => 31, 'not' => false,
-                'compare' => 2, 'value' => 'Ooops' ),
-                array( 'logic' => 1, 'field' => -1, 'not' => true,
-                'compare' => 1, 'value' => '10' ));
+        if ( !$result['filter'] )
+            $result['filter'] = array( array( 'logic' => 0, 'field' => 0, 'not' => false,
+                        'compare' => 0, 'value' => '' ));
 /*        foreach ( $result['result'] as &$ival )
         {
             foreach ( $result['columns'] as &$icol )

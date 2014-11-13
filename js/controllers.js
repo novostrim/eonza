@@ -891,6 +891,10 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
     $scope.fltdel = function( ind ) {
         $scope.filter.splice( ind, 1 );
     }
+    $scope.fltclear = function() {
+        $scope.filter = [];//[{ logic: 0, field: 0, not: false, compare: 0, value: '' }];
+        $scope.update();
+    }
     $scope.update = function( latest ) {
         if ( $scope.mode == cnt.M_CARD )
             $scope.cardback();

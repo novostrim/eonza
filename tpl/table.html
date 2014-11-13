@@ -37,7 +37,7 @@
             <option ng-repeat="icmp in compare" ng-selected="ifilter.compare==icmp.id" value="{{icmp.id}}" ng-if="ismask( ifilter.field, icmp.mask )">{{icmp.title}}</option>
     </select></td>
         <td><input type="text" class="view-control" ng-model="ifilter.value" style="width: 150px;"></td><td><a href="" ng-if="!$index" class="formbtn" ng-click="fltadd()"><i class="fa fa-fw fa-plus"></i></a><a href="" ng-if="$index" class="formbtn" ng-click="fltdel( $index )"><i class="fa fa-fw fa-minus"></i></a>    
-</td><td> <a  ng-if="!$index" href="" class="btn btn-primary btn-lg">Apply</a></td></tr>
+</td><td> <a  ng-if="!$index" href="" ng-click="update()" class="btn btn-primary btn-lg">{{lng.ok}}</a> <a  ng-if="!$index" href="" ng-click="fltclear()" class="btn btn-primary btn-lg">{{lng.clear}}</a></td></tr>
     </table> 
     <div class="pages">
     </div>
