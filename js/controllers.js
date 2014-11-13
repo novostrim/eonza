@@ -309,6 +309,10 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
     $scope.edititems = '';
     $scope.viewitems = '';
     $scope.carditems = '';
+    $scope.compare = compare;
+    $scope.logic = logic;
+    $scope.filter = [];
+    $scope.fltfields = [];
 //    $scope.cookies= $cookies;
 
     $rootScope.cheditform = function( obj, callback ) {
@@ -333,6 +337,9 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
         Scope.params.parent = id;
         Scope.update();
     }
+    $scope.ismask = function( id, mask ) {
+        return $scope.mask[id] & mask ? true: false;
+    }
     $scope.columns = function() {
         DbApi( 'columns', $scope.params, function( data ) {
             if ( data.success )
@@ -341,6 +348,8 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
                 $scope.columns = data.columns;
                 var i = 0;
                 $scope.collist = [];
+                $scope.fltfields = [ {title: '', id: 0, mask: 0 }, {title: 'ID', id: -1, mask: 0x07 } ];
+                $scope.mask = {};
                 $scope.colnames = {};
                 var listitems = '';
                 var viewitems = '';
@@ -356,6 +365,17 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
                     $scope.colnames[ column.alias ] = column;
                     listitems += js_editpattern( i, $scope.columns );
                     viewitems += js_viewpattern( i, $scope.columns );
+                    if ( angular.isDefined( types[column.idtype].filter ))
+                    {
+                        $scope.fltfields.push( { title: column.title, id: column.id, 
+                            mask: types[column.idtype].filter.mask } ); 
+                    }
+                    i++;
+                }
+                i = 0;
+                while ( i <  $scope.fltfields.length )
+                {
+                    $scope.mask[ $scope.fltfields[i].id ] = $scope.fltfields[i].mask;
                     i++;
                 }
                 $scope.listitems = listitems + js_editpatternbottom();
@@ -865,9 +885,29 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
         });   
         return false;
     }
+    $scope.fltadd = function() {
+        $scope.filter.push({field: 0, not: false, compare: 1 , value: '', logic: 2});
+    }
+    $scope.fltdel = function( ind ) {
+        $scope.filter.splice( ind, 1 );
+    }
     $scope.update = function( latest ) {
         if ( $scope.mode == cnt.M_CARD )
             $scope.cardback();
+        var filter = [];
+        var i = 0;
+        while ( i < $scope.filter.length )
+        {
+            var flt = $scope.filter[i];
+            if ( flt.compare && flt.field )
+            {            
+                var fpar = parseInt( flt.logic ).toString(16) + ( flt.not ? '1' : '0' ) + dec2hex( parseInt( flt.compare ), 2 )
+                     + ( parseInt( flt.field ) < 0 ? 'f' + dec2hex( -parseInt(flt.field), 3 ) : dec2hex( parseInt(flt.field), 4 )) + flt.value;
+                filter.push( fpar );
+            }
+            i++;
+        }
+        $scope.params.filter = filter.length ? filter.join('!') : undefined;
         DbApi( 'table', $scope.params, function( data ) {
             if ( data.success )
             {
@@ -894,6 +934,7 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
                 }
                 $scope.items = data.result;
                 $scope.pages = data.pages;
+                $scope.filter = data.filter;
                 if ( angular.isDefined($scope.params.parent))
                     $scope.crumbs = data.crumbs;
                 if ( angular.isDefined( latest ))

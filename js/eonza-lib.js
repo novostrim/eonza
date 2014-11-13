@@ -51,8 +51,22 @@ var cnt = {
 }
 "use strict";
 
+var logic = [
+    { title: 'OR', id: 1 },
+    { title: 'AND', id: 2 },
+];
+
+var compare = [
+    { title: '', id: 0, mask: 0xff },
+    { title: '=', id: 1, mask: 0x1 },
+    { title: '>', id: 2, mask: 0x2 },
+    { title: '<', id: 3, mask: 0x4 },
+    { title: 'zero', id: 4, mask: 0x8 },
+];
+
 var types = {
     1 : { id: cnt.FT_NUMBER, name: 'fnumber', number: 1, verify: number_verify,
+            filter: { mask: 0x0f },
          extend: [ { name: 'range', type: cnt.ET_COMBO, def: 7, 
                      list: [ {id: 1, title: '-128...127' }, { title: '0...255', id: 2},
                  {id: 3, title: '–32768...32767' }, {id: 4, title: '0...65535' },
@@ -752,6 +766,7 @@ function js_listselect( obj )
     $(obj).val(0);
 }
 
+
 function js_card( idtable, iditem )
 {
     Scope.card( idtable, iditem );
@@ -804,4 +819,9 @@ function ajax( phpfile )
 function tpl( pattern )
 {
    return cfg.appdir + 'tpl/' + pattern;
+}
+
+function dec2hex( val, length )
+{
+    return ('00000000' + val.toString( 16 )).substr( -length );
 }

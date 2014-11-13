@@ -102,7 +102,10 @@ if ( $id && $result['success'] )
         $order = 'order by '.$order;
         $result['result'] = $db->getall("select ?p from ?n as t ?p ?p ?p ?p", implode( ',', $fields ), $dbname,
                 $leftjoin, $qwhere, $order, $result['pages']['limit'] );
-
+        $result['filter'] = array( array( 'logic' => 0, 'field' => 31, 'not' => false,
+                'compare' => 2, 'value' => 'Ooops' ),
+                array( 'logic' => 1, 'field' => -1, 'not' => true,
+                'compare' => 1, 'value' => '10' ));
 /*        foreach ( $result['result'] as &$ival )
         {
             foreach ( $result['columns'] as &$icol )
