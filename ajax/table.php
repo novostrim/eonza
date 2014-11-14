@@ -16,11 +16,14 @@ function pagelink( $page )
 
 function fltcompare( $field, $not, $compare, $value )
 {
-    global $names, $COMPARE;
+    global $names, $COMPARE, $db;
 
     if ( !isset( $COMPARE[ $compare ]) || !isset( $names[ $field ]) )
         return '';
-    return str_replace( array('f_', 'v_'), array( $names[ $field ], $value ), $COMPARE[$compare][$not] );
+    if ( isset( $COMPARE[$compare][2] ))
+        $value = str_replace( 'v_', $value, $COMPARE[$compare][2] );
+    return str_replace( array('f_', 'v_'), array( $names[ $field ], $db->parse( '?s', $value )), 
+                        $COMPARE[$compare][$not] );
 }
 
 $id = get( 'id' );

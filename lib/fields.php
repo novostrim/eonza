@@ -39,10 +39,16 @@ list - function which returns the pattern of the control for list mode. By defau
 */
 
 $COMPARE = array(
-    1 => array( "f_ = 'v_'", "f_ != 'v_'" ),
-    2 => array( "f_ > 'v_'", "f_ <= 'v_'" ),
-    3 => array( "f_ < 'v_'", "f_ >= 'v_'" ),
+    1 => array( "f_ = v_", "f_ != v_" ),
+    2 => array( "f_ > v_", "f_ <= v_" ),
+    3 => array( "f_ < v_", "f_ >= v_" ),
     4 => array( "f_ = 0", "f_ != 0" ),
+    5 => array( "f_ = ''", "f_ != ''" ),
+    6 => array( "f_ LIKE v_", "f_ NOT LIKE v_", 'v_%' ),
+    7 => array( "f_ LIKE v_", "f_ NOT LIKE v_", '%v_%' ),
+    8 => array( "LENGTH( f_ ) = v_", "LENGTH( f_ ) != v_" ),
+    9 => array( "LENGTH( f_ ) > v_", "LENGTH( f_ ) <= v_" ),
+    10 => array( "LENGTH( f_ ) < v_", "LENGTH( f_ ) >= v_" ),
     );
 
 $FIELDS = array(

@@ -24,7 +24,7 @@
 </div> 
 
 <div bindonce="items" id="list">
-    <table class="form tdpad"><tr ng-repeat="ifilter in filter"><td ng-if="!ifilter.logic">Filter:</td>
+    <table class="form tdpad"><tr ng-repeat="ifilter in filter"><td ng-if="!ifilter.logic">{{::lng.filter}}:</td>
         <td ng-if="ifilter.logic">
             <select ng-model="ifilter.logic" >
             <option ng-repeat="ilogic in logic" ng-selected="ilogic.id==ifilter.logic" 
@@ -33,11 +33,11 @@
         </td>
         <td><select ng-model="ifilter.field" >
             <option ng-repeat="ifield in fltfields" ng-selected="ifield.id==ifilter.field" value="{{ifield.id}}">{{ifield.title}}</option>
-        </select></td><td><label><input type="checkbox" ng-model="ifilter.not">NOT</label></td><td><select ng-model="ifilter.compare">
+        </select></td><td><label><input type="checkbox" ng-model="ifilter.not">{{::lng.not}}</label></td><td><select ng-model="ifilter.compare">
             <option ng-repeat="icmp in compare" ng-selected="ifilter.compare==icmp.id" value="{{icmp.id}}" ng-if="ismask( ifilter.field, icmp.mask )">{{icmp.title}}</option>
     </select></td>
         <td><input type="text" class="view-control" ng-model="ifilter.value" style="width: 150px;"></td><td><a href="" ng-if="!$index" class="formbtn" ng-click="fltadd()"><i class="fa fa-fw fa-plus"></i></a><a href="" ng-if="$index" class="formbtn" ng-click="fltdel( $index )"><i class="fa fa-fw fa-minus"></i></a>    
-</td><td> <a  ng-if="!$index" href="" ng-click="update()" class="btn btn-primary btn-lg">{{lng.ok}}</a> <a  ng-if="!$index" href="" ng-click="fltclear()" class="btn btn-primary btn-lg">{{lng.clear}}</a></td></tr>
+</td><td> <a  ng-if="!$index" href="" ng-click="update()" class="btn btn-primary btn-lg">{{::lng.apply}}</a> <a  ng-if="!$index" href="" ng-click="fltclear()" class="btn btn-primary btn-lg">{{::lng.cancel}}</a></td></tr>
     </table> 
     <div class="pages">
     </div>

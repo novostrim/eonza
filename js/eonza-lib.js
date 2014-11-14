@@ -61,7 +61,13 @@ var compare = [
     { title: '=', id: 1, mask: 0x1 },
     { title: '>', id: 2, mask: 0x2 },
     { title: '<', id: 3, mask: 0x4 },
-    { title: 'zero', id: 4, mask: 0x8 },
+    { title: lng.zero, id: 4, mask: 0x8 },
+    { title: lng.empty, id: 5, mask: 0x10 },
+    { title: lng.startswith, id: 6, mask: 0x20 },
+    { title: lng.contains, id: 7, mask: 0x40 },
+    { title: lng['length'] + ' =', id: 8, mask: 0x80 },
+    { title: lng['length'] + ' >', id: 9, mask: 0x100 },
+    { title: lng['length'] + ' <', id: 10, mask: 0x200 },
 ];
 
 var types = {
@@ -75,7 +81,7 @@ var types = {
             ] } 
         ] 
     },
-    2 : { id: cnt.FT_VAR, name: 'fstext', verify: var_verify,
+    2 : { id: cnt.FT_VAR, name: 'fstext', verify: var_verify, filter: { mask: 0x77 },
          extend: [ { name: 'length', type: cnt.ET_NUMBER, def: 32 } ] 
     },
     3 : { id: cnt.FT_DATETIME, name: 'fdatetime', verify: number_verify,
@@ -87,7 +93,7 @@ var types = {
             { name: 'timenow', type: cnt.ET_CHECK, def: 0 }  
         ] 
     },
-    4 : { id: cnt.FT_TEXT, name: 'ftext', verify: number_verify,
+    4 : { id: cnt.FT_TEXT, name: 'ftext', verify: number_verify, filter: { mask: 0x3d0 },
             edit: edit_text, pattern: pattern_wide, patternview: patternview_wide, 
          extend: [  { name: 'weditor', type: cnt.ET_COMBO, def: 2, 
                      list: [ {id: 1, title: '---' }, { title: lng.htmleditor, id: 2 }
