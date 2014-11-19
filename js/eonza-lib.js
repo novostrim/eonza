@@ -115,6 +115,7 @@ var types = {
          extend: [] 
     },
     7 : { id: cnt.FT_DECIMAL, name: 'fdecimal', number: 1, verify: number_verify,
+            filter: { mask: 0x0f },
          extend: [ { name: 'dtype', title: lng.type, type: cnt.ET_COMBO, def: 1, 
                      list: [ {id: 1, title: lng.decfloat }, { title: lng.decdouble, id: 2}
             ] },  
