@@ -49,7 +49,16 @@ var cnt = {
     ET_HIDDEN: 7,
     ET_SET: 8,
 }
-"use strict";
+"use strict";  
+
+var cfgdefault = {
+    title: 'Eonza',
+    isalias: 0,
+    perpage: 25,
+    dblang: 'en',
+    loginshort: 0,
+    keeplog: 0
+}
 
 var logic = [
     { title: 'OR', id: 1 },

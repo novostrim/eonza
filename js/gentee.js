@@ -90,14 +90,14 @@ geapp
 geapp.controller( 'GenteeCtrl', function GenteeCtrl($scope, $location, 
     $rootScope, $modal, DbApi, $sce, $http, $filter ) {
 
-//    angular.extend( cfg, conf );
+    cfg = angular.extend( {}, cfgdefault, cfg );
     if ( typeof( cfg.module ) != 'undefined' )
     {
         cfg.prevurl = $location.path();
         $location.path( cfg.module );
     } 
     if ( !cfg.title.length )
-        cfg.title = cfg.appname;
+        cfg.title = cfg.appname;   
     
 //    cfg.apphead = $sce.trustAsHtml( cfg.appname );
     rootScope = $rootScope;

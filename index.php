@@ -30,13 +30,17 @@ if ( file_exists( APP_DOCROOT.APP_ENTER."conf.inc.php"))
         print "System Error";
         exit();
     }
+    // Change from below in 2015 
+//    $conf = array_merge( $conf, json_decode( $dbpar['settings'], true ));
+    /* Change to above in 2015 */
+    $conf['dblang'] = 'en';
     $settings = json_decode( $dbpar['settings'], true );
     foreach ( $settings as $skey => $sval )
     {
-        if ( !isset( $sval['protect']))
-            $conf[ $skey ] = $sval['value'];
+        if ( !is_array( $sval )) 
+            $conf[ $skey ] = $sval;
     }
-//    print pass_md5( '111', true );
+    /**/
 //    $conf['title'] = $dbpar['name'];
 //    $conf['isalias'] = $dbpar['isalias'];
 
@@ -76,16 +80,10 @@ $conf['appenter'] = APP_ENTER;
 
 $template = file_get_contents( APP_DOCROOT.APP_DIR.'tpl/index.tpl' );
 
-/*foreach ( $FTYPES as $fkey => $fval )
-{
-    $ftypes[$fkey] = array( 'id' => $fkey, 'name' => $fval['name'] );
-}*/
-
 $vars = array(
     'lang' => $conf['lang'],
     'appname' => $conf['appname'],
     'cfg' => json_encode( $conf ),
-//    'types' => json_encode( $ftypes ),
     'langlist' => json_encode( $langlist ),
     'appdir' => APP_DIR,
 );

@@ -6,9 +6,9 @@ require_once 'ajax_common.php';
 
 if ( $result['success'] )
 {
-    $settings = json_decode( $db->getone( "select settings from ?n where id=?s && pass=?s", APP_DB, 
+    $result['result'] = json_decode( $db->getone( "select settings from ?n where id=?s && pass=?s", APP_DB, 
                           CONF_DBID, pass_md5( CONF_PSW, true )), true );
-    $result['result'] = array();
+/*    $result['result'] = array();
     if ( $settings )
     {    
         foreach ( $settings as $skey => $sval )
@@ -27,7 +27,7 @@ if ( $result['success'] )
         }
     }
     else
-        api_error('');
+        api_error('');*/
 }
 
 print json_encode( $result );

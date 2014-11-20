@@ -191,7 +191,7 @@ else
     if ( $dbsets )
     {
         foreach ( json_decode( $dbsets, true ) as $okey => $oval )
-            $OPTIONS[ $okey ] = $oval['value'];
+            $OPTIONS[ $okey ] = $oval;
     }
 }
 

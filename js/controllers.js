@@ -1183,8 +1183,26 @@ function MenuCtrl($scope, $routeSegment, DbApi, $rootScope ) {
 }
 
 function AppsettingsCtrl($scope, $rootScope, $routeSegment, DbApi ) {
+    $scope.appsets = [
+         { name: 'title', lang: lng.titlejs, visible: true, ctrl:"input", 'class': "form-control wbig" },
+         { name: 'isalias', lang: lng.showalias, visible: true, ctrl:"switch"},
+         { name: 'perpage', lang: lng.perpage, visible: true, ctrl: "input", 'class': "form-control wshort"},
+         { name: 'dblang', lang: lng.language, visible: false, ctrl:"select"},
+//         { name: 'apitoken', value: "", visible: false, ctrl: "input", 'class': "form-control whuge"},
+         { name: 'keeplog', lang: lng.keeplog, visible: true, ctrl: "switch"},
+         { name: 'loginshort', lang: lng.loginshort, visible: true, ctrl :"switch" }
+    ];
+    for ( var i=0; i < $scope.appsets.length; i++ )
+        $scope.appsets[i].value = cfgdefault[ $scope.appsets[i].name ];
     DbApi( 'getdb', {}, function( data ) {
-        $scope.items = data.result;
+        for ( var i=0; i < $scope.appsets.length; i++ )
+        {
+            var name =  $scope.appsets[i].name;
+            if ( angular.isDefined( data.result[ name ] ) && !angular.isObject( data.result[ name ] ))
+                $scope.appsets[i].value = data.result[ name ];
+        }
+//        $scope.items = data.result;
+//        console.log( $scope.items );
     });
     $scope.changeswitch = function( value, callback )
     {

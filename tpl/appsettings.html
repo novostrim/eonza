@@ -2,9 +2,9 @@
 
     <form class="form" >
     <table class="formtbl">
-        <tr ng-repeat="item in items "><td class="formtxt">{{lng[item.lang]}}: </td><td class="formval">
+        <tr ng-repeat="item in appsets" ng-if="item.visible"><td class="formtxt">{{::item.lang}}: </td><td class="formval">
             <div ng-if="item.ctrl == 'input'" ge-edit="item.value" ge-func="savedb" ge-field="{{item.name}}" ge-callback="updatesettings" 
-            ge-class="{{item.class}}"></div>
+            ge-class="{{::item.class}}"></div>
             <div ng-if="item.ctrl == 'switch'" ge-field="{{item.name}}" ge-check="item.value" ge-func="changeswitch"></div>
         </td></tr>
 

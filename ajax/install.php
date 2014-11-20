@@ -94,14 +94,13 @@ if ( !file_exists( $filename ))
 //            chmod( $storage, 0666 );
         }
         $lang = post( 'lang' );
-        $settings = 
-             '{ "title": { "value": "'.$conf['appname'].'", "lang":"titlejs", "visible": 1, "ctrl": "input", "par": "normal" },
-               "isalias": { "value": 0, "lang": "showalias", "visible": 1, "ctrl": "switch" },
-               "perpage": { "value": 25, "lang": "perpage", "visible": 1, "ctrl": "input", "par": "number" },
-               "dblang": { "value": "'.$lang.'", "lang": "language", "visible": 0, "ctrl": "select" },
-               "loginshort":{"value": 1,"lang":"loginshort","visible":1,"ctrl":"switch"},
-               "apitoken": { "value": "", "visible": 0, "protect": 1, "ctrl": "input", "par": "wide" },
-               "keeplog": { "value": 0, "lang": "keeplog", "visible": 1, "ctrl": "switch" }
+        $settings = '{ "title": "'.$conf['appname'].'",
+            "isalias": 0,
+            "perpage": 25,
+            "dblang": "'.$lang.'",
+            "loginshort": 1,
+            "apitoken": "",
+            "keeplog": 0
             }';
         $db->query("insert into ?n set pass=?s, ctime=NOW(), settings=?s", APP_DB,
                     pass_md5( $form['psw'], true ), $settings );
