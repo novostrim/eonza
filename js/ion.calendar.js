@@ -127,7 +127,7 @@
                     html += '<div class="ic__next"><div></div></div>';
 
                     // head month
-                    console.log( timeNowLocal.format(), timeNowLocal.format("M"), timeNowLocal.format("m") );
+//                    console.log( timeNowLocal.format(), timeNowLocal.format("M"), timeNowLocal.format("m") );
                     html += '<div class="ic__month"><select class="ic__month-select">';
                     for(i = 0; i < 12; i++){
                         if(i === parseInt(timeNowLocal.format("M")) - 1){

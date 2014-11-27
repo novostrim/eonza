@@ -57,7 +57,8 @@ var cfgdefault = {
     perpage: 25,
     dblang: 'en',
     loginshort: 0,
-    keeplog: 0
+    keeplog: 0,
+    showhelp: 1
 }
 
 var logic = [

@@ -100,7 +100,8 @@ if ( !file_exists( $filename ))
             "dblang": "'.$lang.'",
             "loginshort": 1,
             "apitoken": "",
-            "keeplog": 0
+            "keeplog": 0,
+            "showhelp": 1
             }';
         $db->query("insert into ?n set pass=?s, ctime=NOW(), settings=?s", APP_DB,
                     pass_md5( $form['psw'], true ), $settings );
