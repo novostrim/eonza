@@ -1,6 +1,7 @@
 <h1>{{lng.sets}}</h1>
 
  <a href="" ng-click="editset()" class="flatbtn"><i class="fa fa-plus-circle fa-lg"></i>&nbsp;&nbsp;{{lng.create}}</a>
+ <a class="flatbtn" ng-if="cfg.showhelp" target="_blank" href="http://{{::cfg.website}}/how-to-manage-sets.html" title="{{::lng.help}}"><i class="fa fa-question fa-lg"></i></a>
 
 <div class="ilist strip" ng-repeat="item in items" ind="{{item.id}}" >
     <div class="btn-group" onMouseOver='js_menuover( this );' onMouseOut='js_menuout( this );' >

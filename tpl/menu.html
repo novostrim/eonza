@@ -2,6 +2,8 @@
 
  <a href="" ng-click="editmenu()" class="flatbtn"><i class="fa fa-plus-circle fa-lg"></i>&nbsp;&nbsp;{{lng.newitem}}</a>
 <a href="" ng-click="editfolder()" class="flatbtn"><i class="fa fa-plus-circle fa-lg"></i>&nbsp;&nbsp;{{lng.newfld}}</a>
+ <a class="flatbtn" ng-if="cfg.showhelp" target="_blank" href="http://{{::cfg.website}}/how-to-manage-menu.html" title="{{::lng.help}}"><i class="fa fa-question fa-lg"></i></a>
+
 <script type="text/ng-template"  id="topmenu.html">
      <div class="imenulist" ng-class-odd="'strip'" ind="{{item.id}}" >
          <div style="display:inline-block" ng-if="item.isfolder">

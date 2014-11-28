@@ -3,6 +3,7 @@
  <a href="#/edittable?idparent={{parent}}" class="flatbtn"><i class="fa fa-plus-circle fa-lg"></i>&nbsp;&nbsp;{{lng.newtbl}}</a>
 <a href="" ng-click="editfolder()" class="flatbtn"><i class="fa fa-plus-circle fa-lg"></i>&nbsp;&nbsp;{{lng.newfld}}</a>
 <a href="#/import" class="flatbtn"><i class="fa fa-wrench fa-lg"></i>&nbsp;&nbsp;{{lng.import}}</a>
+<a class="flatbtn" ng-if="cfg.showhelp"  target="_blank" href="http://{{::cfg.website}}/how-to-manage-tables.html" title="{{::lng.help}}"><i class="fa fa-question fa-lg"></i></a>
 
 <div class="crumbs"><a href="#/?id={{crumb.id}}" ng-class="{crumblast:$last,crumb: !$last }" ng-repeat-start="crumb in crumbs">{{crumb.title}}</a> <i ng-repeat-end class="fa fa-angle-double-right" ng-if="!$last"></i> </div>
 <div class="ilist strip" ng-repeat="item in items" ind="{{item.id}}" ord="{{$index}}"><i ng-if="item.isfolder" class="fa fa-folder pull-left"></i>

@@ -1,5 +1,7 @@
     <h1>{{lng.settings}}</h1>
 
+<div><a class="flatbtn" ng-if="cfg.showhelp" target="_blank" href="http://{{::cfg.website}}/application-settings.html" title="{{::lng.help}}"><i class="fa fa-question fa-lg"></i></a>
+</div>
     <form class="form" >
     <table class="formtbl">
         <tr ng-repeat="item in appsets" ng-if="item.visible"><td class="formtxt">{{::item.lang}}: </td><td class="formval">
