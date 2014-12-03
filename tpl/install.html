@@ -1,6 +1,9 @@
 <div class="workarea" ng-controller="InstallCtrl" ng-show="module=='install'">
     <div class="a-group"><a href="" ng-repeat="item in langlist" ng-click="changelng( item.code )" ng-class="{linkactive:item.code==lng.code}">{{item.native}}</a></div>
     <h1>{{lng.installing}} </h1>
+    <div><a class="flatbtn" target="_blank" href="http://{{::cfg.website}}/{{lng.code}}/installation.html" title="{{lng.help}}"><i class="fa fa-question fa-lg"></i>&nbsp;&nbsp;{{lng.help}}</a>
+</div>
+
    <form class="form" ng-submit="submit()">
     <table class="formtbl">
         <tr><td colspan="2"><h2>{{lng.dbconnect}}</h2></td></tr>

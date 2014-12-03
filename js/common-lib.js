@@ -47,3 +47,13 @@ function json2num( obj )
         }
     }
 }
+
+function js_menuover( objdiv )
+{
+    $(objdiv).children().eq( 1 ).css('display','block');
+}
+
+function js_menuout( objdiv )
+{
+    $(objdiv).children().eq( 1 ).css('display','none');
+}

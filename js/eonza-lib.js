@@ -620,16 +620,6 @@ function nfy_info( text )
     setTimeout( function(){ $("#nfy_info").hide(); }, 2000 );
 }
 
-function js_menuover( objdiv )
-{
-    $(objdiv).children().eq( 1 ).css('display','block');
-}
-
-function js_menuout( objdiv )
-{
-    $(objdiv).children().eq( 1 ).css('display','none');
-}
-
 var Scope = {};
 var rootScope = {};
 

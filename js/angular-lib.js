@@ -46,7 +46,7 @@ function js_loadjs( jsfile, f )
     var head = document.getElementsByTagName("head")[0];
     var script = document.createElement('script');
     script.type = 'text/javascript';
-    script.src = jsfile;
+    script.src = cfg.appdir + jsfile;
     var done = false;
     script.onload = script.onreadystatechange = function() { 
         if ( !done && (!this.readyState ||
