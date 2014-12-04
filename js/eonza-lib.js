@@ -78,6 +78,7 @@ var compare = [
     { title: lng['length'] + ' =', id: 8, mask: 0x80 },
     { title: lng['length'] + ' >', id: 9, mask: 0x100 },
     { title: lng['length'] + ' <', id: 10, mask: 0x200 },
+    { title: lng.endswith, id: 11, mask: 0x400 },
 ];
 
 var types = {
@@ -168,8 +169,9 @@ var types = {
                  ] 
     },
     13 : { id: cnt.FT_SPECIAL, name: 'fspecial', verify: number_verify, /*view: view_special,*/
+         filter: { mask: 0xffff, extend: 'type', extmask: { 1: 0x77, 2: 0x77, 3: 0x471 }},
          extend: [ { name: 'type', title: lng.more, type: cnt.ET_COMBO, def: 1, 
-                     list: [ {id: 1, title: lng.website }, { title: lng.email, id: 2},
+                     list: [ {id: 1, title: lng.website }, { title: lng.email, id: 2  },
                       { title: lng.phone, id: 3}, { title: lng.fhash, id: 4}
             ] }
         ] 

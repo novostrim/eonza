@@ -49,7 +49,8 @@ $COMPARE = array(
     8 => array( "LENGTH( f_ ) = v_", "LENGTH( f_ ) != v_" ),
     9 => array( "LENGTH( f_ ) > v_", "LENGTH( f_ ) <= v_" ),
     10 => array( "LENGTH( f_ ) < v_", "LENGTH( f_ ) >= v_" ),
-    );
+    11 => array( "f_ LIKE v_", "f_ NOT LIKE v_", '%v_' ),
+);
 
 $FIELDS = array(
    FT_NUMBER => array( 'pars'=>'range', 'sql' => 'number_sql'  /*'sql' => 'int(10)' , 'number' => 1 */ ),

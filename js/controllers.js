@@ -367,8 +367,13 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
                     viewitems += js_viewpattern( i, $scope.columns );
                     if ( angular.isDefined( types[column.idtype].filter ))
                     {
-                        $scope.fltfields.push( { title: column.title, id: column.id, 
-                            mask: types[column.idtype].filter.mask } ); 
+                        var filter = types[column.idtype].filter;
+                        var mask = filter.mask;
+                        if ( mask == 0xffff )
+                            mask = filter.extmask[ column.extend[ filter.extend ]];
+                        if ( mask > 0 )
+                            $scope.fltfields.push( { title: column.title, id: column.id, 
+                                mask: mask } ); 
                     }
                     i++;
                 }

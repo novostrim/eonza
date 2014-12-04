@@ -50,6 +50,7 @@ var lng = {
 	edittbl: 'Edit table',
 	email: 'E-mail',
 	empty: 'Empty',
+	endswith: 'Ends with',
 	error: 'Error',
 	err_alias: 'Alias #temp# is inadmissible.',
 	err_connect: 'Cannot connect to database. Check all parameters.',
