@@ -33,7 +33,7 @@ function index_list_table( $table )
                                    CONF_PREFIX.'_columns', $table['id'], FT_PARENT, 'sort' );
     foreach ( $items as $iext )
         $fields[ alias( $iext )] = $iext['title'];
-    $ret = index_list( $table['alias'] ? $table['alias'] : CONF_PREFIX."_$table[id]", $fields );
+    $ret = index_list( alias( $table, CONF_PREFIX."_" ), $fields );
 
     return $ret;
 }

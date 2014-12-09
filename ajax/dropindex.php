@@ -13,8 +13,8 @@ if ( $result['success'] )
         api_error( 'err_id', "id=$pars[id]" );
     else
     {
-        $result['success'] = $db->query( "alter table ?n drop index ?n", 
-                  $table['alias'] ? $table['alias'] : CONF_PREFIX."_$idtable", $pars['field'] );
+        $dbname = alias( $table, CONF_PREFIX.'_' );
+        $result['success'] = $db->query( "alter table ?n drop index ?n", $dbname, $pars['field'] );
         if ( $result['success'] )
             $result['index'] = index_list_table( $table );
     }

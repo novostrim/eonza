@@ -32,8 +32,8 @@ if ( $result['success'] )
         api_error( 'err_id', "id=$pars[id]" );
     else
     {
-        $result['success'] = $db->query( "alter table ?n add ?p ( ?p )", 
-                  $table['alias'] ? $table['alias'] : CONF_PREFIX."_$idtable", $type, $list );
+        $dbname = alias( $table, CONF_PREFIX.'_' );
+        $result['success'] = $db->query( "alter table ?n add ?p ( ?p )", $dbname, $type, $list );
         if ( $result['success'] )
             $result['index'] = index_list_table( $table );
     }

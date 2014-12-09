@@ -24,7 +24,7 @@ if ( $result['success'] )
             }
             else
             {
-                $dbname = $curtable['alias'] ? $curtable['alias'] : CONF_PREFIX."_$idi"; 
+                $dbname = alias( $curtable, CONF_PREFIX.'_' );
                 $islink = 0;
                 $links = $db->getall("select col.extend, col.title as icol, t.title as itable from ?n as col
                     left join ?n as t on t.id = col.idtable

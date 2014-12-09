@@ -41,7 +41,7 @@ if ( $result['success'] )
             api_error( 'err_id', "idtable=$idtable" );
         else
         {
-            $dbname = $curtbl['alias'] ? $curtbl['alias'] : CONF_PREFIX."_$idi";
+            $dbname = alias( $curtbl, CONF_PREFIX.'_' );
             foreach ( $what as $id )
             {
                 $result['success'] = deleteitem( (int)$id );

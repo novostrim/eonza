@@ -477,13 +477,13 @@ function edit_file( i, icol )
 function view_default( i, icol )
 {
     //"+icol['alias']+"
-    return "<div class='view-control' ng-bind-html='view."+icol.alias+"'></div>";
+    return "<div class='view-control' ng-bind-html='view[\""+icol.alias+"\"]'></div>";
 }
 
 
 function common_file( isview, icol )
 {
-    var out = "<div class='file-control' ng-repeat='fitem in "+isview+"." + icol.alias +"' >";
+    var out = "<div class='file-control' ng-repeat='fitem in "+isview+"[\"" + icol.alias +"\"]' >";
 
     var href = cfg.appenter+'api/download';
 
@@ -508,12 +508,12 @@ function view_file( i, icol )
 
 function view_setset( i, icol )
 {
-    return "<div ng-bind-html='view."+icol.alias+"'></div>";
+    return "<div ng-bind-html='view[\"" +icol.alias + "\"]'></div>";
 }
 
 function view_linktable( i, icol )
 {
-    return "<div ng-bind-html='view."+icol.alias+"'></div>";
+    return "<div ng-bind-html='view[\"" +icol.alias + "\"]'></div>";
 }
 
 function pattern_default( i, control, icol )
