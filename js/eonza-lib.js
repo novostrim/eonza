@@ -143,9 +143,6 @@ var types = {
          extend: [  { name: 'set', type: cnt.ET_SET, def: 0 },  
         ] 
     },
-    10 : { id: cnt.FT_PARENT, name: 'fsetset', verify: number_verify, number: 1,
-            edit: edit_parent, view: view_linktable, extend: [] 
-    },    
     11 : { id: cnt.FT_FILE, name: 'ffile', verify: number_verify,
          view: view_file, edit: edit_file, pattern: pattern_file, patternview: patternview_file,  
          extend: [ { name: 'storedb', type: cnt.ET_CHECK, def: 0 } ] 
@@ -401,12 +398,6 @@ function edit_setset( i, icol )
 function edit_linktable( i, icol )
 {
     return "<div class='setitem' ng-if='formlink[columns["+i+"].alias]' ng-bind-html='formlink[columns["+i+"].alias]'></div>" +
-     '<a href="" class="formbtn" ng-click="editlink('+i+')"><i class="fa fa-fw fa-th-list"></i></a>';
-}
-
-function edit_parent( i, icol )
-{
-    return "<div class='setitem' ng-if='formlink[columns["+i+"].alias]' ng-bind='formlink[columns["+i+"].alias]'></div>" +
      '<a href="" class="formbtn" ng-click="editlink('+i+')"><i class="fa fa-fw fa-th-list"></i></a>';
 }
 
