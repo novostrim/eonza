@@ -294,7 +294,7 @@ function js_list( item )
             case cnt.FT_TEXT:
                 if ( item[key].length == 128 )
                     item[key] += '...';
-                item[key] = item[key].replace( /<[^>]+>/ig,"" );
+                item[key] = String( item[key] ).replace( /<[^>]+>/ig,"" );
 //                item[key] = jQuery(item[key]).text()
                 break;
             case cnt.FT_DATETIME:
@@ -808,6 +808,27 @@ function js_getchecked()
 {
     
     return ret;
+}
+
+function htmleditor( form, get )
+{
+    var iclass = angular.isDefined( cfg.htmleditor ) ? cfg.htmleditor.class : 'redactor';
+
+    $( "."+iclass ).each( function() {
+        var attr = $(this).attr('name');
+        if ( !get )
+            if ( angular.isDefined( cfg.htmleditor ))
+                CKEDITOR.instances['id-'+attr].setData( form[ attr ] );
+            else
+                $(this).redactor('set', form[ attr ] );
+        else
+        {
+            if ( angular.isDefined( cfg.htmleditor ))
+                form[attr] =  CKEDITOR.instances['id-'+attr].getData();
+            else
+                form[attr] =  $(this).redactor('get' );
+        }
+    })
 }
 
 function ajax( phpfile )
