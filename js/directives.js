@@ -63,12 +63,22 @@ geapp.directive( 'geSet', function( $compile, $document, $rootScope )
         '<a href="" class="formbtn" ng-click="setselect()"><i class="fa fa-fw fa-check-square-o"></i></a>',
         controller: function($scope, $element, $attrs, $rootScope ) {
 //            varinfo( $scope.geSet );
-            $scope.items = js_getset( $scope.geSet, $scope.geKey );
+            $scope.key = $scope.geKey;
+            if ( $scope.geKey == Number( $scope.geKey ))
+            {
+                for( key in Scope.colnames )
+                    if ( Scope.colnames[key].id == $scope.geKey )
+                    {
+                        $scope.key = key;
+                        break;
+                    }
+            }
+            $scope.items = js_getset( $scope.geSet, $scope.key );
 //            varinfo( $scope.items );
-
             $scope.setselect = function() {
+//                $scope.geKey = $scope.key;
                 $rootScope.checks = [];
-                var cols = Scope.colnames[$scope.geKey]['list'];
+                var cols = Scope.colnames[$scope.key]['list'];
                 for ( var i=0; i<32; i++ )
                     if ( angular.isDefined( cols[ i+1] ))
                         $rootScope.checks.push( { id: i, state: !!($scope.geSet & ( 1<<i )), title: cols[ i+1] } );
@@ -86,7 +96,7 @@ geapp.directive( 'geSet', function( $compile, $document, $rootScope )
             }
              $scope.$watch( 'geSet', function( newValue ){ 
                  $scope.geSet = newValue;
-                $scope.items = js_getset( $scope.geSet, $scope.geKey );
+                $scope.items = js_getset( $scope.geSet, $scope.key );
              });
         }
     }

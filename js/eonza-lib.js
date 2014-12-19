@@ -79,6 +79,9 @@ var compare = [
     { title: lng['length'] + ' >', id: 9, mask: 0x100 },
     { title: lng['length'] + ' <', id: 10, mask: 0x200 },
     { title: lng.endswith, id: 11, mask: 0x400 },
+    { title: '<=', id: 12, mask: 0x800 },
+    { title: '>=', id: 13, mask: 0x1000 },
+    { title: '<=', id: 14, mask: 0x2000 },
 ];
 
 var types = {
@@ -135,12 +138,12 @@ var types = {
         ] 
     },    
     8 : { id: cnt.FT_ENUMSET, name: 'fenumset', verify: number_verify, number: 1,
-            edit: edit_enumset, 
+            edit: edit_enumset, filter: { mask: 0x2000 }, 
          extend: [  { name: 'set', type: cnt.ET_SET, def: 0 },  
         ] 
     },
     9 : { id: cnt.FT_SETSET, name: 'fsetset', verify: number_verify, number: 1,
-            edit: edit_setset, view: view_setset,
+            edit: edit_setset, view: view_setset, filter: { mask: 0x1801 }, 
          extend: [  { name: 'set', type: cnt.ET_SET, def: 0 },  
         ] 
     },

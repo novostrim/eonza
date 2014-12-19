@@ -50,6 +50,9 @@ $COMPARE = array(
     9 => array( "LENGTH( f_ ) > v_", "LENGTH( f_ ) <= v_" ),
     10 => array( "LENGTH( f_ ) < v_", "LENGTH( f_ ) >= v_" ),
     11 => array( "f_ LIKE v_", "f_ NOT LIKE v_", '%v_' ),
+    12 => array( "f_ & v_", "!( f_ & v_ )" ),
+    13 => array( "(f_ & v_) = v_", "(f_ & v_) != v_" ),
+    14 => array( "((1<<(f_ - 1 )) & v_)", "!((1<<(f_ - 1 )) & v_)" ),
 );
 
 $FIELDS = array(

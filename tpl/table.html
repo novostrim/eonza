@@ -35,10 +35,10 @@
         </select></td><td><label><input type="checkbox" ng-model="ifilter.not">{{::lng.not}}</label></td><td><select ng-model="ifilter.compare">
             <option ng-repeat="icmp in compare" ng-selected="ifilter.compare==icmp.id" value="{{icmp.id}}" ng-if="ismask( ifilter.field, icmp.mask )">{{icmp.title}}</option>
     </select></td>
-        <td style="white-space: nowrap;"><nobr><input type="text" class="view-control" ng-model="ifilter.value" style="width: 150px;display: inline-block;"><a ng-if="iscustom(ifilter.field, cnt.FT_LINKTABLE )" href="" class="formbtn" ng-click="editlink( 0, ifilter.field, $index )"><i class="fa fa-fw fa-th-list"></i></a></nobr>
-        
+        <td style="white-space: nowrap;"><input type="text" class="view-control" ng-model="ifilter.value" style="width: 150px;display: inline-block;"><a ng-if="iscustom(ifilter.field, cnt.FT_LINKTABLE )" href="" class="formbtn" ng-click="editlink( 0, ifilter.field, $index )"><i class="fa fa-fw fa-th-list"></i></a>
+        <div ng-if="iscustom(ifilter.field, cnt.FT_SETSET )" ge-key='{{ifilter.field}}' ge-set='ifilter.value' style="white-space: normal; margin-top: 5px;"></div>        
         </td><td><a href="" ng-if="!$index" class="formbtn" ng-click="fltadd()"><i class="fa fa-fw fa-plus"></i></a><a href="" ng-if="$index" class="formbtn" ng-click="fltdel( $index )"><i class="fa fa-fw fa-minus"></i></a>&nbsp;    
-</td><td> <a  ng-if="!$index" href="" ng-click="update()" class="btn btn-primary btn-lg">{{::lng.apply}}</a> <a  ng-if="!$index" href="" ng-click="fltclear()" class="btn btn-primary btn-lg">{{::lng.cancel}}</a></td></tr>
+</td><td> <a style="margin-top: 10px;" ng-if="!$index" href="" ng-click="update()" class="btn btn-primary btn-lg">{{::lng.apply}}</a> <a style="margin-top: 10px;"  ng-if="!$index" href="" ng-click="fltclear()" class="btn btn-primary btn-lg">{{::lng.cancel}}</a></td></tr>
     </table> 
     <div class="pages">
     </div>

@@ -342,8 +342,15 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
     }
     $scope.iscustom = function( id, custom ) {
         var ind = colindex(id);
-        return ind >= 0 && $scope.columns[ colindex(id) ].idtype == custom;
+        var idtype = ( ind >=0 ? $scope.columns[ ind ].idtype : 0 );
+        if ( idtype == cnt.FT_ENUMSET && custom == cnt.FT_SETSET )
+            custom = cnt.FT_ENUMSET;
+        return idtype == custom;
     }    
+    $scope.fltalias = function(id) {
+        var ind = colindex(id);
+        return ind >=0 ? $scope.columns[ ind ].alias : '';
+    }
     $scope.columns = function() {
         DbApi( 'columns', $scope.params, function( data ) {
             if ( data.success )
