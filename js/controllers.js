@@ -340,6 +340,10 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
     $scope.ismask = function( id, mask ) {
         return $scope.mask[id] & mask ? true: false;
     }
+    $scope.iscustom = function( id, custom ) {
+        var ind = colindex(id);
+        return ind >= 0 && $scope.columns[ colindex(id) ].idtype == custom;
+    }    
     $scope.columns = function() {
         DbApi( 'columns', $scope.params, function( data ) {
             if ( data.success )
@@ -459,11 +463,14 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
         }
         return false;
     }
-    $scope.editlink = function( idcol ) {
+    $scope.editlink = function( idcol, idfilter, fltindex ) {
+        if ( idfilter )
+            idcol = colindex( idfilter );
         $rootScope.link = $scope.columns[idcol].link;
         $rootScope.link.filter = 0;
         $rootScope.idlink = idcol;  
-        if ( parseInt( $scope.columns[idcol].extend.filter ) > 0 )
+        $rootScope.fltindex = fltindex;
+        if ( !idfilter && parseInt( $scope.columns[idcol].extend.filter ) > 0 )
         {
             for ( var i = 0; i < $scope.columns.length; i++ )
                 if ( angular.isDefined( $scope.columns[i].extend.table ) &&
@@ -486,10 +493,13 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
         $rootScope.msg( {  title: $scope.columns[idcol].title, template: tpl('editlink.html'),
                        btns: 
                        [ {text: lng.clear, func: function(){
+                            if ( !idfilter )
+                            {
                                 var alias = $scope.columns[idcol].alias;
                                 $scope.form[ alias ] = 0;
                                 $scope.formlink[ alias ] = '';
                                 $scope.view[ alias ] = '';
+                            }
                        }, class: 'btn-default btn-near' },
                        {text: lng.close, class: 'btn-primary btn-near' } ] });
         return false;

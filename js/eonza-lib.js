@@ -62,8 +62,8 @@ var cfgdefault = {
 }
 
 var logic = [
-    { title: 'OR', id: 1 },
-    { title: 'AND', id: 2 },
+    { title: lng.or, id: 1 },
+    { title: lng.and, id: 2 },
 ];
 
 var compare = [
@@ -114,6 +114,7 @@ var types = {
     },
     5 : { id: cnt.FT_LINKTABLE, name: 'flinktable', verify: number_verify, number: 1,
             edit: edit_linktable, view: view_linktable,
+             filter: { mask: 0x01 },
          extend: [  { name: 'table', type: cnt.ET_TABLE, def: 0 },  
             { name: 'column', type: cnt.ET_COLUMN, def: 0 },
             { name: 'extbyte', type: cnt.ET_HIDDEN, def: 0 },
@@ -845,4 +846,31 @@ function tpl( pattern )
 function dec2hex( val, length )
 {
     return ('00000000' + val.toString( 16 )).substr( -length );
+}
+
+function js_filterfield( obj )
+{
+    var ind = $(obj).attr('ind');
+    var mask = 1;
+    Scope.filter[ind].title = '';    
+    for ( var i = 0; i < Scope.fltfields.length; i++ )
+        if ( Scope.fltfields[i].id == $(obj).val())
+        {
+            mask = Scope.fltfields[i].mask;
+            break;
+        }
+    for ( i = 1; i < Scope.compare.length; i++ )
+        if ( Scope.compare[i].mask & mask )
+        {
+            Scope.filter[ind].compare=Scope.compare[i].id;
+            break;
+        }
+}
+
+function colindex( id )
+{
+    for ( var i = 0; i <  Scope.columns.length; i++ )
+        if ( Scope.columns[i].id == id )
+            return i;
+    return -1;
 }

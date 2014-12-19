@@ -11,10 +11,10 @@
 <a href='' ng-click="linkparent(0)" ><i class="fa fa-home fa-fw"></i></a>    
 <span ng-repeat-start="icrumb in link.crumbs">/</span><a href='' ng-click="linkparent( icrumb[1] )"  ng-repeat-end>{{icrumb[0]}}</a>
 </div>
-<div ng-repeat="ilist in link.list" ng-class="{treelink: link.istree==1}">
+<div ng-repeat="ilist in link.list" ng-class="{treelink: link.istree==1}" style="position: relative">
 <a href='' ng-click="linkparent( ilist.id )" ng-if="ilist.count" class="folder" ><i class="fa fa-folder fa-fw"></i> {{ilist.count}}</a>
 <a href='' ng-click="linkselect( ilist.id )" class="strip linkitem">
-{{ilist.title}}</a></div>
+{{ilist.title}}</a><span class="linkid">{{ilist.id}}</span></div>
 
 <div style="text-align:center;"><div class="btn-group" style="margin-top: 10px;">
     <a class="btn" onclick="return js_linkpage(-1)" href="" ng-if="link.offset"><i class="fa fa-chevron-up fa-lg"></i>{{lng.prev}}</a>

@@ -41,10 +41,13 @@ if ( $id && $result['success'] )
         $dbname = alias( $result['db'], CONF_PREFIX.'_' );
         $fields = array( "t.id", "t._uptime" );
         $leftjoin = '';
+        $field2ind = array();
         $columns = $db->getall("select * from ?n where idtable=?s && visible=1 
                                           order by `sort`", CONF_PREFIX.'_columns', $id );
+        $cind = 0;
         foreach ( $columns as &$icol )
         {
+            $field2ind[ $icol['id'] ] = $cind++;
             $icol['class'] = '';
             $icol['alias'] = alias( $icol );
             $names[ $icol['id']] = 't.'.$icol['alias'];
@@ -121,7 +124,13 @@ if ( $id && $result['success'] )
                 $value = substr( $ifilter, 8 );
                 if ( !$compare || !$field )
                     continue;
-                $fout = fltcompare( $field, $not, $compare, $value );
+                $fltvalue = $value;
+                if ( isset( $field2ind[ $field ] )) 
+                {
+                    if ( $columns[$field2ind[ $field ]]['idtype'] == FT_LINKTABLE )
+                        $fltvalue = (int)$value;
+                }
+                $fout = fltcompare( $field, $not, $compare, $fltvalue );
                 if ( $fout )
                 {
                     $qwhere .= $db->parse(" ?p ?p", $logic == 1 ? '||' : '&&', $fout );

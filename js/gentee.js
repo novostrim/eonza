@@ -298,27 +298,41 @@ var ModalInstanceCtrl = function( $scope, $modalInstance, dlg_opt ) {
         //alert( id  );
         var column = Scope.columns[ Scope.idlink ];
         var alias = column.alias;
-        Scope.form[alias] = id;
+        var title = '';
         for ( var i = 0; i< column.link.list.length; i++ )
         {
             if ( column.link.list[i].id == id )
             {
-                Scope.formlink[alias] = column.link.list[i].title;
-//                Scope.view[alias] = column.link.list[i].title;
+                title = column.link.list[i].title;// + ' ['+ id +']';
+                break;
             }
         }
-        for ( i = 0; i< Scope.columns.length; i++ )
+        if ( angular.isDefined( Scope.fltindex ))
+            Scope.filter[Scope.fltindex].value = id+':' + title;
+        else
         {
-            if ( Scope.columns[i].idtype == cnt.FT_LINKTABLE &&
-                 Scope.columns[i].extend.filter == column.extend.table )
+            Scope.form[alias] = id;
+            Scope.formlink[alias] = title
+/*            for ( var i = 0; i< column.link.list.length; i++ )
             {
-                var ialias = Scope.columns[i].alias;
-                Scope.formlink[ialias] = '';
-                Scope.form[ialias] = 0;
-//                Scope.view[alias] = column.link.list[i].title;
+                if ( column.link.list[i].id == id )
+                {
+//                    Scope.formlink[alias] = column.link.list[i].title;
+    //                Scope.view[alias] = column.link.list[i].title;
+                }
+            }*/
+            for ( i = 0; i< Scope.columns.length; i++ )
+            {
+                if ( Scope.columns[i].idtype == cnt.FT_LINKTABLE &&
+                     Scope.columns[i].extend.filter == column.extend.table )
+                {
+                    var ialias = Scope.columns[i].alias;
+                    Scope.formlink[ialias] = '';
+                    Scope.form[ialias] = 0;
+    //                Scope.view[alias] = column.link.list[i].title;
+                }
             }
         }
-
         $modalInstance.close();
     }
     $scope.dlg = {
