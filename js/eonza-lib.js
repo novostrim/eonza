@@ -82,6 +82,8 @@ var compare = [
     { title: '<=', id: 12, mask: 0x800 },
     { title: '>=', id: 13, mask: 0x1000 },
     { title: '<=', id: 14, mask: 0x2000 },
+    { title: lng.yes, id: 15, mask: 0x4000 },
+    { title: lng.no, id: 16, mask: 0x8000 },
 ];
 
 var types = {
@@ -126,7 +128,7 @@ var types = {
         ] 
     },
     6 : { id: cnt.FT_CHECK, name: 'fcheck', verify: number_verify, number: 1,
-         edit: edit_check,
+         edit: edit_check, filter: { mask: 0xC000 },
          extend: [] 
     },
     7 : { id: cnt.FT_DECIMAL, name: 'fdecimal', number: 1, verify: number_verify,

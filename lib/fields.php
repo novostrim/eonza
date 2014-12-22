@@ -53,6 +53,8 @@ $COMPARE = array(
     12 => array( "f_ & v_", "!( f_ & v_ )" ),
     13 => array( "(f_ & v_) = v_", "(f_ & v_) != v_" ),
     14 => array( "((1<<(f_ - 1 )) & v_)", "!((1<<(f_ - 1 )) & v_)" ),
+    15 => array( "f_ != 0", "f_ = 0" ),
+    16 => array( "f_ = 0", "f_ != 0" ),
 );
 
 $FIELDS = array(

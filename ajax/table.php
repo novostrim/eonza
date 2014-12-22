@@ -121,7 +121,10 @@ if ( $id && $result['success'] )
                 $compare = hexdec( substr( $ifilter, 2, 2 ));
                 $fld = substr( $ifilter, 4, 4 );
                 $field = $fld[0] == 'f' ? -hexdec( substr( $fld, 1 )) : hexdec( $fld );
-                $value = substr( $ifilter, 8 );
+                if ( strlen( $ifilter ) <= 8 )
+                    $value="";
+                else
+                    $value = substr( $ifilter, 8 );
                 if ( !$compare || !$field )
                     continue;
                 $fltvalue = $value;
