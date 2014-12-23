@@ -63,7 +63,7 @@ $FIELDS = array(
    FT_DATETIME => array( 'pars' => 'date,timenow', 'sql' => 'date_sql', /* 'varchar(%par%)' */
                               'save' => 'date_save' ),
    FT_TEXT => array( 'pars' => 'weditor,bigtext', 'sql' => 'text_sql' ),
-   FT_LINKTABLE => array( 'pars' => 'table,column,extbyte,filter,aslink', 'sql' => 'linktable_sql',
+   FT_LINKTABLE => array( 'pars' => 'table,column,extbyte,filter,aslink,showid', 'sql' => 'linktable_sql',
                            'save' => 'linktable_save'),
    FT_CHECK => array( 'pars' => '', 'sql' => 'check_sql' ),
    FT_DECIMAL => array( 'pars'=>'dtype,dlen', 'sql' => 'decimal_sql' /*'sql' => 'int(10)' , 'number' => 1 */ ),

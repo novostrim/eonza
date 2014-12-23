@@ -42,7 +42,7 @@ if ( $id && $result['success'] )
         $fields = array( "t.id", "t._uptime" );
         $leftjoin = '';
         $field2ind = array();
-        $columns = $db->getall("select * from ?n where idtable=?s && visible=1 
+        $columns = $db->getall("select * from ?n where idtable=?s  
                                           order by `sort`", CONF_PREFIX.'_columns', $id );
         $cind = 0;
         foreach ( $columns as &$icol )
@@ -51,6 +51,9 @@ if ( $id && $result['success'] )
             $icol['class'] = '';
             $icol['alias'] = alias( $icol );
             $names[ $icol['id']] = 't.'.$icol['alias'];
+            if ( !$icol['visible'] )            
+                continue;
+
             $extend = json_decode( $icol['extend'], true );
                if ( $icol['idtype'] == FT_PARENT )
                {
@@ -61,11 +64,19 @@ if ( $id && $result['success'] )
                 $dblink = api_dbname( $extend['table'] );
                 $link = $icol['id'];
                 $collink = api_colname( (int)$extend['column'] );
-                   $leftjoin .= $db->parse( " left join ?n as t$link on t$link.id=t.?p", $dblink, alias( $icol ));
+                $alias = alias( $icol );
+                $leftjoin .= $db->parse( " left join ?n as t$link on t$link.id=t.?p", $dblink, $alias );
                 if ( empty( $extend['aslink'] ))
-                    $ext = "ifnull( t$link.$collink, '' ) as `$icol[alias]`";
+                {
+                    $linktitle = empty( $extend['showid'] ) ? "t$link.$collink" : "concat( t$link.$collink, '<span class=\"idcode\">', t.$alias, '</span>' )";
+                    $ext = "ifnull( $linktitle, '' ) as `$icol[alias]`";
+                }
                 else
-                    $ext = "if( t$link.$collink is NULL, '', concat('<a href=\"\" onclick=\"return js_card($extend[table], ', t$link.id, ' )\">', t$link.$collink, '</a>')) as `$icol[alias]`";
+                {   $href = "concat('<a href=\"\" onclick=\"return js_card($extend[table], ', t$link.id, ' )\">', t$link.$collink, '</a>'";
+                    $linktitle = empty( $extend['showid'] ) ? $href.")" :
+                        $href.", '<span class=\"idcode\">', t.$alias, '</span>' )";
+                    $ext = "if( t$link.$collink is NULL, '', $linktitle ) as `$icol[alias]`";
+                }
                 $fields[] = (  $icol['idtype'] == FT_PARENT ? " t.`_parent` as `_parent_`," : '' ).$ext;
                        // $collink$link";
                }

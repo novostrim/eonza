@@ -40,8 +40,13 @@
         </td><td><a href="" ng-if="!$index" class="formbtn" ng-click="fltadd()"><i class="fa fa-fw fa-plus"></i></a><a href="" ng-if="$index" class="formbtn" ng-click="fltdel( $index )"><i class="fa fa-fw fa-minus"></i></a>&nbsp;    
 </td><td> <a style="margin-top: 10px;" ng-if="!$index" href="" ng-click="update()" class="btn btn-primary btn-lg">{{::lng.apply}}</a> <a style="margin-top: 10px;"  ng-if="!$index" href="" ng-click="fltclear()" class="btn btn-primary btn-lg">{{::lng.cancel}}</a></td></tr>
     </table> 
-    <div class="pages">
+    <center><table><tr><td align="left" style="padding-right: 2em;">
+        {{::lng.numrec}}: <strong>{{allcount}}</strong>
+    </td>
+    <td align="center"><div class="pages">
     </div>
+    </td>
+    </tr></table></center>
     <div ng-if="db.istree == 1" class="linkcrumbs">
         <a href="" ng-class="{switchoff:params.parent==undefined, switchon:params.parent!=undefined }" ng-click="treemode()"><i class="fa fa-fw fa-sitemap"></i></a>    
         <a href='' ng-if="params.parent!=undefined" onclick="return js_treechange(0)" ><i class="fa fa-home fa-fw"></i></a>    
