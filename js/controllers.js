@@ -549,16 +549,6 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
         return false;
     }
     $scope.saveitem = function(){
-/*        var iclass = angular.isDefined( cfg.htmleditor ) ? cfg.htmleditor.class : 'redactor';
-        $( "."+iclass ).each( function() {
-            var attr = $(this).attr('name');
-            var value = '';
-            if ( angular.isDefined( cfg.htmleditor ))
-                value = CKEDITOR.instances['id-'+attr].getData();
-            else
-                value = $(this).redactor('get' );
-            $scope.form[ attr ] = value;
-        })*/
         htmleditor( $scope.form, true );
         DbApi( 'saveitem', $scope.form, function( data ) {
             if ( data.success )
@@ -697,15 +687,6 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
                 if ( $scope.mode == cnt.M_VIEW )
                     $scope.formtoview();
                 htmleditor( $scope.form );
-/*                var iclass = angular.isDefined( cfg.htmleditor ) ? cfg.htmleditor.class : 'redactor';
-                $( "."+iclass ).each( function() {
-                    var attr = $(this).attr('name');
-                    var value =  $scope.form[ attr ];
-                    if ( angular.isDefined( cfg.htmleditor ))
-                        CKEDITOR.instances['id-'+attr].setData( value );
-                    else
-                        $(this).redactor('set', value );
-                });*/
             }
         });
     }

@@ -417,7 +417,7 @@ function edit_text( i, icol )
     var iclass = angular.isDefined( cfg.htmleditor ) ? cfg.htmleditor.class : 'redactor';
     var out = "<textarea class='"+iclass+"' id='id-"+alias+"' name='"+alias + "' ng-model='form[columns["+i+"].alias]' style='width: 90%;height: 400px;'></textarea>";
     if ( angular.isUndefined( cfg.htmleditor ))
-        out += '<script type="text/javascript">$("textarea[name=\''+ alias +'\']").redactor({plugins: [\'fullscreen\']});</script>';
+        out += '<script type="text/javascript">$("textarea[name=\''+ alias +'\']").redactor({buttonSource: true, plugins: [\'table\',\'fontcolor\',\'fontsize\',\'fullscreen\', ]});</script>';
     return out;    
 }
 
@@ -827,13 +827,15 @@ function htmleditor( form, get )
             if ( angular.isDefined( cfg.htmleditor ))
                 CKEDITOR.instances['id-'+attr].setData( form[ attr ] );
             else
-                $(this).redactor('set', form[ attr ] );
+                $(this).redactor('code.set', form[ attr ] );
+//                $(this).redactor('set', form[ attr ] );
         else
         {
             if ( angular.isDefined( cfg.htmleditor ))
                 form[attr] =  CKEDITOR.instances['id-'+attr].getData();
             else
-                form[attr] =  $(this).redactor('get' );
+                form[attr] =  $(this).redactor('code.get' );
+//                form[attr] =  $(this).redactor('get' );
         }
     })
 }
