@@ -319,6 +319,30 @@ function linktable_save( &$out, $form, $icol, &$outext )
     $out[ $alias ] = empty( $form[$alias] ) ? 0 : $val;
 }
 
+$BLACKLIST = array( 'html', 'head', 'link', 'body', 'meta', 'script', 'style', 'applet', 'iframe' );
+$BLACKIN = array();
+$BLACKOUT = array();
+
+if ( defined( 'NOSCRIPT' ))
+{
+    foreach ( $BLACKLIST as $ib )
+    {
+        $BLACKIN[] = "<$ib";
+        $BLACKOUT[] = "<-$ib-";
+    }
+    foreach ( array( FT_VAR, FT_TEXT, FT_SQL ) as $ibf )
+        $FIELDS[ $ibf ]['save'] = 'text_save';
+}
+
+function text_save( &$out, $form, $icol, &$outext )
+{
+    global $BLACKLIST, $BLACKIN, $BLACKOUT;
+
+    $alias = alias( $icol );
+    $out[ $alias ] = str_replace( $BLACKIN, $BLACKOUT, $form[$alias] );
+}
+
+
 function parent_save( &$out, $form, $icol, &$outext )
 {
     global $db;

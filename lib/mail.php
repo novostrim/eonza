@@ -12,7 +12,7 @@ function header_encode( $str )
 }
 
 function send_mail( $name_to, $email_to, $subject, $body,
-                   $name_from, $email_from,
+                   $name_from, $email_from = '',
                    $plain = 'html' )
 {
     $send_charset = 'utf-8';
