@@ -150,6 +150,10 @@ var types = {
          extend: [  { name: 'set', type: cnt.ET_SET, def: 0 },  
         ] 
     },
+    10 : { id: cnt.FT_PARENT, name: 'owner', verify: number_verify, number: 1,
+            edit: edit_linktable, view: view_linktable,
+         extend: [] 
+    },    
     11 : { id: cnt.FT_FILE, name: 'ffile', verify: number_verify,
          view: view_file, edit: edit_file, pattern: pattern_file, patternview: patternview_file,  
          extend: [ { name: 'storedb', type: cnt.ET_CHECK, def: 0 } ] 
@@ -312,7 +316,7 @@ function js_list( item )
                 item[key] = rootScope.filter('date')( item[key].replace(' ', "T"), filter );*/
                 break;                
             case cnt.FT_PARENT:
-                var tmp = item._children == '0' ? '' :
+                var tmp = !item._children ? '' :
                     '<a href="" onclick="return js_treechange(' + item.id + ')"><i class="fa fa-fw fa-folder"></i>' + item._children + '</a>';
                 if ( angular.isUndefined( Scope.params.parent ))
                     item[key] = '<a href="" onclick="return js_treechange(' + item._parent_ + ')">' + item[key] + '</a>' + 

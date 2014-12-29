@@ -70,7 +70,7 @@ foreach ( $pars['items'] as &$iext )
         $iext['extend'] = '{}';
     }
 }
-
+$isnew = $idi;
 if ( $result['success'] )
 {
     $result['result'] = array();
@@ -81,10 +81,10 @@ if ( $result['success'] )
                      array( "_owner=$USER[id]"), true ); 
         if ( $result['success'] )
         {
-            $idtable = $result['success'];
+            $idi = $result['success'];
 //            $result['success'] = true;
             if ( !$dbname )
-                $dbname = CONF_PREFIX."_$idtable";
+                $dbname = CONF_PREFIX."_$idi";
             $query = "CREATE TABLE IF NOT EXISTS `$dbname` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `_uptime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, 
@@ -98,7 +98,7 @@ if ( $result['success'] )
             foreach ( $pars['items'] as $ifield )
             {
                 $idfield = $db->insert( CONF_PREFIX.'_columns', pars_list( 'title,extend,comment,idtype,alias,visible,align', $ifield ), 
-                     array( "idtable = $idtable", "`sort`=$sort" ), true ); 
+                     array( "idtable = $idi", "`sort`=$sort" ), true ); 
                 $sort++;
                 if ( isset( $FIELDS[ $ifield['idtype']]['sql'] ))
                     $query .= column_query( $idfield, $ifield ).", \r\n";
@@ -107,7 +107,7 @@ if ( $result['success'] )
     KEY `_uptime` (`_uptime`) $treeindex
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
             if ( $db->query( $query ))
-                api_log( $idtable, 0, 'create' );
+                api_log( $idi, 0, 'create' );
         }
     }
     else
@@ -220,5 +220,5 @@ if ( $result['success'] )
     }
 }
 if ( $result['success'] )
-    $result['result']['idparent'] = $idi ? $curtbl['idparent'] : $pars['form']['idparent'];
+    $result['result']['idparent'] = $isnew ? $curtbl['idparent'] : $pars['form']['idparent'];
 print json_encode( $result );
