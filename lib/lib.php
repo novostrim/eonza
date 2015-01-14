@@ -149,11 +149,11 @@ function pages( $query, $page, $link )
 function pass_generate( $i = 6 )
 {
    $newpass = '';
-   $rep = '#$%&+-(){';
+   $rep = '#$%&+-23459fk678';
    while ( $i-- )
    {
         $char = chr(mt_rand( 0x32, 0x7A )); 
-        $pos = strrpos( 'lOoIDJ`:;', $char );
+        $pos = strrpos( 'lOoIDJ`:;<>?[]^\\', $char );
         $newpass .= $pos === false ? $char : $rep[$pos];
    }
    return $newpass;

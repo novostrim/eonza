@@ -374,7 +374,7 @@ function edit_default( i, icol )
         if ( icol.idtype == cnt.FT_VAR ) 
         {
             if ( length >128 )
-                return "<textarea name='"+icol.alias+"' ng-model='form[columns["+i+"].alias]' class='form-control whuge' style='height: 5em;'></textarea>";
+                return "<textarea name='"+icol.alias+"' ng-model='form[columns["+i+"].alias]' class='form-control whuge' style='height: 5em;'></textarea><span class='length'>{{form[columns["+i+"].alias].length}}</span>";
             else
                 if ( length >= 80 )
                     iclass = 'whuge'; 
@@ -382,7 +382,7 @@ function edit_default( i, icol )
                     if ( length >=40)
                         iclass = 'wbig'; 
         } 
-    return "<input type='text' name='"+icol.alias+"' ng-model='form[columns["+i+"].alias]' class='form-control " + iclass + "'>";
+    return "<input type='text' name='"+icol.alias+"' ng-model='form[columns["+i+"].alias]' class='form-control " + iclass + "'><span class='length'>{{form[columns["+i+"].alias].length}}</span>";
 }
 
 function edit_check( i, icol )
@@ -416,7 +416,7 @@ function edit_text( i, icol )
 {
     var alias = icol.alias;
     if ( icol.extend.weditor < 2 )
-        return "<textarea name='"+alias +"' ng-model='form[columns["+i+"].alias]' class='form-control whuge' style='height: 5em;'></textarea>";
+        return "<textarea name='"+alias +"' ng-model='form[columns["+i+"].alias]' class='form-control whuge' style='height: 5em;'></textarea><span class='length'>{{form[columns["+i+"].alias].length}}</span>";
 
     var iclass = angular.isDefined( cfg.htmleditor ) ? cfg.htmleditor.class : 'redactor';
     var out = "<textarea class='"+iclass+"' id='id-"+alias+"' name='"+alias + "' ng-model='form[columns["+i+"].alias]' style='width: 90%;height: 400px;'></textarea>";
