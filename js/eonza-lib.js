@@ -382,7 +382,8 @@ function edit_default( i, icol )
                     if ( length >=40)
                         iclass = 'wbig'; 
         } 
-    return "<input type='text' name='"+icol.alias+"' ng-model='form[columns["+i+"].alias]' class='form-control " + iclass + "'><span class='length'>{{form[columns["+i+"].alias].length}}</span>";
+    return "<input type='text' name='"+icol.alias+"' ng-model='form[columns["+i+"].alias]' class='form-control " + iclass + "'>" +
+           ( icol.idtype == cnt.FT_VAR ? "<span class='length'>{{form[columns["+i+"].alias].length}}</span>" : '' );
 }
 
 function edit_check( i, icol )
