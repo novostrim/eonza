@@ -87,7 +87,7 @@ function pages( $query, $page, $link )
         in
          onpage => items on page
          page => the current page
-         middle => the pages at the center
+         center => the pages at the center
       )
       link => the name of callback function link( page );
   */
@@ -105,38 +105,33 @@ function pages( $query, $page, $link )
    $ret = array();
    if ( $pages > 1 )
    {
-      $ret[] = array( -1, $curpage == 1 ? '' : $link( $curpage - 1 ), $curpage-1 );
-      if ( $curpage >= $middle )
-      {
-         $ret[] = array( 1, $curpage == 1 ? '' : $link( 1 ), 1 );
-         if ( 1 + $middle != $pages )
-            $ret[] = array( 0, '' );
-      }
-      if ( $curpage < $middle)
-      {
-         $off = 1;
-      }
-      elseif ( $pages - $curpage < $middle -1 )
-      {
-         $off = max( 1, $pages - $middle + 1 );
-      }
-      else 
-         $off = $curpage - 2;
-      
+        $ret[] = array( -1, $curpage == 1 ? '' : $link( $curpage - 1 ), $curpage-1 );
+        if ( $curpage >= $middle )
+        {
+            $ret[] = array( 1, $curpage == 1 ? '' : $link( 1 ), 1 );
+            if ( 1 + $middle != $pages )
+                $ret[] = array( 0, '' );
+        }
+        if ( $curpage < $middle)
+            $off = 1;
+        elseif ( $pages - $curpage < $middle -1 )
+            $off = max( 1, $pages - $middle + 1 );
+        else 
+            $off = $curpage - floor($middle/2);
 //        print "$curpage=$off";
-         for ( $i = $off; $i <= min( $off + $middle-1, $pages ); $i++ )
-         {
-         if ( $i == $curpage )
+        for ( $i = $off; $i <= min( $off + $middle-1, $pages ); $i++ )
+        {
+            if ( $i == $curpage )
                $ret[] = array( $i, '' );
             else
                $ret[] = array( $i, $link( $i ), $i );
-         }
-      if ( $off + $middle <= $pages )
-      { 
-         if ( $off + $middle != $pages )
+        }
+        if ( $off + $middle <= $pages )
+        { 
+            if ( $off + $middle != $pages )
             $ret[] = array( 0, '' );
-         $ret[] = array( $pages, $curpage == $pages ? '' : $link( $pages ), $pages );
-      }
+            $ret[] = array( $pages, $curpage == $pages ? '' : $link( $pages ), $pages );
+        }
       $ret[] = array( -2, $curpage < $pages ? $link( $curpage+1 ) : '', $curpage + 1 );
       $result['offset'] = $onpage * ( $curpage-1 );
       $result['limit'] = " limit $result[offset],".$onpage;
@@ -220,7 +215,10 @@ function getstrict( $name )
 
 function getall( $strict = false )
 {
-    return postall( $strict, true );
+    $result = array();
+    foreach ( $_GET as $ikey => $ipost )
+        $result[ $ikey ] = get( $ikey, '', $strict );
+    return $result;
 }
 
 function pars_list( $list, $src )
