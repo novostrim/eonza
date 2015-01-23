@@ -56,6 +56,7 @@
     </table>
     <center>
     <table><tr><td align="left">
+        <a href="" ng-class="{switchoff:total.result==undefined, switchon:total.result!=undefined }" ng-if="total.is" ng-click="summary( 1 )"><i class="fa fa-fw fa-calculator"></i></a> 
     <select onchange="return js_listselect( this )" class="form-control">
         <option value="0">{{lng.withsel}}</option>
         <option value="delete">{{lng.del}}</option>

@@ -32,9 +32,12 @@ if ( $id && $result['success'] )
     $urlparam = url_params( 'p' );
     $sort = (int)get( 'sort' );
     $filter = get('filter');
+    $summary = (int)get( 'sum' );
     $order = 't._uptime desc';
     $names = array( '-1' => 't.id' );
     $result['filter'] = array();
+    $result['total'] = array();
+    $totallist = array();
     $result['db'] = $db->getrow("select * from ?n where id=?s", CONF_PREFIX.'_tables', $id );
     if ( $result['db'] )
     {
@@ -53,7 +56,8 @@ if ( $id && $result['success'] )
             $names[ $icol['id']] = 't.'.$icol['alias'];
             if ( !$icol['visible'] )            
                 continue;
-
+            if ( $icol['idtype'] == FT_NUMBER || $icol['idtype'] == FT_DECIMAL )
+                $totallist[] = $icol['alias'];
             $extend = json_decode( $icol['extend'], true );
                if ( $icol['idtype'] == FT_PARENT )
                {
@@ -162,6 +166,14 @@ if ( $id && $result['success'] )
         $order = 'order by '.$order;
         $result['result'] = $db->getall("select ?p from ?n as t ?p ?p ?p ?p", implode( ',', $fields ), $dbname,
                 $leftjoin, $qwhere, $order, $result['pages']['limit'] );
+        $result['total']['is'] = count( $totallist );
+        if ( $summary & 0x1 )
+        {
+            foreach ( $totallist as $tl )
+                $sumlist[] = "sum( $tl ) as $tl";
+            $result['total']['result'] = $db->getrow("select ?p from ?n as t ?p", 
+                 implode( ',', $sumlist ), $dbname, $qwhere );
+        }
         if ( !$result['filter'] )
             $result['filter'] = array( array( 'logic' => 0, 'field' => 0, 'not' => false,
                         'compare' => 0, 'value' => '' ));

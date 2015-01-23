@@ -838,6 +838,14 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
         htmlitem = '';
         for (var i = 0; i < $scope.items.length; i++ )
             js_listappend( i, list );
+        if ( $scope.total.result )
+            js_summary( $scope.total, list, 'calculator' );
+    }
+    $scope.summary = function( flag ) {
+        $scope.params.sum = $scope.params.sum & flag ? $scope.params.sum & ~flag :
+                    $scope.params.sum | flag;
+        $scope.update(); 
+        return false;  
     }
     $scope.listedit = function( id ) {
         $scope.currow = id + 1;
@@ -935,6 +943,7 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
                 }
                 $scope.items = data.result;
                 $scope.pages = data.pages;
+                $scope.total = data.total;
                 $scope.filter = data.filter;
                 if ( angular.isDefined($scope.params.parent))
                     $scope.crumbs = data.crumbs;
