@@ -667,7 +667,7 @@ function js_page(  )
 
 function js_summary( src, list, ico )
 {
-    var htmlitem = '<tr class="summary" valign="top"><td style="text-align:center;'+
+    var htmlitem = '<tr class="summary" id="intotal" valign="top"><td style="text-align:center;'+
                'vertical-align: middle;"><i class="fa fa-fw fa-' + ico + '"></i></td><td></td>';
     for ( var k=0; k< Scope.collist.length; k++ )   
     {

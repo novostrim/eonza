@@ -204,9 +204,11 @@ function decimal_sql( $form )
     if ( $dtype == 2 )
         $type = 'double';
     else
-        $type = 'float';
+        $type = 'decimal';
     if ( $form['ext']['dlen'] )
         $type .= "(".$form['ext']['dlen'].")";
+    else
+        $type .= "(9,2)";
     return "$type NOT NULL";
 
 }

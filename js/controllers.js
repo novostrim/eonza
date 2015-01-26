@@ -844,7 +844,13 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
     $scope.summary = function( flag ) {
         $scope.params.sum = $scope.params.sum & flag ? $scope.params.sum & ~flag :
                     $scope.params.sum | flag;
-        $scope.update(); 
+        if ( $scope.params.sum )
+            $scope.update(); 
+        else
+        {
+            $scope.total.result = undefined;
+            $("#intotal").remove();
+        }
         return false;  
     }
     $scope.listedit = function( id ) {
