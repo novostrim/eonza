@@ -392,9 +392,8 @@ geapp.directive('ckEditor', [function () {
                             isReady = false;
                             setData();
                         }
-                    };
+                    }
                 }
-                
             }
-        };
+        }
 }]);

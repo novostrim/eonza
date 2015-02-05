@@ -413,6 +413,14 @@ function edit_linktable( i, icol )
      '<a href="" class="formbtn" ng-click="editlink('+i+')"><i class="fa fa-fw fa-th-list"></i></a>';
 }
 
+function js_redactorpaste( html )
+{
+    var para = html.split("<br><br>");
+    if ( para.length > 1 )
+        html = '<p>' + para.join('</p><p>') + '</p>';
+    return html;
+}
+
 function edit_text( i, icol )
 {
     var alias = icol.alias;
@@ -423,8 +431,8 @@ function edit_text( i, icol )
     var out = "<textarea class='"+iclass+"' id='id-"+alias+"' name='"+alias + "' ng-model='form[columns["+i+"].alias]' style='width: 90%;height: 400px;'></textarea>";
     if ( angular.isUndefined( cfg.htmleditor ))
         out += '<script type="text/javascript">$("textarea[name=\''+ alias +'\']").redactor({buttonSource: true, replaceDivs: false, paragraphize: false,' +
-            "deniedTags: ['html', 'head', 'link', 'body', 'meta', 'style', 'applet']," +
-            ' plugins: [\'table\',\'fontcolor\',\'fontsize\',\'fullscreen\', ]});</script>';
+            "deniedTags: ['html', 'head', 'link', 'body', 'meta', 'style', 'applet'], pasteCallback: js_redactorpaste," +
+            "plugins: ['table','fontcolor','fontsize','fullscreen', ]});</script>";
     return out;    
 }
 

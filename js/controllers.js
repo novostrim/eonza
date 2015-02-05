@@ -17,7 +17,6 @@ geapp.controller('UploadCtrl', function ($scope, FileUploader) {
                     rootScope.msg_warning( text );
                     return false;
                 }
-    //            console.info('filter1');
                 return true;
 //                return this.queue.length < 10;
             }
@@ -69,7 +68,7 @@ geapp.controller('UploadCtrl', function ($scope, FileUploader) {
         });
 */
         uploader.onCompleteItem = function(item, response, status, headers) {
-            if ( uploader.queue.length == 1 && angular.isDefined( uploader.iditem ))
+            if ( !uploader.queue.length && angular.isDefined( uploader.iditem ))
                 uploader.iditem = undefined;
 //            console.info('Complete', xhr, item, response);
             if ( !response.success )
