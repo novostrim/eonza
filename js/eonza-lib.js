@@ -84,6 +84,9 @@ var compare = [
     { title: '<=', id: 14, mask: 0x2000 },
     { title: lng.yes, id: 15, mask: 0x4000 },
     { title: lng.no, id: 16, mask: 0x8000 },
+    { title: lng.thisweek, id: 17, mask: 0x10000 },
+    { title: lng.thismonth, id: 18, mask: 0x20000 },
+    { title: lng.lastndays, id: 19, mask: 0x40000 },
 ];
 
 var types = {
@@ -101,7 +104,7 @@ var types = {
          extend: [ { name: 'length', type: cnt.ET_NUMBER, def: 32 } ] 
     },
     3 : { id: cnt.FT_DATETIME, name: 'fdatetime', verify: number_verify,
-            edit: edit_datetime,
+            filter: { mask: 0x70007 }, edit: edit_datetime,
          extend: [ { name: 'date', title: lng.more, type: cnt.ET_COMBO, def: 2, 
                      list: [ {id: 1, title: lng.fdtime }, { title: lng.fdate, id: 2},
                       { title: 'Timestamp', id: 3}, { title: lng.calendar, id: 4 }
@@ -813,7 +816,7 @@ function js_closeback( obj )
     $(obj).remove();
 }
 
-function js_editdate( obj, ind )
+function js_editdate( obj, ind, filter )
 {
     var start = '';
     var calendar = $(obj).after('<div class="calendar"></div><div onclick="js_closeback(this)" class="modal-backdrop"></div>').next();
@@ -831,7 +834,15 @@ function js_editdate( obj, ind )
         years: '1900-' + moment().add( 2, 'y').format( 'YYYY' ),
         format: 'YYYY-MM-DD',
         onClick: function(date){        // клик по дням вернет сюда дату
-            Scope.editdate( date, ind );
+            if ( !!filter )
+            {
+                var pars = Scope.filter[ ind ].value.split(' ');
+                pars[0] = date;
+                Scope.filter[ ind ].value = pars.join( ' ' );
+                Scope.$apply();
+            }
+            else
+                Scope.editdate( date, ind );
             calendar.next().remove();
             calendar.remove();
         }

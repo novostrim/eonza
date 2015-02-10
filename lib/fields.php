@@ -55,6 +55,14 @@ $COMPARE = array(
     14 => array( "((1<<(f_ - 1 )) & v_)", "!((1<<(f_ - 1 )) & v_)" ),
     15 => array( "f_ != 0", "f_ = 0" ),
     16 => array( "f_ = 0", "f_ != 0" ),
+    17 => array( "YEARWEEK(f_) = YEARWEEK(NOW())", "YEARWEEK(f_) != YEARWEEK(NOW())" ),
+    18 => array( "( YEAR(f_) = YEAR(NOW()) && MONTH(f_) = MONTH(NOW()))", 
+                    "( YEAR(f_) != YEAR(NOW()) || MONTH(f_) != MONTH(NOW()))" ),
+    17 => array( "YEARWEEK(f_) = YEARWEEK(NOW())", "YEARWEEK(f_) != YEARWEEK(NOW())" ),
+    18 => array( "( YEAR(f_) = YEAR(NOW()) && MONTH(f_) = MONTH(NOW()))", 
+                    "( YEAR(f_) != YEAR(NOW()) || MONTH(f_) != MONTH(NOW()))" ),
+    19 => array( "( f_ >= DATE_SUB( CURDATE(), INTERVAL v_ DAY) && DATE(f_) != CURDATE())", 
+                 "( f_ < DATE_SUB( CURDATE(), INTERVAL v_ DAY) || DATE(f_) = CURDATE())" ),
 );
 
 $FIELDS = array(

@@ -158,7 +158,6 @@ function pass_md5( $pass, $full = false )
 {
     if ( $full )
         $pass = md5( $pass );
-        
     return md5( md5( CONF_SALT ).$pass );
 }
 

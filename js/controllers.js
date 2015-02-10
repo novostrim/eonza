@@ -469,6 +469,9 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
         }
         return false;
     }
+    $scope.filterdate = function( fltindex, e ) {
+        js_editdate( e.currentTarget, fltindex, true );
+    }
     $scope.editlink = function( idcol, idfilter, fltindex ) {
         if ( idfilter )
             idcol = colindex( idfilter );
