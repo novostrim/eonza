@@ -5,6 +5,14 @@ String.prototype.insert = function( index, string )
     return this.slice( 0, index ) + string + this.slice( index );
 };
 
+function js_long2ip(ip) {
+  if ( !ip )
+    return '';
+  if ( angular.isString( ip ) && ip.indexOf('.') >= 0 )
+    return ip;
+  return [ip >>> 24, ip >>> 16 & 0xFF, ip >>> 8 & 0xFF, ip & 0xFF].join('.');
+}
+
 function js_phone( phone )
 {
     if ( parseInt( phone ) == 0 )

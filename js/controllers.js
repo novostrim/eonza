@@ -556,7 +556,7 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
             if ( data.success )
             {
                 $rootScope.curitem = data.success;
-                $scope.form = data.result;
+                $scope.proceedform( data.result );
                 $scope.action = lng.savejs;
                 for ( i = 0; i < $rootScope.uploads.length; i++ )
                 {
@@ -640,6 +640,11 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
                             $scope.view[ alias ] = phone.length > 0 ? '<a href="tel:+'+ $scope.form[ alias ] +'" class="phonelink">' + 
                                         phone + '</a>' : phone;
                             break;
+                        case cnt.FTM_IPV4:
+                            $scope.view[ alias ] = js_long2ip( $scope.form[ alias ] );
+//                            if ( $scope.form[ alias ] != $scope.view[ alias ] )
+//                                $scope.form[ alias ] = $scope.view[ alias ];
+                            break;                            
                     }
                     break;
                 default:
@@ -650,6 +655,16 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
 //                        $scope.view[alias] = $sce.trustAsHtml( $scope.view[alias] );
                     break;
             }
+        }
+    }
+    $scope.proceedform = function( data ) {
+        $scope.form = data;
+        var i = $scope.columns.length;
+        while ( i-- )
+        {
+            var icol = $scope.columns[i];
+            if ( types[icol.idtype].form )
+                types[icol.idtype].form( $scope.form, icol );
         }
     }
     $scope.loaditem = function() {
@@ -683,9 +698,10 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
                  table: $routeSegment.$routeParams.id }, function( data ) {
             if ( data.success )
             {
-                $scope.form = data.result;
+                $scope.proceedform( data.result );
                 $scope.action = $scope.form.id != 0 ? lng.savejs : lng.add;
                 $scope.formlink = data.link;
+
                 if ( $scope.mode == cnt.M_VIEW )
                     $scope.formtoview();
                 htmleditor( $scope.form );
@@ -761,7 +777,7 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
                 DbApi( 'getitem', {id: iditem, table: idtable }, function( data ) {
                     if ( data.success )
                     {
-                        $scope.form = data.result;
+                        $scope.proceedform( data.result );
                         $scope.formlink = data.link;
                         $scope.formtoview( columns );
                     }

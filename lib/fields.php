@@ -25,6 +25,7 @@ define('FTM_WEBSITE', 1 );
 define('FTM_EMAIL', 2 );
 define('FTM_PHONE', 3 );
 define('FTM_HASH', 4 );
+define('FTM_IPV4', 5 );
 //define('FT_DATE', 7 );
 //define('FT_HTML', 10 );
 //define('FT_UBYTE', 80 );
@@ -124,6 +125,7 @@ function special_sql( $form )
         case FTM_EMAIL: $type = 'varchar(48)';break;
         case FTM_PHONE: $type = 'bigint';break;
         case FTM_HASH: $type = 'binary(16)';break;
+        case FTM_IPV4: $type = 'int(10) unsigned'; break;
         default: 
             $type = 'varchar(256)';
     }
@@ -294,6 +296,10 @@ function special_save( &$out, $form, $icol, &$outext )
             else
                 $outext = array( $tmp );
             return;
+        case FTM_IPV4:
+            if ( strpos( $val, '.'))
+                $val = ip2long( $val );
+            break;
         default: 
             $val = str_replace('http://', '', utf_lower( $val ));
     }    

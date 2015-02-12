@@ -105,6 +105,7 @@ var lng = {
 	inform: 'Информация',
 	install: 'Установить',
 	installing: 'Установка Eonza',
+	ipv4: 'IPv4 адрес',
 	itemadded: 'Запись успешно добавлена.',
 	itemdel: 'Запись была успешно удалена',
 	itemupdated: 'Запись успешно обновлена.',

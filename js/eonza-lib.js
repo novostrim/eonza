@@ -32,6 +32,7 @@ var cnt = {
     FTM_EMAIL: 2,
     FTM_PHONE: 3,
     FTM_HASH: 4,
+    FTM_IPV4: 5,
 
 // Date
     FTM_DATETIME: 1,
@@ -179,17 +180,24 @@ var types = {
                     ] },
                  ] 
     },
-    13 : { id: cnt.FT_SPECIAL, name: 'fspecial', verify: number_verify, /*view: view_special,*/
-         filter: { mask: 0xffff, extend: 'type', extmask: { 1: 0x77, 2: 0x77, 3: 0x471 }},
+    13 : { id: cnt.FT_SPECIAL, name: 'fspecial', form: special_form, verify: number_verify, /*view: view_special,*/
+         filter: { mask: 0xffff, extend: 'type', extmask: { 1: 0x77, 2: 0x77, 3: 0x471, 5: 0x1 }},
          extend: [ { name: 'type', title: lng.more, type: cnt.ET_COMBO, def: 1, 
                      list: [ {id: 1, title: lng.website }, { title: lng.email, id: 2  },
-                      { title: lng.phone, id: 3}, { title: lng.fhash, id: 4}
+                      { title: lng.phone, id: 3}, { title: lng.fhash, id: 4},
+                      { title: lng.ipv4, id: 5}
             ] }
         ] 
     },    
     99 : { id: cnt.FT_SQL, name: 'fsql', verify: sql_verify,
          extend: [ { name: 'sqlcmd', title: lng.fsql, type: cnt.ET_EDIT, def: '' } ] 
     },
+}
+
+function special_form( form, column )
+{
+    if ( column.extend.idtype == cnt.FNT_IPV4 )
+        form[ column.alias ] = js_long2ip( form[ column.alias ] );
 }
 
 function number_verify( field )  // NUMBER DATETIME TEXT
@@ -358,6 +366,9 @@ function js_list( item )
 
                         item[key] = phone.length > 0 ? '<a href="tel:+'+ item[key] +'" class="phonelink">' + 
                                     phone + '</a>' : phone;
+                        break;
+                    case cnt.FTM_IPV4:
+                        item[key] = js_long2ip( item[key] );
                         break;
                 }
                 break;

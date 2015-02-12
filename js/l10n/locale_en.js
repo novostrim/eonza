@@ -105,6 +105,7 @@ var lng = {
 	inform: 'Information',
 	install: 'Install',
 	installing: 'Installing Eonza',
+	ipv4: 'IPv4 address',
 	itemadded: 'The item has been successfully inserted.',
 	itemdel: 'The item has been successfully deleted.',
 	itemupdated: 'The item has been successfully updated.',
