@@ -27,14 +27,13 @@ if ( $result['success'] )
                 else
                 {
                     $result['success'] = $db->insert( CONF_PREFIX.'_sets', 
-                                   array( 'title' => $curtable['title'] ), array( "_owner=$USER[id]"), true ); 
+                                   array( 'title' => $curtable['title'] ), GS::owner(), true ); 
                     if ( $result['success'] )
                     {
                         $i = 1;
                         foreach ( $list as $val )
                             $db->insert(  CONF_PREFIX.'_sets', array('title'=> $val[ $colname ], 
-                                 'idset' => $result['success'], 'iditem' => $i++ ), 
-                                  array( "_owner=$USER[id]" )); 
+                                 'idset' => $result['success'], 'iditem' => $i++ ), GS::owner()); 
                     }
                 }
             }

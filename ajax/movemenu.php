@@ -4,7 +4,8 @@ require_once 'ajax_common.php';
 
 function sortmenu( $idparent, $id, $sort )
 {
-    global $db;
+    $db = DB::getInstance();
+
     $dbname = CONF_PREFIX.'_menu';
     $i = 1;
     $list = $db->getall( "select id from ?n where idparent = ?s order by idparent,`sort`,title", 

@@ -6,7 +6,7 @@ require_once 'ajax_common.php';
 require_once $_SERVER['DOCUMENT_ROOT'].'/eonza/lib/export.php';
 require_once $_SERVER['DOCUMENT_ROOT'].'/eonza/lib/import.php';
 
-if ( !$USER )
+if ( !GS::userid() )
 {
     print "USER error";
     exit();

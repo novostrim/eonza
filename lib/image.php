@@ -82,7 +82,7 @@ class Image
 
     function savetofile( $filename, $thumb = false )
     {
-    //    global $istrans, $transcolor;
+    //    glob $istrans, $transcolor;
         if ( is_file( $filename ))
             unlink( $filename );
         if ( $this->ftype == 'jpeg' )
@@ -145,7 +145,6 @@ class Image
 
     public function finish( $idfile, $path )
     {
-        global $db;
 
         $params = array('w' => $this->w, 'h' => $this->h );
         if ( $this->opt['thumb'] )
@@ -174,7 +173,7 @@ class Image
             }
             $params['ispreview'] = 1;
         }
-        $db->update( TBL_FILES, $params, '', $idfile );
+        DB::update( TBL_FILES, $params, '', $idfile );
     }
 }
 

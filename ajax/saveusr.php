@@ -16,7 +16,7 @@ if ( $result['success'] )
         $fields['pass'] = pass_md5( $fields['pass'], true );
     }
     $result['success'] = $db->query( "update ?n set ?u where id=?s", 
-                                 CONF_PREFIX.'_users', $fields, $USER['id']);
+                                 CONF_PREFIX.'_users', $fields, GS::userid());
     if ( $result['success'] )
     {
         if ( isset( $ipass ))

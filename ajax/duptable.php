@@ -16,11 +16,10 @@ if ( $result['success'] )
             api_error( 'err_id', "id=$idi" );
         else
         {
-            $curtable['_owner'] = $USER['id'];
             $curtable['title'] = $dest;
-            foreach ( array( 'alias', '_uptime', 'id' ) as $iun )
+            foreach ( array( 'alias', '_uptime', 'id', '_owner' ) as $iun )
                 unset( $curtable[ $iun ] );
-            $result['success'] = $db->insert( $tables, $curtable, '', true ); 
+            $result['success'] = $db->insert( $tables, $curtable, GS::owner(), true ); 
             if ( $result['success'] )
             {
                 $cols = $db->getall( "select * from ?n where idtable=?s", $columns, $idi );

@@ -5,7 +5,9 @@ require_once APP_EONZA.'lib/files.php';
 
 function deleteitem( $id )
 {
-    global $db, $curtbl, $files_is, $dbname, $idtable;
+    global $curtbl, $files_is, $dbname, $idtable;
+
+    $db = DB::getInstance();
 
     if ( $curtbl['istree'] )
     {

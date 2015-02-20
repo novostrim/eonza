@@ -28,7 +28,7 @@ if ( $result['success'] )
                         break;
                 $result['success'] = $db->insert( $setname, array('title'=> $form['title'], 
                          'idset' => $form['idset'], 'iditem' => $i ), 
-                      array( "_owner=$USER[id]" ), true ); 
+                      GS::owner(), true ); 
 //                if ( $result['success'] )
 //                    api_log( $form['table'], $result['success'], 'create' );
             }

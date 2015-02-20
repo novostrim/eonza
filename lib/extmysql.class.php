@@ -50,3 +50,51 @@ class ExtMySQL extends SafeMySQL
     }
 
 }
+
+class DB {
+    protected static $instance;
+    protected static $db;
+
+    public static function getInstance( $opt = '' ) { 
+        if ( self::$instance === null) 
+        { 
+            self::$instance = new DB( $opt );
+        } 
+        return self::$db;
+    }
+    public  function __construct( $opt ) {
+        self::$db = new ExtMySQL( $opt );
+    }
+    private function __clone() {
+    }
+    private function __wakeup() {
+    }
+    public static function getall() {
+        $par = func_get_args();  // PHP 5.3
+        return call_user_func_array( array( self::$db, 'getAll'), $par );
+    }
+    public static function getone() {
+        $par = func_get_args();
+        return call_user_func_array( array( self::$db, 'getOne'), $par );
+    }
+    public static function getrow() {
+        $par = func_get_args();
+        return call_user_func_array( array( self::$db, 'getRow'), $par );
+    }
+    public static function insert() {
+        $par = func_get_args();
+        return call_user_func_array( array( self::$db, 'insert'), $par );
+    }
+    public static function parse() {
+        $par = func_get_args();
+        return call_user_func_array( array( self::$db, 'parse'), $par );
+    }
+    public static function query() {
+        $par = func_get_args();
+        return call_user_func_array( array( self::$db, 'query'), $par );
+    }
+    public static function update() {
+        $par = func_get_args();
+        return call_user_func_array( array( self::$db, 'update'), $par );
+    }
+}

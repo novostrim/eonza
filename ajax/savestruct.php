@@ -3,17 +3,6 @@
 require_once 'ajax_common.php';
 require_once APP_EONZA.'lib/files.php';
 
-/*function columns_list( $tablename )
-{
-    global $db;
-
-    $ret = array();
-    $list = $db->getall("show columns from ?n", $tablename );
-    foreach ( $list as $ilist )
-        $ret[] = $ilist['field'];
-    return $ret;
-}*/
-
 function column_query( $idfield, &$ifield )
 {
     global $FIELDS;
@@ -78,7 +67,7 @@ if ( $result['success'] )
     if ( !$idi )
     {
         $result['success'] = $db->insert( CONF_PREFIX.'_tables', pars_list( 'comment,title,alias,idparent,istree', $pars['form'] ), 
-                     array( "_owner=$USER[id]"), true ); 
+                     GS::owner(), true ); 
         if ( $result['success'] )
         {
             $idi = $result['success'];

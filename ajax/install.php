@@ -49,7 +49,7 @@ if ( !file_exists( $filename ))
             if ( !empty( $form[ $iv ]))
                 $options[ $iv ] = $form[ $iv ];
 
-        $db = new ExtMySQL( $options );
+        $db = DB::getInstance( $options );
         $step = 'err_create';
         define( 'CONF_DB', $form['db'] );
         $tables = $db->tables();

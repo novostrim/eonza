@@ -170,7 +170,7 @@ if ( $id && $result['success'] )
         if ( $summary & 0x1 )
         {
             foreach ( $totallist as $tl )
-                $sumlist[] = "sum( $tl ) as $tl";
+                $sumlist[] = "sum( t.$tl ) as `$tl`";
             $result['total']['result'] = $db->getrow("select ?p from ?n as t ?p", 
                  implode( ',', $sumlist ), $dbname, $qwhere );
         }

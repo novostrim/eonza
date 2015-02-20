@@ -18,10 +18,9 @@ if ( $result['success'] )
             $dbname = alias( $dbt, CONF_PREFIX.'_' );
 
             $fields = $db->getrow("select * from ?n where id=?s", $dbname, $idi );
-            unset( $fields['id'] );
-            unset( $fields['_uptime'] );
-            $fields['_owner'] = $USER['id'];
-            $result['success'] = $db->insert( $dbname, $fields, array( '_uptime=NOW()' ), true ); 
+            foreach ( array( 'id', '_uptime', '_owner') as $fi )
+                unset( $fields[$fi] );
+            $result['success'] = $db->insert( $dbname, $fields, GS::owner(), true ); 
             if ( $result['success'] )
             {
                 api_log( $idtable, $result['success'], 'create' );

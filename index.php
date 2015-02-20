@@ -6,7 +6,7 @@
 */
 require_once "app.inc.php";
 require_once "lib/lib.php";
-
+ 
 $lang = '';
 
 if ( file_exists( APP_DOCROOT.APP_ENTER."conf.inc.php"))
@@ -21,7 +21,7 @@ if ( file_exists( APP_DOCROOT.APP_ENTER."conf.inc.php"))
         'user' => defined( 'CONF_USER' ) ? CONF_USER : '',
         'pass' => defined( 'CONF_PASS' ) ? CONF_PASS : '',
     );
-    $db = new ExtMySQL( $options );
+    $db = DB::getInstance( $options );
 
     $dbpar = $db->getrow( "select * from ?n where id=?s && pass=?s", APP_DB, 
                           CONF_DBID, pass_md5( CONF_PSW, true ));
@@ -45,17 +45,14 @@ if ( file_exists( APP_DOCROOT.APP_ENTER."conf.inc.php"))
 //    $conf['isalias'] = $dbpar['isalias'];
 
     $lang = $conf['dblang'];
-    login();
-    if ( !$USER )
-    {
+    if ( !GS::login())
         $conf['module'] = 'login';
-    }
     else
     {
-        $lang = $USER['lang'];
+        $lang = GS::user('lang');
 //        $conf['apitoken'] = $dbpar['apitoken'];
     }
-    $conf['user'] = $USER;
+    $conf['user'] = GS::user();
 //    REQUEST_URI
 }
 else

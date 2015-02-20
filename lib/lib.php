@@ -13,7 +13,62 @@ require_once "fields.php";
 
 error_reporting( LOCALHOST ? E_ALL | E_STRICT : E_ALL & ~E_NOTICE );
 
-$USER = array();
+class GS {
+    protected static $instance;
+    protected static $user;
+
+    public static function getInstance() { 
+        if ( self::$instance === null) 
+        { 
+            self::$instance = new GS;
+        } 
+        return self::$instance;
+    }
+    public  function __construct() {
+        $user = array();
+    }
+    private function __clone() {
+    }
+    private function __wakeup() {
+    }
+    public static function login() 
+    {
+        // id=1 &&  TIMESTAMPDIFF( HOUR, uptime, NOW()) as lastdif
+        self::$user = DB::getrow( "select id, login, email, 
+            ( DATE_ADD( uptime, INTERVAL 1 HOUR ) < NOW()) as lastdif, lang from ?n 
+            where pass=?s && id=?s", 
+                        CONF_PREFIX.'_users', pass_md5( cookie('pass')), cookie('iduser'));
+        if ( self::$user )
+        {
+            self::$user['access'] = array();
+            if ( self::$user['lastdif'] )
+            {
+                DB::query( "update ?n set uptime = NOW() where id=?i", 
+                           CONF_PREFIX.'_users', self::$user['id'] );
+                cookie_set( 'pass', cookie('pass'), 120 );
+                cookie_set( 'iduser', self::$user['id'], 120 );
+            }
+        }
+        return self::$user ? true : false;
+    }
+    public static function user( $par = '' )
+    {
+        return $par ? self::$user[ $par ] : self::$user;
+    }
+    public static function userid()
+    {
+        return self::$user ? self::$user[ 'id' ] : 0;
+    }
+    public static function owner( $more = '' )
+    {
+        $ret = array( "_owner=".GS::userid() );
+        if ( $more )
+            $ret[] = $more;
+        return $ret;
+    }
+}
+
+GS::getInstance();
 
 function access( $idtable, $action = '' )
 {
@@ -57,31 +112,8 @@ function addfname( $path, $dir, $fname='' )
    return $ret;
 }
 
-function login()
-{
-   global $db, $USER;
-
-// id=1 &&  TIMESTAMPDIFF( HOUR, uptime, NOW()) as lastdif
-   $USER = $db->getrow( "select id, login, email, 
-      ( DATE_ADD( uptime, INTERVAL 1 HOUR ) < NOW()) as lastdif, lang from ?n where pass=?s && id=?s", 
-                        CONF_PREFIX.'_users', pass_md5( cookie('pass')), cookie('iduser'));
-   if ( $USER )
-   {
-      $USER['access'] = array();
-      if ( $USER['lastdif'] )
-      {
-         $db->query( "update ?n set uptime = NOW() where id=?i", 
-                       CONF_PREFIX.'_users', $USER['id'] );
-         cookie_set( 'pass', cookie('pass'), 120 );
-         cookie_set( 'iduser', $USER['id'], 120 );
-      }
-   }
-   return $USER ? true : false;
-}
-
 function pages( $query, $page, $link )
 {
-   global $db;
   /*
       $page = array(
         in
@@ -93,7 +125,7 @@ function pages( $query, $page, $link )
   */
 
    $result = array();
-   $count = ( is_numeric( $query ) ? $query : $db->getOne( $query ));
+   $count = ( is_numeric( $query ) ? $query : DB::getOne( $query ));
    $onpage = max( 1, isset( $page['onpage'] ) ? $page['onpage'] : 50 );
    $pages = max( 1, ceil( $count/$onpage ));
    $curpage = min( ( isset( $page['page'] ) ? max( $page['page'], 1 ) : 1 ), $pages );

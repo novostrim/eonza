@@ -36,9 +36,9 @@ if ( $result['success'] )
         else
         {
             if ( !$outext )
-                $outext = array( /*'_uptime=CURRENT_TIMESTAMP',*/ "_owner=$USER[id]" );
+                $outext = GS::owner();
             else
-                $outext[] = "_owner=$USER[id]";
+                $outext[] = "_owner=".GS::userid();
             $result['success'] = $db->insert( $dbname, $out, $outext, true ); 
             if ( $result['success'] )
                 api_log( $form['table'], $result['success'], 'create' );

@@ -7,8 +7,7 @@ $pars = post( 'params' );
 if ( $result['success'])
 {
     $result['success'] = $db->insert( CONF_PREFIX.'_tables', 
-            array( 'title' => $pars['tblname'] ),
-            array( "_owner=$USER[id]"), true ); 
+            array( 'title' => $pars['tblname'] ), GS::owner(), true ); 
     $extend = array();
     if ( $result['success'] )
     {
@@ -138,7 +137,7 @@ if ( $result['success'])
             if ( $isowner )
             {
                 if ( $db->query( "alter table ?n add `_owner` smallint(5) unsigned NOT NULL", $table ))
-                    $db->query( "update ?n set _owner = $USER[id]", $table );
+                    $db->query( "update ?n set _owner = ?s", $table, GS::userid());
             }
         }
     }
@@ -197,7 +196,7 @@ if ( $result['success'] )
     if ( !$idi )
     {
         $result['success'] = $db->insert( CONF_PREFIX.'_tables', pars_list( 'comment,title,alias,idparent', $pars['form'] ), 
-                     array( '_uptime = NOW()', "_owner=$USER[id]"), true ); 
+                     GS::owner( '_uptime = NOW()' ), true ); 
         if ( $result['success'] )
         {
             $idtable = $result['success'];

@@ -32,7 +32,7 @@ function unpackstr( &$ret, $names, &$in, $off )
 
 function import( $pars )
 {
-    global $db, $USER, $FIELDS;
+    global $db, $FIELDS;
 
 //    $filename = "$pars[output]/".strftime($pars['filename']);
 //    $filename = "$pars[output]/".strftime($pars['filename']);
@@ -86,8 +86,7 @@ function import( $pars )
                 else
                 {
                     $idtable = $db->insert( CONF_PREFIX.'_tables', 
-                        pars_list( 'comment,title,alias,istree', $tbl ), 
-                             array( "_owner=$USER[id]"), true ); 
+                        pars_list( 'comment,title,alias,istree', $tbl ), GS::owner(), true ); 
                     if ( !$tbl['alias'])
                         $tbl['alias'] = CONF_PREFIX."_$idtable";
                     $query = "CREATE TABLE IF NOT EXISTS `$tbl[alias]` (

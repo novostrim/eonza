@@ -10,7 +10,7 @@ if ( $result['success'] )
     if ( !$idi )
     {
         $result['success'] = $db->insert( CONF_PREFIX.'_sets', pars_list( 'title', $pars ), 
-              array( "_owner=$USER[id]"), true ); 
+              GS::owner(), true ); 
     }
     else
     {

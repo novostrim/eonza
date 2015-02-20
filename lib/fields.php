@@ -139,7 +139,7 @@ function enumset_sql( $form )
 
 function linktable_sql( &$form )
 {
-    global $db;
+    $db = DB::getInstance();
 
     $colname = CONF_PREFIX."_columns";
     $extbyte = $form['ext']['extbyte'];
@@ -251,7 +251,7 @@ function var_sql( $form )
 
 function date_save( &$out, $form, $icol, &$outext )
 {
-    global $db;
+    $db = DB::getInstance();
 
     $alias = alias( $icol );
     $val = $form[$alias];
@@ -267,8 +267,6 @@ function date_save( &$out, $form, $icol, &$outext )
 
 function special_save( &$out, $form, $icol, &$outext )
 {
-    global $db;
-
     require_once "utf.php";
 
     $alias = alias( $icol );
@@ -290,7 +288,7 @@ function special_save( &$out, $form, $icol, &$outext )
                 $val = time();
             if ( strlen($val) == 32 )
                 return;
-            $tmp = $db->parse("?n=?p", $alias, "X'".pass_md5( $val, true )."'" );
+            $tmp = DB::parse("?n=?p", $alias, "X'".pass_md5( $val, true )."'" );
             if ( $outext )
                 $outext[] = $tmp;
             else
@@ -308,7 +306,7 @@ function special_save( &$out, $form, $icol, &$outext )
 
 function linktable_save( &$out, $form, $icol, &$outext )
 {
-    global $db;
+    $db = DB::getInstance();
     
     $alias = alias( $icol );
     $val = $form[$alias];
@@ -361,7 +359,7 @@ function text_save( &$out, $form, $icol, &$outext )
 
 function parent_save( &$out, $form, $icol, &$outext )
 {
-    global $db;
+    $db = DB::getInstance();
     
     $alias = alias( $icol );
     $val = empty( $form[$alias] ) ? 0 : $form[$alias];

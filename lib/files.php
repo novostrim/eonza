@@ -5,9 +5,7 @@ define( 'TBL_FILES', CONF_PREFIX."_files" );
 
 function files_download( $id, $browser = false, $thumb = false, $public = '' )
 {
-    global $db;
-
-    $file = $db->getrow("select idtable,folder,filename,size,storage,preview, w, h,
+    $file = DB::getrow("select idtable,folder,filename,size,storage,preview, w, h,
                      ifnull( m.name, 'application/octet-stream' ) as mime from ?n as f
                     left join ?n as m on m.id=f.mime
                     where f.id=?s",
@@ -55,17 +53,15 @@ function files_download( $id, $browser = false, $thumb = false, $public = '' )
 
 function files_getfolder( $idtable )
 {
-    global $db;
-
     $idfolder = 0;
-    $count = $db->getrow("select count( id ) as count, folder from ?n where idtable=?s group by folder order by count", 
+    $count = DB::getrow("select count( id ) as count, folder from ?n where idtable=?s group by folder order by count", 
            CONF_PREFIX."_files", $idtable );
     if ( $count && $count['count'] < 500 )
         $idfolder = $count['folder'];
     $path = STORAGE.$idtable;
     if ( !$idfolder )
     {
-        $idfolder = $db->getone("select ifnull( max( folder ) +1, 1 ) from ?n where idtable=?s", 
+        $idfolder = DB::getone("select ifnull( max( folder ) +1, 1 ) from ?n where idtable=?s", 
                                    CONF_PREFIX."_files", $idtable );
         if ( !is_dir( $path ))
                mkdir( $path, 0777 );
@@ -82,16 +78,13 @@ function files_getfolder( $idtable )
 // Returns true if the table has FT_FILE or FT_IMAGE fields
 function files_is( $idi )
 {
-    global $db;
-    return $db->getone( "select count(*) from ?n where idtable=?s && ( idtype=?s || idtype=?s )",
+    return DB::getone( "select count(*) from ?n where idtable=?s && ( idtype=?s || idtype=?s )",
                                        CONF_PREFIX.'_columns', $idi, FT_FILE, FT_IMAGE ) ? 1 : 0;
 }
 
 function files_delcolumn( $col )
 {
-    global $db;
-
-    $list = $db->getall("select id from ?n 
+    $list = DB::getall("select id from ?n 
                          where idtable=?s && idcol=?s", TBL_FILES, $col['idtable'], $col['id'] );
     foreach ( $list as $il )
         files_delfile( $il['id'], false );
@@ -99,9 +92,7 @@ function files_delcolumn( $col )
 
 function files_delitem( $idtable, $id )
 {
-    global $db;
-
-    $list = $db->getall("select id from ?n 
+    $list = DB::getall("select id from ?n 
                          where idtable=?s && iditem=?s", TBL_FILES, $idtable, $id );
     foreach ( $list as $il )
         files_delfile( $il['id'], false );
@@ -109,9 +100,7 @@ function files_delitem( $idtable, $id )
 
 function files_deltable( $idtable )
 {
-    global $db;
-
-    $list = $db->getall("select id from ?n 
+    $list = DB::getall("select id from ?n 
                          where idtable=?s", TBL_FILES, $idtable );
     foreach ( $list as $il )
         files_delfile( $il['id'], false );
@@ -119,9 +108,9 @@ function files_deltable( $idtable )
 
 function files_delfile( $idi, $toresult )
 {
-    global $result, $db;
+    global $result;
 
-    $fitem = $db->getrow("select id, idtable, idcol, ispreview, iditem, folder from ?n where id=?s",
+    $fitem = DB::getrow("select id, idtable, idcol, ispreview, iditem, folder from ?n where id=?s",
                           TBL_FILES, $idi );
     if ( $fitem )
     {
@@ -132,10 +121,10 @@ function files_delfile( $idi, $toresult )
             if ( $fitem['ispreview'] )
                 @unlink( $path.'_'.$idi );
         }
-        $db->query("delete from ?n where id=?s", TBL_FILES, $idi );
+        DB::query("delete from ?n where id=?s", TBL_FILES, $idi );
         if ( $toresult )
         {
-            $col = $db->getrow("select * from ?n where id=?s", CONF_PREFIX.'_columns', (int)$fitem['idcol'] );
+            $col = DB::getrow("select * from ?n where id=?s", CONF_PREFIX.'_columns', (int)$fitem['idcol'] );
             if ( $col )
                 $result['result'] = files_result( $fitem['idtable'], $col, $fitem['iditem'], true );
         }
@@ -146,23 +135,22 @@ function files_delfile( $idi, $toresult )
 
 function files_edit( $data )
 {
-    global $db;
     $par =  array( 'comment' => $data['comment'] );
     if ( !empty( $data['filename'] ))
         $par['filename'] = $data['filename'];
-    return $db->update( TBL_FILES, $par, '', $data['id'] );
+    return DB::update( TBL_FILES, $par, '', $data['id'] );
 }
 
 function files_result( $idtable, $col, $iditem, $full = false )
 {
-    global $result, $db;
+    global $result;
 
     if ( $full )
     {
         $result['iditem'] = $iditem;
         $result['alias'] = alias( $col );
     }
-    return $db->getall("select id, filename, comment, size, w, h, ispreview from ?n
+    return DB::getall("select id, filename, comment, size, w, h, ispreview from ?n
         where idtable=?s && idcol=?s && iditem=?s order by `sort`", TBL_FILES, 
         $idtable, $col['id'], $iditem );    
 }

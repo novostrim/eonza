@@ -10,7 +10,7 @@ if ( $result['success'] )
     if ( !$idi )
     {
         $result['success'] = $db->insert( CONF_PREFIX.'_tables', pars_list( 'title,idparent', $pars ), 
-              array( 'isfolder=1', "_owner=$USER[id]"), true ); 
+              GS::owner('isfolder=1'), true ); 
     }
     else
     {

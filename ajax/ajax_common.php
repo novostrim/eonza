@@ -22,25 +22,23 @@ function api_error( $err, $temp ='' )
 
 function api_dbname( $idtable )
 {
-    global $db;
-    $alias = $db->getone("select alias from ?n where id=?s", CONF_PREFIX.'_tables', $idtable );
+    $alias = DB::getone("select alias from ?n where id=?s", CONF_PREFIX.'_tables', $idtable );
     return ( $alias ? $alias : CONF_PREFIX."_$idtable" );
 }
 
 function api_colname( $idcol )
 {
-    global $db;
-    $alias = $db->getone("select alias from ?n where id=?s", CONF_PREFIX.'_columns', $idcol );
+    $alias = DB::getone("select alias from ?n where id=?s", CONF_PREFIX.'_columns', $idcol );
     return ( $alias ? $alias : $idcol );
 }
 
 function api_log( $idtable, $idrow, $action )
 {
-    global $db, $USER, $OPTIONS;
+    global $OPTIONS;
 
     if ( $OPTIONS['keeplog'] )
-        $db->insert( CONF_PREFIX.'_log', array( 'idtable'=>$idtable, 'idrow' => $idrow, 
-                'iduser'=> $USER['id'], 'action'=> $action ), array( "uptime=NOW()" ));
+        DB::insert( CONF_PREFIX.'_log', array( 'idtable'=>$idtable, 'idrow' => $idrow, 
+                'iduser'=> GS::userid(), 'action'=> $action ), array( "uptime=NOW()" ));
 }
 
 function getitem( $table, $id )
@@ -118,15 +116,12 @@ function getitem( $table, $id )
 
 function get_linklist( $icol, $offset, $search = '', $parent = 0, $filter=0 )
 {
-    global $db;
-    //                $icol['link_table'] = api_dbname( $icol['extend']['table'] );
-//                $icol['link_column'] = api_colname( (int)$icol['extend']['column'] );
+    $db = DB::getInstance();
     $dblink = api_dbname( $icol['extend']['table'] );
     $collink = api_colname( (int)$icol['extend']['column'] );
     $istree = $db->getone("select istree from ?n where id=?s", CONF_PREFIX.'_tables', $icol['extend']['table'] );
     $onpage = 15;
-//                $link = $icol['id'];
-//                $alias = $collink.$link;
+
     $wsearch = $istree ? 'where _parent='.(int)$parent : 'where 1';
     if ( $filter )
     {
@@ -166,10 +161,10 @@ function get_linklist( $icol, $offset, $search = '', $parent = 0, $filter=0 )
        return $ret;
 }
 
-$db = new ExtMySQL( array( 'host' => defined( 'CONF_DBHOST' ) ? CONF_DBHOST : 'localhost',
+$db = DB::getInstance( array( 'host' => defined( 'CONF_DBHOST' ) ? CONF_DBHOST : 'localhost',
                 'db' => CONF_DB, 'user' => defined( 'CONF_USER' ) ? CONF_USER : '',
                  'pass' => defined( 'CONF_PASS' ) ? CONF_PASS : '' ));
-login();
+GS::login();
 
 if ( CONF_QUOTES ) {
      array_walk_recursive($_GET, 'stripslashes_gpc');
@@ -178,7 +173,7 @@ if ( CONF_QUOTES ) {
      array_walk_recursive($_REQUEST, 'stripslashes_gpc');
 }
 
-if ( !$USER )
+if ( !GS::userid() )
 {
     api_error( 'err_login' );
 //    $result['err'] = 'err_login';

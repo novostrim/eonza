@@ -44,7 +44,7 @@ if ( $result['success'] )
             }
             if ( $result['success'] )
             {
-                $idfile = $db->insert( TBL_FILES, array( '_owner' => $USER['id'],
+                $idfile = $db->insert( TBL_FILES, array( '_owner' => GS::userid(),
                    'idtable' => $idtable, 'idcol' => $col['id'], 'iditem' => $iditem,
                    'folder' => $idfolder,
                    'filename' => $_FILES[ 'file' ]['name'],
