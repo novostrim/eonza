@@ -39,34 +39,7 @@ view - function which returns the pattern of the control for edit mode. By defau
 list - function which returns the pattern of the control for list mode. By default: list_default
 */
 
-$COMPARE = array(
-    1 => array( "f_ = v_", "f_ != v_" ),
-    2 => array( "f_ > v_", "f_ <= v_" ),
-    3 => array( "f_ < v_", "f_ >= v_" ),
-    4 => array( "f_ = 0", "f_ != 0" ),
-    5 => array( "f_ = ''", "f_ != ''" ),
-    6 => array( "f_ LIKE v_", "f_ NOT LIKE v_", 'v_%' ),
-    7 => array( "f_ LIKE v_", "f_ NOT LIKE v_", '%v_%' ),
-    8 => array( "LENGTH( f_ ) = v_", "LENGTH( f_ ) != v_" ),
-    9 => array( "LENGTH( f_ ) > v_", "LENGTH( f_ ) <= v_" ),
-    10 => array( "LENGTH( f_ ) < v_", "LENGTH( f_ ) >= v_" ),
-    11 => array( "f_ LIKE v_", "f_ NOT LIKE v_", '%v_' ),
-    12 => array( "f_ & v_", "!( f_ & v_ )" ),
-    13 => array( "(f_ & v_) = v_", "(f_ & v_) != v_" ),
-    14 => array( "((1<<(f_ - 1 )) & v_)", "!((1<<(f_ - 1 )) & v_)" ),
-    15 => array( "f_ != 0", "f_ = 0" ),
-    16 => array( "f_ = 0", "f_ != 0" ),
-    17 => array( "YEARWEEK(f_) = YEARWEEK(NOW())", "YEARWEEK(f_) != YEARWEEK(NOW())" ),
-    18 => array( "( YEAR(f_) = YEAR(NOW()) && MONTH(f_) = MONTH(NOW()))", 
-                    "( YEAR(f_) != YEAR(NOW()) || MONTH(f_) != MONTH(NOW()))" ),
-    17 => array( "YEARWEEK(f_) = YEARWEEK(NOW())", "YEARWEEK(f_) != YEARWEEK(NOW())" ),
-    18 => array( "( YEAR(f_) = YEAR(NOW()) && MONTH(f_) = MONTH(NOW()))", 
-                    "( YEAR(f_) != YEAR(NOW()) || MONTH(f_) != MONTH(NOW()))" ),
-    19 => array( "( f_ >= DATE_SUB( CURDATE(), INTERVAL v_ DAY) && DATE(f_) != CURDATE())", 
-                 "( f_ < DATE_SUB( CURDATE(), INTERVAL v_ DAY) || DATE(f_) = CURDATE())" ),
-);
-
-$FIELDS = array(
+GS::set( 'fields', array(
    FT_NUMBER => array( 'pars'=>'range', 'sql' => 'number_sql'  /*'sql' => 'int(10)' , 'number' => 1 */ ),
    FT_VAR => array( 'pars' => 'length', 'sql' => 'var_sql'/* 'varchar(%par%)' */ ),
    FT_DATETIME => array( 'pars' => 'date,timenow', 'sql' => 'date_sql', /* 'varchar(%par%)' */
@@ -85,25 +58,7 @@ $FIELDS = array(
    FT_SPECIAL => array( 'pars' => 'type', 'sql' => 'special_sql', 
                               'save' => 'special_save' ),
    FT_SQL => array( 'pars' => 'sqlcmd', 'sql' => 'sql_sql' ),
-/*   3 => array( "name" => 'fdatetime', 'sql' => 'datetime' ),
-   4 => array( "name" => 'ftext', 'sql' => 'text', 'edit' => 'edit_text' ),
-   5 => array( "name" => 'flinktable', 'sql' => 'custom', 'edit' => 'edit_linktable', 'number' => 1,
-               'save' => 'save_linktable' ),
-   6 => array( "name" => 'fcheck', 'sql' => 'tinyint(3) unsigned', 'number' => 1,
-               'edit' => 'edit_check', 'list' => 'list_check' ),
-   7 => array( "name" => 'fdate', 'sql' => 'date' ),
-
-   8 => array( "name" => 'fenumset', 'sql' => 'tinyint(3) unsigned', 'list' => 'list_enumset',
-                  'edit' => 'edit_enumset', 'number' => 1 ),
-   9 => array( "name" => 'fsetset', 'sql' => 'int(10)', 'edit' => 'edit_setset', 'number' => 1,
-               'savex' => 'save_setset' ),
-   10 => array( "name" => 'fhtmlcont', 'sql' => 'text', 'edit' => 'edit_text', 'ptn_edit' => 'pattern_span' ),
-   11 => array( "name" => 'ffile', 'sql' => '', 'save' => 'save_file' ),
-   12 => array( "name" => 'fimage', 'sql' => '', 'save' => 'save_file' ),
-   80 => array( "name" => 'fubyte', 'sql' => 'tinyint(3) unsigned', 'number' => 1 ),
-   81 => array( "name" => 'fushort', 'sql' => 'smallint(5) unsigned', 'number' => 1 ),
-   99 => array( "name" => 'fsql', 'sql' => '%par%' ),*/
-);
+));
 
 function check_sql( $form )
 {
@@ -333,27 +288,27 @@ function linktable_save( &$out, $form, $icol, &$outext )
     $out[ $alias ] = empty( $form[$alias] ) ? 0 : $val;
 }
 
-$BLACKLIST = array( 'html', 'head', 'link', 'body', 'meta', 'script', 'style', 'applet', 'iframe' );
-$BLACKIN = array();
-$BLACKOUT = array();
 
 if ( defined( 'NOSCRIPT' ))
 {
+    $BLACKLIST = array( 'html', 'head', 'link', 'body', 'meta', 'script', 'style', 'applet', 'iframe' );
+    $BLACKIN = $BLACKOUT = array();
+    
     foreach ( $BLACKLIST as $ib )
     {
         $BLACKIN[] = "<$ib";
         $BLACKOUT[] = "<-$ib-";
     }
+    GS::set( 'blackin', $BLACKIN );
+    GS::set( 'blackout', $BLACKOUT );
     foreach ( array( FT_VAR, FT_TEXT, FT_SQL ) as $ibf )
-        $FIELDS[ $ibf ]['save'] = 'text_save';
+        GS::fieldset( $ibf, 'save', 'text_save' );
 }
 
 function text_save( &$out, $form, $icol, &$outext )
 {
-    global $BLACKLIST, $BLACKIN, $BLACKOUT;
-
     $alias = alias( $icol );
-    $out[ $alias ] = str_replace( $BLACKIN, $BLACKOUT, $form[$alias] );
+    $out[ $alias ] = str_replace( GS::get('blackin'), GS::get('blackout'), $form[$alias] );
 }
 
 

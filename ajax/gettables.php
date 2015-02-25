@@ -2,15 +2,15 @@
 
 require_once 'ajax_common.php';
 
-if ( $result['success'] )
+if ( ANSWER::is_success())
 {
     $idparent = get( 'parent' );
     $query = "select * from ".CONF_PREFIX."_tables where";
     if ( $idparent == -1 )
-        $result['result'] = $db->getall( $query." isfolder=0 order by title" );
+        ANSWER::result( $db->getall( $query." isfolder=0 order by title" ));
     else
-        $result['result'] = $db->getall( $query." idparent=?s order by isfolder desc, title", 
-                                         $idparent );
+        ANSWER::result( $db->getall( $query." idparent=?s order by isfolder desc, title", 
+                                         $idparent ));
     if ( $idparent )
     {
         while ( $idparent )
@@ -26,7 +26,7 @@ if ( $result['success'] )
                 break;
         }
         if ( isset( $crumbs ))
-            $result['crumbs'] = array_reverse( $crumbs );
+            ANSWER::resultset( 'crumbs', array_reverse( $crumbs ));
     }
 }
-print json_encode( $result );
+ANSWER::answer();

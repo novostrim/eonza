@@ -8,12 +8,11 @@ require_once 'enz_format.php';
 
 function column_query( $idfield, &$ifield )
 {
-    global $FIELDS;
-
     $fname = defval( $ifield['alias'], $idfield );
     $fid = $ifield['idtype'];
 //    print_r( $ifield );
-    $ftype = $FIELDS[$fid]['sql']( $ifield );
+    $field = GS::field( $fid );
+    $ftype = $field['sql']( $ifield );
     return "`$fname` $ftype";
 }
 
@@ -32,8 +31,7 @@ function unpackstr( &$ret, $names, &$in, $off )
 
 function import( $pars )
 {
-    global $db, $FIELDS;
-
+    $db = DB::getInstance();
 //    $filename = "$pars[output]/".strftime($pars['filename']);
 //    $filename = "$pars[output]/".strftime($pars['filename']);
     $filename = strftime($pars['filename']);
@@ -103,8 +101,9 @@ function import( $pars )
                     {
                         $idfield = $db->insert( CONF_PREFIX.'_columns', 
                         pars_list( 'title,extend,comment,idtype,alias,visible,align,sort', $ifield ), 
-                             array( "idtable = $idtable" ), true ); 
-                        if ( isset( $FIELDS[ $ifield['idtype']]['sql'] ))
+                             array( "idtable = $idtable" ), true );
+                        $gsfield = $GS::field( $ifield['idtype'] );
+                        if ( isset( $gsfield['sql'] ))
                             $query .= column_query( $idfield, $ifield ).", \r\n";
                     }
                     $query .= "  PRIMARY KEY (`id`),

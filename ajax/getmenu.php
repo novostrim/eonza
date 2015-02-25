@@ -2,8 +2,8 @@
 
 require_once 'ajax_common.php';
 
-if ( $result['success'] )
+if ( ANSWER::is_success())
 {
     require_once 'menu_common.php';
 }
-print json_encode( $result );
+ANSWER::answer();

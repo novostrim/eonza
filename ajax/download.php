@@ -9,6 +9,6 @@ if ( !$id )
 require_once 'ajax_common.php';
 require_once APP_EONZA.'lib/files.php';
 
-if ( $result['success'] )
+if ( ANSWER::is_success())
     files_download( $id, !empty( $_GET['view'] ), !empty( $_GET['thumb'] ));
 

@@ -108,8 +108,6 @@ function files_deltable( $idtable )
 
 function files_delfile( $idi, $toresult )
 {
-    global $result;
-
     $fitem = DB::getrow("select id, idtable, idcol, ispreview, iditem, folder from ?n where id=?s",
                           TBL_FILES, $idi );
     if ( $fitem )
@@ -126,7 +124,7 @@ function files_delfile( $idi, $toresult )
         {
             $col = DB::getrow("select * from ?n where id=?s", CONF_PREFIX.'_columns', (int)$fitem['idcol'] );
             if ( $col )
-                $result['result'] = files_result( $fitem['idtable'], $col, $fitem['iditem'], true );
+                ANSWER::result( files_result( $fitem['idtable'], $col, $fitem['iditem'], true ));
         }
         return;
     }
@@ -143,12 +141,10 @@ function files_edit( $data )
 
 function files_result( $idtable, $col, $iditem, $full = false )
 {
-    global $result;
-
     if ( $full )
     {
-        $result['iditem'] = $iditem;
-        $result['alias'] = alias( $col );
+        ANSWER::set( 'iditem', $iditem );
+        ANSWER::set( 'alias', alias( $col ));
     }
     return DB::getall("select id, filename, comment, size, w, h, ispreview from ?n
         where idtable=?s && idcol=?s && iditem=?s order by `sort`", TBL_FILES, 

@@ -2,7 +2,7 @@
 
 require_once 'ajax_common.php';
 
-if ( $result['success'] )
+if ( ANSWER::is_success())
 {
     $pars = post( 'params' );
     $idi = (int)$pars['id'];
@@ -10,9 +10,9 @@ if ( $result['success'] )
     if ( $idi && $idset );
     {
         $setname = CONF_PREFIX.'_sets';
-        $result['success'] = $db->query("delete from ?n where id=?s && idset=?s", $setname, $idi, $idset );
-//            if ( $result['success'] )
+        ANSWER::success( $db->query("delete from ?n where id=?s && idset=?s", $setname, $idi, $idset ));
+//            if ( ANSWER::is_success())
 //                api_log( $idtable, $idi, 'delete' );
     }
 }
-print json_encode( $result );
+ANSWER::answer();

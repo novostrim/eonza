@@ -2,7 +2,7 @@
 
 require_once 'ajax_common.php';
 
-if ( $result['success'] )
+if ( ANSWER::is_success())
 {
     $pars = post( 'params' );
     $idi = (int)$pars['id'];
@@ -20,19 +20,18 @@ if ( $result['success'] )
             $fields = $db->getrow("select * from ?n where id=?s", $dbname, $idi );
             foreach ( array( 'id', '_uptime', '_owner') as $fi )
                 unset( $fields[$fi] );
-            $result['success'] = $db->insert( $dbname, $fields, GS::owner(), true ); 
-            if ( $result['success'] )
+            ANSWER::success( $db->insert( $dbname, $fields, GS::owner(), true )); 
+            if ( ANSWER::is_success())
             {
-                api_log( $idtable, $result['success'], 'create' );
+                api_log( $idtable, ANSWER::is_success(), 'create' );
                 $columns = $db->getall("select * from ?n where idtable=?s", 
                                           CONF_PREFIX.'_columns', $idtable );
                 foreach ( $columns as &$icol )
-                {
                     $icol['idalias'] = alias( $icol );
-                }
-                getitem( $dbt, $result['success'] );
+
+                getitem( $dbt['id'], ANSWER::is_success(), $dbname, $columns );
             }
         }
     }
 }
-print json_encode( $result );
+ANSWER::answer();

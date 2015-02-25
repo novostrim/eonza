@@ -2,7 +2,7 @@
 
 require_once 'ajax_common.php';
 
-if ( $result['success'] )
+if ( ANSWER::is_success())
 {
     $pars = post( 'params' );
     $idi = $pars['id'];
@@ -26,14 +26,14 @@ if ( $result['success'] )
                     api_error( 'err_limitset' );
                 else
                 {
-                    $result['success'] = $db->insert( CONF_PREFIX.'_sets', 
-                                   array( 'title' => $curtable['title'] ), GS::owner(), true ); 
-                    if ( $result['success'] )
+                    ANSWER::success( $db->insert( CONF_PREFIX.'_sets', 
+                                   array( 'title' => $curtable['title'] ), GS::owner(), true )); 
+                    if ( ANSWER::is_success())
                     {
                         $i = 1;
                         foreach ( $list as $val )
                             $db->insert(  CONF_PREFIX.'_sets', array('title'=> $val[ $colname ], 
-                                 'idset' => $result['success'], 'iditem' => $i++ ), GS::owner()); 
+                                 'idset' => ANSWER::is_success(), 'iditem' => $i++ ), GS::owner()); 
                     }
                 }
             }
@@ -44,4 +44,4 @@ if ( $result['success'] )
         }
     }
 }
-print json_encode( $result );
+ANSWER::answer();

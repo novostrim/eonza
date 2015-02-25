@@ -4,24 +4,24 @@ require_once 'ajax_common.php';
 
 $pars = post( 'params' );
 
-if ( $result['success'])
+if ( ANSWER::is_success())
 {
-    $result['success'] = $db->insert( CONF_PREFIX.'_tables', 
-            array( 'title' => $pars['tblname'] ), GS::owner(), true ); 
+    ANSWER::success( $db->insert( CONF_PREFIX.'_tables', 
+            array( 'title' => $pars['tblname'] ), GS::owner(), true )); 
     $extend = array();
-    if ( $result['success'] )
+    if ( ANSWER::is_success())
     {
-        $table = CONF_PREFIX.'_'.$result['success'];
+        $table = CONF_PREFIX.'_'.( ANSWER::is_success());
         $ret = $db->query("create table ?n like ?n", $table, $pars['tblname'] );
         if ( $pars['importdata'])
             $ret = $db->query("insert into ?n select * from ?n", $table, $pars['tblname'] );
         if ( !$ret )
         {
-            $db->query("delete from ?n where id=?s", CONF_PREFIX.'_tables', $result['success'] );
+            $db->query("delete from ?n where id=?s", CONF_PREFIX.'_tables', ANSWER::is_success() );
             api_error( 101 );
         }
         else {
-            api_log( $result['success'], 0, 'create' );
+            api_log( ANSWER::is_success(), 0, 'create' );
             $list = $db->getall("show columns from ?n", $table );
             $isid = 1;
             $istime = 1;
@@ -126,7 +126,7 @@ if ( $result['success'])
                     if ( $extend )
                         $fields['extend'] = json_encode( $extend );
                     $db->insert( CONF_PREFIX.'_columns', $fields,
-                         array( "idtable = $result[success]", "`sort`=$sort" ), true ); 
+                         array( "idtable = ".ANSWER::is_success(), "`sort`=$sort" ), true ); 
                     $sort++;
                 }
             }
@@ -152,14 +152,6 @@ if ( $result['success'])
 //print_r( $pars );
 /**/
 /*
-function column_query( $idfield, $ifield )
-{
-    global $FTYPES;
-    $fname = empty( $ifield['alias']) ? $idfield : $ifield['alias'];
-    $ftype = str_replace( "%par%", $ifield['extpar'], $FTYPES[ $ifield['idtype']]['sql'] );
-    return "`$fname` $ftype NOT NULL";
-}
-
 function is_name( $val )
 {
     return preg_match("/^[a-zA-Z_0-9]+$/", $val );
@@ -189,18 +181,18 @@ if ( $dbname )
         api_error( 'err_dbexist', $dbname );
 }
 
-if ( $result['success'] )
+if ( ANSWER::is_success())
 {
-    $result['result'] = array();
+    $xresult['result'] = array();
 //    print_r( $tables );
     if ( !$idi )
     {
-        $result['success'] = $db->insert( CONF_PREFIX.'_tables', pars_list( 'comment,title,alias,idparent', $pars['form'] ), 
+        $xresult['success'] = $db->insert( CONF_PREFIX.'_tables', pars_list( 'comment,title,alias,idparent', $pars['form'] ), 
                      GS::owner( '_uptime = NOW()' ), true ); 
-        if ( $result['success'] )
+        if ( ANSWER::is_success())
         {
-            $idtable = $result['success'];
-//            $result['success'] = true;
+            $idtable = $xresult['success'];
+//            $xresult['success'] = true;
             if ( !$dbname )
                 $dbname = CONF_PREFIX."_$idtable";
             $query = "CREATE TABLE IF NOT EXISTS `$dbname` (
@@ -246,9 +238,9 @@ if ( $result['success'] )
             else
                 $dbname = $curtbl['alias'] ? $curtbl['alias'] : CONF_PREFIX."_$idi";
 
-            $result['success'] = $db->update( CONF_PREFIX.'_tables', 
+            $xresult['success'] = $db->update( CONF_PREFIX.'_tables', 
                     pars_list( 'comment,title', $pars['form'] ), '', $idi ); 
-            if ( $result['success'] )
+            if ( ANSWER::is_success())
             {
                 $coldb = CONF_PREFIX.'_columns';
                 $db->query( "update $coldb set `sort`=30000 where idtable=?s", $idi );
@@ -297,7 +289,7 @@ if ( $result['success'] )
         }
     }
 }
-if ( $result['success'] )
-    $result['result']['idparent'] = $idi ? $curtbl['idparent'] : $pars['form']['idparent'];
+if ( ANSWER::is_success())
+    $xresult['result']['idparent'] = $idi ? $curtbl['idparent'] : $pars['form']['idparent'];
 */    
-print json_encode( $result );
+ANSWER::answer();

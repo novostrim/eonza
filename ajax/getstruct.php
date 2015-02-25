@@ -3,31 +3,32 @@
 require_once 'ajax_common.php';
 require_once 'index_common.php';
 
-if ( $result['success'] )
+if ( ANSWER::is_success())
 {
-    $result['result'] = array( 'form' => array(), 'items' => array());
+    ANSWER::result( array( 'form' => array(), 'items' => array()));
 
     $idi = (int)get( 'id' );
     if ( $idi )
     {
-        $result['result']['form'] = $db->getrow("select * from ?n where id=?s",
+        $form = $db->getrow("select * from ?n where id=?s",
                                        CONF_PREFIX.'_tables', $idi );
-        if ( !$result['result']['form'] )
+        if ( !$form )
             api_error( 'err_id', "id=$idi" );
         else
         {
+            ANSWER::resultset( 'form', $form );
             $fields = array();
-            $result['result']['items'] = $db->getall("select * from ?n where idtable=?s && idtype!=?s order by ?n",
+            $items = $db->getall("select * from ?n where idtable=?s && idtype!=?s order by ?n",
                                        CONF_PREFIX.'_columns', $idi, FT_PARENT, 'sort' );
-            foreach ( $result['result']['items'] as &$iext )
+            foreach ( $items as &$iext )
             {
                 $iext['extend'] = json_decode( $iext['extend'] );
                 $fields[ alias( $iext )] = $iext['title'];
             }
-            $result['result']['index'] = index_list( $result['result']['form']['alias'] ? 
-                                    $result['result']['form']['alias'] : CONF_PREFIX."_$idi",
-                                    $fields );
+            ANSWER::resultset( 'items', $items );
+            ANSWER::resultset( 'index', index_list( $form['alias'] ? 
+                                $form['alias'] : CONF_PREFIX."_$idi", $fields ));
         }
     }
 }
-print json_encode( $result );
+ANSWER::answer();

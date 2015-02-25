@@ -5,7 +5,7 @@ require_once 'index_common.php';
 
 $pars = post( 'params' );
 
-if ( $result['success'] )
+if ( ANSWER::is_success())
 {
     $list = '';
     $type = 'INDEX';
@@ -13,7 +13,7 @@ if ( $result['success'] )
     {
         if ( !(int)$ifield )
             continue;
-        $col = $db->getrow("select alias, idtype from ?n where id=?s", CONF_PREFIX.'_columns', $ifield );
+        $col = $db->getrow("select id, alias, idtype from ?n where id=?s", CONF_PREFIX.'_columns', $ifield );
         if ( in_array( $col['idtype'], array( FT_UNKNOWN, FT_PARENT, FT_FILE, FT_IMAGE )))
             continue;
         $alias = $col['alias'] ? $col['alias'] : $col['id'];
@@ -33,10 +33,9 @@ if ( $result['success'] )
     else
     {
         $dbname = alias( $table, CONF_PREFIX.'_' );
-        $result['success'] = $db->query( "alter table ?n add ?p ( ?p )", $dbname, $type, $list );
-        if ( $result['success'] )
-            $result['index'] = index_list_table( $table );
+        ANSWER::success( $db->query( "alter table ?n add ?p ( ?p )", $dbname, $type, $list ));
+        if ( ANSWER::is_success())
+            ANSWER::set( 'index', index_list_table( $table ));
     }
 }
-
-print json_encode( $result );
+ANSWER::answer();

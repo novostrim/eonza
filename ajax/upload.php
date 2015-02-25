@@ -5,7 +5,7 @@ require_once APP_EONZA.'lib/files.php';
 
 //print_r( $_POST );
 //print_r( $_FILES );
-if ( $result['success'] )
+if ( ANSWER::is_success())
 {
     if ( !isset( $_POST['idcol']) || !isset( $_POST['iditem']) || empty( $_FILES ) ||
           !isset( $_FILES[ 'file' ] ))
@@ -42,7 +42,7 @@ if ( $result['success'] )
                 if ( $image->check( $_FILES['file'] ))
                     $image->original( $_FILES['file']['tmp_name'] );
             }
-            if ( $result['success'] )
+            if ( ANSWER::is_success())
             {
                 $idfile = $db->insert( TBL_FILES, array( '_owner' => GS::userid(),
                    'idtable' => $idtable, 'idcol' => $col['id'], 'iditem' => $iditem,
@@ -54,7 +54,7 @@ if ( $result['success'] )
                     api_error( 'File table error' );
                 else
                 {
-                    if ( $result['success'])
+                    if ( ANSWER::is_success())
                     {
                         if ( !$idfolder )
                         {
@@ -69,17 +69,17 @@ if ( $result['success'] )
                                 api_error( 'err_writefile', STORAGE );
                         }
                     }                    
-                    if ( $result['success'])
+                    if ( ANSWER::is_success())
                     {
                         if ( $col['idtype'] == FT_IMAGE )
                             $image->finish( $idfile, $idfolder ? STORAGE.$idtable."/$idfolder" : '' );
-                        $result['result'] = files_result( $idtable, $col, $iditem, true );
+                        ANSWER::result( files_result( $idtable, $col, $iditem, true ));
                     }
-    //                $result['result'] = 'File transfer completed';
+    //                $xresult['result'] = 'File transfer completed';
                 }
             }
         }
     }
 }
-print json_encode( $result );
+ANSWER::answer();
 

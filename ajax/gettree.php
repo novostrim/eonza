@@ -2,16 +2,15 @@
 
 require_once 'ajax_common.php';
 
-$dbname = get( 'dbname' );
-$id = get( 'id' );
+GS::set( 'dbname', CONF_PREFIX.'_'.get( 'dbname' ));
+GS::set( 'id', get( 'id' ));
 
 function subfolder( $idparent, $title  )
 {
-    global $dbname, $db, $id;
-
+    $id = GS::get('id');
     $ret = array( 'id' => $idparent, 'title' => $title );
-    $list = $db->getall("select title, id from ?n where isfolder=1 && idparent=?s order by idparent,title", 
-                         CONF_PREFIX.'_'.$dbname, $idparent );
+    $list = DB::getall("select title, id from ?n where isfolder=1 && idparent=?s order by idparent,title", 
+                         GS::get('dbname'), $idparent );
     if ( $list )
         foreach ( $list as $ilist )
             if ( !$id || $id != $ilist['id'] )
@@ -21,8 +20,7 @@ function subfolder( $idparent, $title  )
     return $ret;
 }
 
-if ( $result['success'] )
-{
-    $result['result'] = subfolder( 0, '' );
-}
-print json_encode( $result );
+if ( ANSWER::is_success())
+    ANSWER::result( subfolder( 0, '' ));
+
+ANSWER::answer();

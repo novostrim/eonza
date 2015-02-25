@@ -2,17 +2,17 @@
 
 require_once 'ajax_common.php';
 
-if ( $result['success'] )
+if ( ANSWER::is_success())
 {
     $icol = $db->getrow("select * from ?n where id=?s && ( idtype=?s ||  idtype=?s )", 
                  CONF_PREFIX.'_columns', (int)get( 'id' ), FT_LINKTABLE, FT_PARENT );
     if ( $icol )
     {
         $icol['extend'] = json_decode( $icol['extend'], true );
-        $result['result'] = get_linklist( $icol, (int)get( 'offset' ), get('search'), 
-                    (int)get( 'parent' ), get( 'filter' ));
+        ANSWER::result( get_linklist( $icol, (int)get( 'offset' ), get('search'), 
+                    (int)get( 'parent' ), get( 'filter' )));
     }
     else
         api_error('Link table');
 }
-print json_encode( $result );
+ANSWER::answer();

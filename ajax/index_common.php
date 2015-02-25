@@ -2,9 +2,7 @@
 
 function index_list( $dbname, $fields )
 {
-    global $db;
-
-    $index = $db->getall("show index from ?n", $dbname );
+    $index = DB::getall("show index from ?n", $dbname );
     $indexret = array();
     $last = '';
     foreach ( $index as $ind )
@@ -25,11 +23,10 @@ function index_list( $dbname, $fields )
 
 function index_list_table( $table )
 {
-    global $db;
     $ret = array();
 
     $fields = array();
-    $items = $db->getall("select * from ?n where idtable=?s && idtype!=?s order by ?n",
+    $items = DB::getall("select * from ?n where idtable=?s && idtype!=?s order by ?n",
                                    CONF_PREFIX.'_columns', $table['id'], FT_PARENT, 'sort' );
     foreach ( $items as $iext )
         $fields[ alias( $iext )] = $iext['title'];

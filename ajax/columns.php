@@ -3,15 +3,15 @@
 require_once 'ajax_common.php';
 
 $id = get( 'id' );
-if ( $id && $result['success'] )
+if ( $id && ANSWER::is_success())
 {
-//    $result['result'] = array( 'coledit' => array(), 'collist' => array());
-    $result['db'] = $db->getrow("select * from ?n where id=?s", CONF_PREFIX.'_tables', $id );
-    if ( $result['db'] )
+    ANSWER::set( 'db', $db->getrow("select * from ?n where id=?s", CONF_PREFIX.'_tables', $id ));
+
+    if ( ANSWER::get( 'db' ))
     {
-        $result['columns'] = $db->getall("select * from ?n where idtable=?s order by `sort`", CONF_PREFIX.'_columns', $id );
+        $columns = $db->getall("select * from ?n where idtable=?s order by `sort`", CONF_PREFIX.'_columns', $id );
         $i = 0;
-        foreach ( $result['columns'] as &$icol )
+        foreach ( $columns as &$icol )
         {
             $icol['class'] = '';
             $alias = '';
@@ -34,15 +34,16 @@ if ( $id && $result['success'] )
 //        $alias = alias( $icol );
             $icol['alias'] =  alias( $icol );//$alias;
         }
-/*        if ( $result['db']['istree'] )
+        ANSWER::set( 'columns', $columns );
+/*        if ( $xresult['db']['istree'] )
         {
-            array_unshift( $result['columns'], array( 'id' => 0xffffff, 'title' => '', 
-                'idtype' => FT_PARENT, 'alias' => '_parent', 'extend'=>array( 'table'=> $result['db']['id'],
-                                   'column'=> $result['columns'][0]['id'],
+            array_unshift( $xresult['columns'], array( 'id' => 0xffffff, 'title' => '', 
+                'idtype' => FT_PARENT, 'alias' => '_parent', 'extend'=>array( 'table'=> $xresult['db']['id'],
+                                   'column'=> $xresult['columns'][0]['id'],
                                    'extbyte' => 2 ),
                 'sort' => -1, 'align'=>0, 'visible' => '1' ));
-            $result['columns'][0]['link'] = get_linklist( $result['columns'][0], 0 );
+            $xresult['columns'][0]['link'] = get_linklist( $xresult['columns'][0], 0 );
         }*/
     }
 }
-print json_encode( $result );
+ANSWER::answer();

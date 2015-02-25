@@ -15,13 +15,13 @@ $ext = empty( $settings['loginshort'] ) ? $db->parse( " && login=?s", $form['log
 $usr = $db->getrow( "select id, login,lang from ?n where pass=?s ?p", 
                           CONF_PREFIX.'_users', pass_md5( $form['psw'], true ), $ext );
 if ( !$usr )
-    $result['err'] = 'err_login';
+    ANSWER::set( 'err', 'err_login' );
 else
 {
-    $result['success'] = true;
-    $result['user'] = $usr;
+    ANSWER::success( true );
+    ANSWER::set( 'user', $usr );
     cookie_set( 'pass', md5( $form['psw'] ), 120 );
     cookie_set( 'iduser', $usr['id'], 120 );
 }
-print json_encode( $result );
+ANSWER::answer();
 

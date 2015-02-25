@@ -3,9 +3,37 @@
 require_once 'ajax_common.php';
 require_once APP_EONZA.'lib/utf.php';
 
+GS::set( 'compare', array(
+    1 => array( "f_ = v_", "f_ != v_" ),
+    2 => array( "f_ > v_", "f_ <= v_" ),
+    3 => array( "f_ < v_", "f_ >= v_" ),
+    4 => array( "f_ = 0", "f_ != 0" ),
+    5 => array( "f_ = ''", "f_ != ''" ),
+    6 => array( "f_ LIKE v_", "f_ NOT LIKE v_", 'v_%' ),
+    7 => array( "f_ LIKE v_", "f_ NOT LIKE v_", '%v_%' ),
+    8 => array( "LENGTH( f_ ) = v_", "LENGTH( f_ ) != v_" ),
+    9 => array( "LENGTH( f_ ) > v_", "LENGTH( f_ ) <= v_" ),
+    10 => array( "LENGTH( f_ ) < v_", "LENGTH( f_ ) >= v_" ),
+    11 => array( "f_ LIKE v_", "f_ NOT LIKE v_", '%v_' ),
+    12 => array( "f_ & v_", "!( f_ & v_ )" ),
+    13 => array( "(f_ & v_) = v_", "(f_ & v_) != v_" ),
+    14 => array( "((1<<(f_ - 1 )) & v_)", "!((1<<(f_ - 1 )) & v_)" ),
+    15 => array( "f_ != 0", "f_ = 0" ),
+    16 => array( "f_ = 0", "f_ != 0" ),
+    17 => array( "YEARWEEK(f_) = YEARWEEK(NOW())", "YEARWEEK(f_) != YEARWEEK(NOW())" ),
+    18 => array( "( YEAR(f_) = YEAR(NOW()) && MONTH(f_) = MONTH(NOW()))", 
+                    "( YEAR(f_) != YEAR(NOW()) || MONTH(f_) != MONTH(NOW()))" ),
+    17 => array( "YEARWEEK(f_) = YEARWEEK(NOW())", "YEARWEEK(f_) != YEARWEEK(NOW())" ),
+    18 => array( "( YEAR(f_) = YEAR(NOW()) && MONTH(f_) = MONTH(NOW()))", 
+                    "( YEAR(f_) != YEAR(NOW()) || MONTH(f_) != MONTH(NOW()))" ),
+    19 => array( "( f_ >= DATE_SUB( CURDATE(), INTERVAL v_ DAY) && DATE(f_) != CURDATE())", 
+                 "( f_ < DATE_SUB( CURDATE(), INTERVAL v_ DAY) || DATE(f_) = CURDATE())" ),
+));
+
+
 function pagelink( $page )
 {
-    global $urlparam;
+    $urlparam = GS::get( 'urlparam' );
 
     $ret = '#/table'.( $urlparam ? '?'.$urlparam : '');
     if ( $page == 1 )
@@ -14,34 +42,36 @@ function pagelink( $page )
     return $ret.( $urlparam ? '&' : '?').'p='.$page;
 }
 
-function fltcompare( $field, $not, $compare, $value )
+function fltcompare( $field, $not, $compare, $value, $names )
 {
-    global $names, $COMPARE, $db;
-
-    if ( !isset( $COMPARE[ $compare ]) || !isset( $names[ $field ]) )
+    if ( !GS::ifget( 'compare', $compare ) || !isset( $names[ $field ]) )
         return '';
-    if ( isset( $COMPARE[$compare][2] ))
-        $value = str_replace( 'v_', $value, $COMPARE[$compare][2] );
-    return str_replace( array('f_', 'v_'), array( $names[ $field ], $db->parse( '?s', $value )), 
-                        $COMPARE[$compare][$not] );
+    $cmp = GS::get( 'compare', $compare );
+    if ( isset( $cmp[2] ))
+        $value = str_replace( 'v_', $value, $cmp[2] );
+    return str_replace( array('f_', 'v_'), array( $names[ $field ], DB::parse( '?s', $value )), 
+                        $cmp[$not] );
 }
 
 $id = get( 'id' );
-if ( $id && $result['success'] )
+if ( $id && ANSWER::is_success() )
 {
-    $urlparam = url_params( 'p' );
+    GS::set( 'urlparam', url_params( 'p' ));
     $sort = (int)get( 'sort' );
     $filter = get('filter');
     $summary = (int)get( 'sum' );
     $order = 't._uptime desc';
     $names = array( '-1' => 't.id' );
-    $result['filter'] = array();
-    $result['total'] = array();
+    $retfilter = array();
+    ANSWER::set( 'filter', array());
+    $total = array();
+    ANSWER::set( 'total', array());
     $totallist = array();
-    $result['db'] = $db->getrow("select * from ?n where id=?s", CONF_PREFIX.'_tables', $id );
-    if ( $result['db'] )
+    $retdb = $db->getrow("select * from ?n where id=?s", CONF_PREFIX.'_tables', $id );
+    if ( $retdb )
     {
-        $dbname = alias( $result['db'], CONF_PREFIX.'_' );
+        $dbname = alias( $retdb, CONF_PREFIX.'_' );
+        ANSWER::set( 'db', $retdb );
         $fields = array( "t.id", "t._uptime" );
         $leftjoin = '';
         $field2ind = array();
@@ -110,7 +140,7 @@ if ( $id && $result['success'] )
             }
         }
         $qwhere = '';//$db->parse("where idtask=?s && status>0", $task['id'] );
-        if ( $result['db']['istree'] && isset( $_GET['parent'] ))
+        if ( $retdb['istree'] && isset( $_GET['parent'] ))
         {
             $parent = (int)get( 'parent' );
             $qwhere = $db->parse( 'where t.`_parent`=?s', $parent );
@@ -122,7 +152,7 @@ if ( $id && $result['success'] )
                 $parent = $par['_parent'];
                 $crumbs[] = array( $par['title'], $par['id'] );
             }
-             $result['crumbs'] = array_reverse( $crumbs );
+            ANSWER::set( 'crumbs', array_reverse( $crumbs ));
         }
         if ( $filter )
         {
@@ -145,54 +175,41 @@ if ( $id && $result['success'] )
                     if ( $columns[$field2ind[ $field ]]['idtype'] == FT_LINKTABLE )
                         $fltvalue = (int)$value;
                 }
-                $fout = fltcompare( $field, $not, $compare, $fltvalue );
+                $fout = fltcompare( $field, $not, $compare, $fltvalue, $names );
                 if ( $fout )
                 {
                     $qwhere .= $db->parse(" ?p ?p", $logic == 1 ? '||' : '&&', $fout );
-                    $result['filter'][] = array( 'logic' => $logic, 'field' => $field, 'not' => $not ? true : false,
+                    $retfilter[] = array( 'logic' => $logic, 'field' => $field, 'not' => $not ? true : false,
                                    'compare' => $compare, 'value' => $value );
                 }
             }
         }
 
         $query = $db->parse( "select count(`id`) from ?n as t ?p", $dbname, $qwhere );
-        $onpage = $OPTIONS['perpage'];
+        $onpage = GS::get( 'options', 'perpage' );
         if ( $onpage < 1 )
             $onpage = 50;
-        $result['pages'] = pages( $query, array( 'onpage' => $onpage, 'page' => (int)get('p') ), 'pagelink' );
-/*        $result['items'] = $db->getall("select * from ?n as m ?p
-            order by status desc,idowner,name ?p", CONF_PREFIX.'_files', $qwhere, $result['pages']['limit'] );
-*/
+        $pages = pages( $query, array( 'onpage' => $onpage, 'page' => (int)get('p') ), 'pagelink' );
         $order = 'order by '.$order;
-        $result['result'] = $db->getall("select ?p from ?n as t ?p ?p ?p ?p", implode( ',', $fields ), $dbname,
-                $leftjoin, $qwhere, $order, $result['pages']['limit'] );
-        $result['total']['is'] = count( $totallist );
+        ANSWER::result( $db->getall("select ?p from ?n as t ?p ?p ?p ?p", implode( ',', $fields ), $dbname,
+                $leftjoin, $qwhere, $order, $pages['limit'] ));
+        ANSWER::set( 'pages', $pages );
+        $total['is'] = count( $totallist );
         if ( $summary & 0x1 )
         {
             foreach ( $totallist as $tl )
                 $sumlist[] = "sum( t.$tl ) as `$tl`";
-            $result['total']['result'] = $db->getrow("select ?p from ?n as t ?p", 
+            $total['result'] = $db->getrow("select ?p from ?n as t ?p", 
                  implode( ',', $sumlist ), $dbname, $qwhere );
         }
-        if ( !$result['filter'] )
-            $result['filter'] = array( array( 'logic' => 0, 'field' => 0, 'not' => false,
+        ANSWER::set( 'total', $total );
+        if ( !$retfilter )
+            $retfilter = array( array( 'logic' => 0, 'field' => 0, 'not' => false,
                         'compare' => 0, 'value' => '' ));
-/*        foreach ( $result['result'] as &$ival )
-        {
-            foreach ( $result['columns'] as &$icol )
-            {
-                $idf = $icol['idtype'];
-                $ial = $icol['alias'];
-                $type = $FTYPES[ $idf ];
-
-                $pattern = isset( $type['list'] ) ? $type['list'] : 'list_default';
-                $pattern( $ival[ $ial ], $icol );
-//                $ival[ $ial ]['_type']
-            }
-        }*/
+        ANSWER::set( 'filter', $retfilter );
     }
     else
-        $result['success'] = false;
+        ANSWER::success( false );
 }
 
-print json_encode( $result );
+ANSWER::answer();

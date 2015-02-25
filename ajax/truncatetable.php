@@ -3,7 +3,7 @@
 require_once 'ajax_common.php';
 require_once APP_EONZA.'lib/files.php';
 
-if ( $result['success'] )
+if ( ANSWER::is_success())
 {
     $pars = post( 'params' );
     $idi = $pars['id'];
@@ -12,9 +12,9 @@ if ( $result['success'] )
         if ( $db->query("truncate table ?n", api_dbname( $idi ) ))
         {
             files_deltable( $idi );
-            $result['success'] = $idi;
-            api_log( $result['success'], 0, 'truncate' );
+            ANSWER::success( $idi );
+            api_log( ANSWER::is_success(), 0, 'truncate' );
         }
     }
 }
-print json_encode( $result );
+ANSWER::answer();

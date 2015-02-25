@@ -24,7 +24,7 @@ function sortmenu( $idparent, $id, $sort )
 }
 
 $pars = post('params');
-if ( $result['success'] )
+if ( ANSWER::is_success())
 {
     $dbname = CONF_PREFIX.'_menu';
     if ( !$pars['prev'] )
@@ -52,4 +52,4 @@ if ( $result['success'] )
     }
     require_once 'menu_common.php';
 }
-print json_encode( $result );
+ANSWER::answer();

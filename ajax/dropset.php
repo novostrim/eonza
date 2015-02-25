@@ -2,7 +2,7 @@
 
 require_once 'ajax_common.php';
 
-if ( $result['success'] )
+if ( ANSWER::is_success())
 {
     $pars = post( 'params' );
     $idi = $pars['id'];
@@ -33,11 +33,11 @@ if ( $result['success'] )
                 api_error( 'err_dellink', $islink );
             else 
             {
-                $result['success'] = $db->query("delete from ?n where id=?s || idset=?s", $set, $idi, $idi );
-//                     if ( $result['success'] )
+                ANSWER::success( $db->query("delete from ?n where id=?s || idset=?s", $set, $idi, $idi ));
+//                     if ( ANSWER::is_success())
 //                        api_log( $idi, 0, 'delete' );
             }
         }
     }
 }
-print json_encode( $result );
+ANSWER::answer();

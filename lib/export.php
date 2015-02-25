@@ -20,9 +20,7 @@ function packstr( &$out )
 
 function index_export( $table, $columns )
 {
-    global $db;
-
-    $index = $db->getall("show index from ?n", $table['alias'] ? $table['alias'] : CONF_PREFIX."_$table[id]" );
+    $index = DB::getall("show index from ?n", $table['alias'] ? $table['alias'] : CONF_PREFIX."_$table[id]" );
     $indexret = array();
     $last = '';
     foreach ( $index as $ind )
@@ -43,7 +41,7 @@ function index_export( $table, $columns )
 
 function export( $pars )
 {
-    global $db;
+    $db = DB::getInstance();
 
 //    $filename = "$pars[output]/".strftime($pars['filename']).'.enz';
     $filename = strftime($pars['filename']).'.enz';

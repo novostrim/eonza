@@ -2,7 +2,7 @@
 
 require_once 'ajax_common.php';
 
-if ( $result['success'] )
+if ( ANSWER::is_success())
 {
     $pars = post( 'params' );
     $idi = $pars['id'];
@@ -20,7 +20,7 @@ if ( $result['success'] )
                 if ( $count )
                     api_error( 'err_notempty' );
             }
-            if ($result['success'])
+            if ( ANSWER::is_success())
             {
                 $db->query("delete from ?n where id=?s", $tables, $idi );
                 require_once "menu_common.php";
@@ -28,4 +28,4 @@ if ( $result['success'] )
         }
     }
 }
-print json_encode( $result );
+ANSWER::answer();

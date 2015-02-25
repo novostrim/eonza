@@ -4,7 +4,7 @@ require_once 'ajax_common.php';
 
 $form = post( 'params' );
 //print_r( $form );
-if ( $result['success'] )
+if ( ANSWER::is_success())
 {
     $dbt = $db->getrow("select * from ?n where id=?s", CONF_PREFIX.'_tables', $form['table'] );
     if ( $dbt )
@@ -18,9 +18,10 @@ if ( $result['success'] )
         {
             $icol['idalias'] = alias( $icol );
             $colname = $icol['idalias'];
-            if ( !empty( $FIELDS[ $icol['idtype']]['save'] ))
-                $FIELDS[ $icol['idtype']]['save']( $out, $form, $icol, $outext );
-            elseif ( isset( $form[$colname] ) && isset( $FIELDS[ $icol['idtype']]['sql'] ))
+            $field = GS::field( $icol['idtype'] );
+            if ( !empty( $field['save'] ))
+                $field['save']( $out, $form, $icol, $outext );
+            elseif ( isset( $form[$colname] ) && isset( $field['sql'] ))
                 $out[ $colname ] = $form[$colname];
         }
 //        print_r( $out );
@@ -28,8 +29,8 @@ if ( $result['success'] )
         {
             if ( $out )
             {
-                $result['success'] = $db->update( $dbname, $out, $outext, $form['id'] ); 
-                if ( $result['success'] )
+                ANSWER::success( $db->update( $dbname, $out, $outext, $form['id'] )); 
+                if ( ANSWER::is_success())
                     api_log( $form['table'], $form['id'], 'edit' );
             }
         }
@@ -39,12 +40,12 @@ if ( $result['success'] )
                 $outext = GS::owner();
             else
                 $outext[] = "_owner=".GS::userid();
-            $result['success'] = $db->insert( $dbname, $out, $outext, true ); 
-            if ( $result['success'] )
-                api_log( $form['table'], $result['success'], 'create' );
+            ANSWER::success( $db->insert( $dbname, $out, $outext, true )); 
+            if ( ANSWER::is_success())
+                api_log( $form['table'], ANSWER::is_success(), 'create' );
         }
-        if ( $result['success'] )
-            getitem( $dbt, $result['success'] );
+        if ( ANSWER::is_success())
+            getitem( $dbt['id'], ANSWER::is_success(), $dbname, $columns );
     }
 }
-print json_encode( $result );
+ANSWER::answer();

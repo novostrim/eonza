@@ -3,7 +3,7 @@
 require_once 'ajax_common.php';
 require_once APP_EONZA.'lib/files.php';
 
-if ( $result['success'] )
+if ( ANSWER::is_success())
 {
     $pars = post( 'params' );
     $idi = $pars['id'];
@@ -42,12 +42,12 @@ if ( $result['success'] )
                     api_error( 'err_dellink', $islink );
                 elseif ( in_array( $dbname, $db->tables()))
                 {
-                     $result['success'] = $db->query( "drop table ?n", $dbname );
-                     if ( $result['success'] )
+                     ANSWER::success( $db->query( "drop table ?n", $dbname ));
+                     if ( ANSWER::is_success())
                         api_log( $idi, 0, 'delete' );
                 }
             }
-            if ( $result['success'] )
+            if ( ANSWER::is_success())
             {
                 $db->query("delete from ?n where id=?s", $tables, $idi );
                 $db->query("delete from ?n where idtable=?s", $columns, $idi );
@@ -56,4 +56,4 @@ if ( $result['success'] )
         }
     }
 }
-print json_encode( $result );
+ANSWER::answer();

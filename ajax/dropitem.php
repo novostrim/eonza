@@ -5,11 +5,11 @@ require_once APP_EONZA.'lib/files.php';
 
 function deleteitem( $id )
 {
-    global $curtbl, $files_is, $dbname, $idtable;
-
+    $idtable = GS::get('idtable');
+    $dbname = GS::get('dbname');
     $db = DB::getInstance();
 
-    if ( $curtbl['istree'] )
+    if ( GS::get( 'istree' ))
     {
         $children = $db->getall("select id from ?n where _parent=?s", $dbname, $id );
         foreach ( $children as $ic )
@@ -19,14 +19,14 @@ function deleteitem( $id )
     $ret = $db->query("delete from ?n where id=?s", $dbname, $id );
     if ( $ret )
     {
-        if ( $files_is )
+        if ( GS::get( 'files_is' ))
             files_delitem( $idtable, $id );
         api_log( $idtable, (int)$id, 'delete' );
     }
     return $ret;
 }
 
-if ( $result['success'] )
+if ( ANSWER::is_success())
 {
     $pars = post( 'params' );
     if ( is_array( $pars['id'] ))
@@ -38,17 +38,17 @@ if ( $result['success'] )
     {
         $tables = CONF_PREFIX.'_tables';
         $curtbl = $db->getrow("select id,alias,istree from ?n where id=?s", $tables, $idtable );
-        $files_is = files_is( $idtable );
+        GS::set( 'files_is', files_is( $idtable ));
         if ( !$curtbl )
             api_error( 'err_id', "idtable=$idtable" );
         else
         {
-            $dbname = alias( $curtbl, CONF_PREFIX.'_' );
+            GS::set('dbname', alias( $curtbl, CONF_PREFIX.'_' ));
+            GS::set('istree', $curtbl['istree'] );
+            GS::set('idtable', $idtable );
             foreach ( $what as $id )
-            {
-                $result['success'] = deleteitem( (int)$id );
-            }
+                ANSWER::success( deleteitem( (int)$id ));
         }
     }
 }
-print json_encode( $result );
+ANSWER::answer();

@@ -16,6 +16,7 @@ error_reporting( LOCALHOST ? E_ALL | E_STRICT : E_ALL & ~E_NOTICE );
 class GS {
     protected static $instance;
     protected static $user;
+    protected static $glob;
 
     public static function getInstance() { 
         if ( self::$instance === null) 
@@ -26,6 +27,7 @@ class GS {
     }
     public  function __construct() {
         $user = array();
+        $glob = array();
     }
     private function __clone() {
     }
@@ -65,6 +67,30 @@ class GS {
         if ( $more )
             $ret[] = $more;
         return $ret;
+    }
+    public static function set( $name, $value )
+    {
+        self::$glob[ $name ] = $value;
+    }
+    public static function get( $name, $par = '' )
+    {
+        if ( $par )
+            return self::$glob[ $name ][ $par ];
+        return self::$glob[ $name ];
+    }
+    public static function ifget( $name, $par = '' )
+    {
+        if ( $par )
+            return isset( self::$glob[ $name ][ $par ] );
+        return isset( self::$glob[ $name ] );
+    }
+    public static function field( $index )
+    {
+        return self::$glob['fields'][ $index ];
+    }
+    public static function fieldset( $index, $name, $val )
+    {
+        self::$glob['fields'][$index][$name] = $val;
     }
 }
 

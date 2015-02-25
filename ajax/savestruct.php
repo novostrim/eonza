@@ -5,12 +5,11 @@ require_once APP_EONZA.'lib/files.php';
 
 function column_query( $idfield, &$ifield )
 {
-    global $FIELDS;
-
     $fname = defval( $ifield['alias'], $idfield );
     $fid = $ifield['idtype'];
 //    print_r( $ifield );
-    $ftype = $FIELDS[$fid]['sql']( $ifield );
+    $field = GS::field( $fid );
+    $ftype = $field['sql']( $ifield );
     return "`$fname` $ftype";
 }
 
@@ -48,9 +47,10 @@ if ( $dbname )
 
 foreach ( $pars['items'] as &$iext )
 {
-    if ( $FIELDS[ $iext['idtype']]['pars'] )
+    $extpars = GS::field( $iext['idtype'] );
+    if ( $extpars['pars'] )
     {
-        $iext['ext'] = pars_list( $FIELDS[ $iext['idtype']]['pars'], $iext['extend'] );
+        $iext['ext'] = pars_list( $extpars['pars'], $iext['extend'] );
         $iext['extend'] = json_encode( $iext['ext'] );
     }
     else
@@ -60,18 +60,18 @@ foreach ( $pars['items'] as &$iext )
     }
 }
 $isnew = $idi;
-if ( $result['success'] )
+if ( ANSWER::is_success())
 {
-    $result['result'] = array();
+    ANSWER::result( array());
 //    print_r( $tables );
     if ( !$idi )
     {
-        $result['success'] = $db->insert( CONF_PREFIX.'_tables', pars_list( 'comment,title,alias,idparent,istree', $pars['form'] ), 
-                     GS::owner(), true ); 
-        if ( $result['success'] )
+        ANSWER::success( $db->insert( CONF_PREFIX.'_tables', pars_list( 'comment,title,alias,idparent,istree', $pars['form'] ), 
+                     GS::owner(), true )); 
+        if ( ANSWER::is_success())
         {
-            $idi = $result['success'];
-//            $result['success'] = true;
+            $idi = ANSWER::is_success();
+//            $xresult['success'] = true;
             if ( !$dbname )
                 $dbname = CONF_PREFIX."_$idi";
             $query = "CREATE TABLE IF NOT EXISTS `$dbname` (
@@ -89,7 +89,8 @@ if ( $result['success'] )
                 $idfield = $db->insert( CONF_PREFIX.'_columns', pars_list( 'title,extend,comment,idtype,alias,visible,align', $ifield ), 
                      array( "idtable = $idi", "`sort`=$sort" ), true ); 
                 $sort++;
-                if ( isset( $FIELDS[ $ifield['idtype']]['sql'] ))
+                $gsfield = GS::field( $ifield['idtype'] );
+                if ( isset( $gsfield['sql'] ))
                     $query .= column_query( $idfield, $ifield ).", \r\n";
             }
             $query .= "  PRIMARY KEY (`id`),
@@ -123,7 +124,7 @@ if ( $result['success'] )
             }
             else
                 $dbname = alias( $curtbl, CONF_PREFIX.'_' );
-            if ( $result['success'] && (int)$pars['form']['istree'] != (int)$curtbl['istree'] )
+            if ( ANSWER::is_success() && (int)$pars['form']['istree'] != (int)$curtbl['istree'] )
             {
                 if ( $curtbl['istree'] )    
                 {
@@ -137,11 +138,11 @@ if ( $result['success'] )
                     $db->query( "alter table ?n add index `_parent` ( `_parent` , `_uptime` ) ", $dbname );
                 }
             }
-            if ( $result['success'] )
+            if ( ANSWER::is_success())
             {
-                $result['success'] = $db->update( CONF_PREFIX.'_tables', 
-                        pars_list( 'comment,title,istree', $pars['form'] ), '', $idi ); 
-                if ( $result['success'] )
+                ANSWER::success( $db->update( CONF_PREFIX.'_tables', 
+                        pars_list( 'comment,title,istree', $pars['form'] ), '', $idi )); 
+                if ( ANSWER::is_success())
                 {
                     api_log( $idi, 0, 'edit' );
                     $coldb = CONF_PREFIX.'_columns';
@@ -151,6 +152,7 @@ if ( $result['success'] )
                     foreach ( $pars['items'] as $ipar )
                     {
                         $ipar['sort'] = $sort++;
+                        $gsfield = GS::field( $ipar['idtype'] );
                         if ( $ipar['id'] )
                         {
                             $db->update( $coldb, 
@@ -161,7 +163,7 @@ if ( $result['success'] )
                                  $curcol['extend'] != $ipar['extend'] )
                             {
                                 $colname = alias( $curcol );
-                                if ( !isset( $FIELDS[ $ipar['idtype']]['sql'] ) || $db->query( "alter table ?n change ?n ?p", 
+                                if ( !isset( $gsfield['sql'] ) || $db->query( "alter table ?n change ?n ?p", 
                                               $dbname, $colname, column_query( $ipar['id'], $ipar )))
                                     $db->update( $coldb, 
                                         pars_list( 'alias,idtype,extend', $ipar ), '', $ipar['id'] ); 
@@ -172,18 +174,20 @@ if ( $result['success'] )
                             $idcol = $db->insert( CONF_PREFIX.'_columns', 
                                 pars_list( 'title,comment,idtype,extend,alias,sort,visible,align', $ipar ), 
                                          array( "idtable = $idi" ), true );
-                            if ( $idcol && isset( $FIELDS[ $ipar['idtype']]['sql'] ))
+                            if ( $idcol && isset( $gsfield['sql'] ))
                                 $db->query( "alter table ?n add ?p", $dbname, column_query( $idcol, $ipar ));
                         }
     //                    print_r( $ipar );
                     }
-                    if ( $result['success'] )
+                    if ( ANSWER::is_success())
                     {
                         $fordel = $db->getall("select * from $coldb where idtable=?s && `sort`=30000", 
                                             $idi );
                         foreach ( $fordel as $idel )
                         {
-                            if ( isset( $FTYPES[ $idel['idtype']]['sql'] )) 
+                            $gsfield = GS::field( $idel['idtype'] );
+//                            if ( isset( $FXXTYPES[ $idel['idtype']]['sql'] )) 
+                            if ( isset( $gsfield['sql'] )) 
                                 $db->query( "alter table ?n drop ?n", $dbname, alias( $idel ));
                             elseif ( $idel['idtype'] == FT_FILE || $idel['idtype'] == FT_IMAGE )
                                 files_delcolumn( $idel );
@@ -194,7 +198,7 @@ if ( $result['success'] )
             }
         }
     }
-    if ( $result['success'] && !empty($pars['form']['istree'] ))
+    if ( ANSWER::is_success() && !empty($pars['form']['istree'] ))
     {
 
         $curparent = $db->getone("select id from ?n where idtable=?s && idtype=?s", $tbl_columns, $idi, FT_PARENT );
@@ -208,6 +212,6 @@ if ( $result['success'] )
                          array( "idtable = $idi", "`sort`=0" )); 
     }
 }
-if ( $result['success'] )
-    $result['result']['idparent'] = $isnew ? $curtbl['idparent'] : $pars['form']['idparent'];
-print json_encode( $result );
+if ( ANSWER::is_success())
+    ANSWER::resultset( 'idparent', $isnew ? $curtbl['idparent'] : $pars['form']['idparent'] );
+ANSWER::answer();

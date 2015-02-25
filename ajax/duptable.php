@@ -2,7 +2,7 @@
 
 require_once 'ajax_common.php';
 
-if ( $result['success'] )
+if ( ANSWER::is_success())
 {
     $pars = post( 'params' );
     $idi = $pars['id'];
@@ -19,24 +19,36 @@ if ( $result['success'] )
             $curtable['title'] = $dest;
             foreach ( array( 'alias', '_uptime', 'id', '_owner' ) as $iun )
                 unset( $curtable[ $iun ] );
-            $result['success'] = $db->insert( $tables, $curtable, GS::owner(), true ); 
-            if ( $result['success'] )
+            ANSWER::success( $db->insert( $tables, $curtable, GS::owner(), true )); 
+            if ( ANSWER::is_success())
             {
+                api_log( ANSWER::is_success(), 0, 'create' );
+                $dbname = api_dbname( $idi );
+                $newname = CONF_PREFIX.'_'.( ANSWER::is_success());
+
                 $cols = $db->getall( "select * from ?n where idtable=?s", $columns, $idi );
+                $after = array();
                 foreach ( $cols as $icol )
                 {
-                    $icol['idtable'] = $result['success'];
+                    $column = $icol;
+                    $icol['idtable'] = ANSWER::is_success();
                     unset( $icol['id'] );
-                    $db->insert( $columns, $icol, '' );
+                    $newid = $db->insert( $columns, $icol, '', true );
+                    if ( !$column['alias'] )
+                    {
+                        $field = GS::field( $icol['idtype'] );
+                        $decl = $field['sql']( $icol );
+                        $after[] = $db->parse("alter table ?n change ?n ?n ?p", 
+                                    $newname, $column['id'], $newid, $decl );
+                    }
                 }
-                api_log( $result['success'], 0, 'create' );
-                $dbname = api_dbname( $idi );
-                $newname = CONF_PREFIX.'_'.$result['success'];
                 $ret = $db->query("create table ?n like ?n", $newname, $dbname );
                 if ( $pars['importdata'])
                     $ret = $db->query("insert into ?n select * from ?n", $newname, $dbname );
+                foreach ( $after as $iafter )
+                    $db->query( $iafter );
             }
         }
     }
 }
-print json_encode( $result );
+ANSWER::answer();

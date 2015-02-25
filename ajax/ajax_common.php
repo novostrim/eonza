@@ -5,19 +5,77 @@
     License: MIT
 */
 
-$result = array( 'success'=> true, 'err' => 1, 'result' => 0, 'temp' => '' );
-
 require_once APP_EONZA.'lib/lib.php';
 require_once APP_EONZA.'lib/extmysql.class.php';
 
+class ANSWER {
+    protected static $instance;
+    protected static $answer;
+
+    public static function getInstance() { 
+        if ( self::$instance === null) 
+        { 
+            self::$instance = new ANSWER;
+        } 
+        return self::$instance;
+    }
+    public  function __construct() {
+        self::$answer = array( 'success'=> true, 'err' => 1, 'result' => 0, 'temp' => '' );
+    }
+    private function __clone() {
+    }
+    private function __wakeup() {
+    }
+    public static function set( $name, $value )
+    {
+        self::$answer[ $name ] = $value;
+    }
+    public static function get( $name )
+    {
+        return self::$answer[ $name ];
+    }
+    public static function result( $value )
+    {
+        self::$answer['result'] = $value;
+    }
+    public static function isresult( $value )
+    {
+        return  isset( self::$answer['result'][ $value ] );
+    }
+    public static function unsetresult( $value )
+    {
+        unset( self::$answer['result'][ $value ] );
+    }
+    public static function resultset( $field, $value )
+    {
+        self::$answer['result'][ $field ] = $value;
+    }
+    public static function resultget( $field )
+    {
+        return self::$answer['result'][ $field ];
+    }
+    public static function is_success()
+    {
+        return self::$answer['success'];
+    }
+    public static function success( $state )
+    {
+        self::$answer['success'] = $state;
+    }
+    public static function answer()
+    {
+        print json_encode( self::$answer );
+    }
+}
+
+ANSWER::getInstance();
+
 function api_error( $err, $temp ='' )
 {
-    global $result;
-       $result['success'] = false;      
-       $result['err'] = $err;
-       $result['temp'] = $temp;
-
-       return false;
+    ANSWER::set( 'success', false );      
+    ANSWER::set( 'err', $err );
+    ANSWER::set( 'temp', $temp );
+    return false;
 }
 
 function api_dbname( $idtable )
@@ -34,17 +92,14 @@ function api_colname( $idcol )
 
 function api_log( $idtable, $idrow, $action )
 {
-    global $OPTIONS;
-
-    if ( $OPTIONS['keeplog'] )
+    if ( GS::get( 'options', 'keeplog' ))
         DB::insert( CONF_PREFIX.'_log', array( 'idtable'=>$idtable, 'idrow' => $idrow, 
                 'iduser'=> GS::userid(), 'action'=> $action ), array( "uptime=NOW()" ));
 }
 
-function getitem( $table, $id )
+function getitem( $idtable, $id, $dbname, $columns )
 {
-    global $result, $db, $columns, $dbname;
-
+    $db = DB::getInstance();
     $fields = array();
     $leftjoin = '';
     foreach ( $columns as &$icol )
@@ -65,33 +120,33 @@ function getitem( $table, $id )
     }
     if ( $id )
     {
-        $result['result'] = $db->getrow("select t.* ?p from ?n as t ?p where t.id=?s", 
-            $fields ? ','.implode( ',', $fields ) : '', $dbname, $leftjoin, $id );
+        ANSWER::result( $db->getrow("select t.* ?p from ?n as t ?p where t.id=?s", 
+            $fields ? ','.implode( ',', $fields ) : '', $dbname, $leftjoin, $id ));
     }
     else
     {
-        $result['result'] = array( 'id'=> 0 );
+        ANSWER::result( array( 'id'=> 0 ));
         foreach ( $columns as $xcol )
         {
-            if ( isset( $FTYPES[ $xcol['idtype']]['number']))
-                $result['result'][ $xcol['idalias'] ] = 0;
-            else
-                $result['result'][ $xcol['idalias'] ] = '';
+/*            if ( isset( $FXXTYPES[ $xcol['idtype']]['number']))
+                result['result'][ $xcol['idalias'] ] = 0;
+            else*/
+                ANSWER::resultset( $xcol['idalias'], '' );
         }
     }
-    $result['link'] = array();
+    $link = array();
     foreach ( $columns as &$icol )
     {
         if ( $icol['idtype'] == FT_LINKTABLE || $icol['idtype'] == FT_PARENT )
         {
             $alias = '__'.$icol['idalias'];
-            if ( isset( $result['result'][ $alias ] ))
+            if ( ANSWER::isresult( $alias ))
             {
-                $result['link'][ $icol['idalias'] ] = $result['result'][ $alias ];
-                unset( $result['result'][ $alias ] );
+                $link[ $icol['idalias'] ] = ANSWER::resultget( $alias );
+                ANSWER::unsetresult( $alias );
             }
             else
-                $result['link'][ $icol['idalias'] ] = '';
+                $link[ $icol['idalias'] ] = '';
         }
         elseif ( $icol['idtype'] == FT_IMAGE || $icol['idtype'] == FT_FILE )
         {
@@ -100,18 +155,19 @@ function getitem( $table, $id )
             {
                 require_once APP_EONZA.'lib/files.php';
 
-                $files = files_result( $table['id'], $icol, $id );
+                $files = files_result( $idtable, $icol, $id );
             }
-            $result['result'][ $icol['idalias']] = $files;
+            ANSWER::resultset( $icol['idalias'], $files );
         }
         elseif ( $icol['idtype'] == FT_SPECIAL )
         {
             $extend = json_decode( $icol['extend'], true );
             if ( $extend['type'] == FTM_HASH )
-                $result['result'][ $icol['idalias'] ] = bin2hex($result['result'][ $icol['idalias'] ] );
+                ANSWER::resultset( $icol['idalias'], bin2hex( ANSWER::resultget( $icol['idalias'] )));
         }
     }
-    $result['result'][ 'table' ] = $table['id'];
+    ANSWER::set( 'link', $link );
+    ANSWER::resultset( 'table', $idtable );
 }            
 
 function get_linklist( $icol, $offset, $search = '', $parent = 0, $filter=0 )
@@ -174,19 +230,17 @@ if ( CONF_QUOTES ) {
 }
 
 if ( !GS::userid() )
-{
     api_error( 'err_login' );
-//    $result['err'] = 'err_login';
-//    $result['code'] = false;
-}
 else
 {
     $dbsets = $db->getone( "select settings from ?n where id=?s && pass=?s", APP_DB, 
                               CONF_DBID, pass_md5( CONF_PSW, true ));
+    $options = array();
     if ( $dbsets )
     {
         foreach ( json_decode( $dbsets, true ) as $okey => $oval )
-            $OPTIONS[ $okey ] = $oval;
+            $options[ $okey ] = $oval;
     }
+    GS::set( 'options', $options );
 }
 

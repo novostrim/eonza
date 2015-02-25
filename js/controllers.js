@@ -213,7 +213,7 @@ function TablesCtrl($scope, $rootScope, $routeSegment, DbApi ) {
                    btns: [ {text: lng.duplicate, func: function(){
                          DbApi( 'duptable', $rootScope.form, function( data ) {
                             if ( data.success )
-                                document.location = '#/editable?id='+ data.success;
+                                document.location = '#/edittable?id='+ data.success;
                         })             
                    }, class: 'btn-primary btn-near' },
                            {text: lng.cancel, class: 'btn-default btn-near' }
@@ -230,7 +230,7 @@ function TablesCtrl($scope, $rootScope, $routeSegment, DbApi ) {
                    btns: [ {text: lng.savejs, func: function(){
                          DbApi( 'changefld', $rootScope.form, function( data ) {
                             if ( data.success )
-                                document.location = '#\?id='+ $rootScope.form.idparent;
+                                document.location = '#/?id='+ $rootScope.form.idparent;
                         })             
                    }, class: 'btn-primary btn-near' },
                            {text: lng.cancel, class: 'btn-default btn-near' }

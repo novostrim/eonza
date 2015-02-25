@@ -10,5 +10,5 @@ require_once 'ajax_common.php';
 cookie_set( 'pass' );
 cookie_set( 'iduser' );
 
-print json_encode( $result );
+ANSWER::answer();
 

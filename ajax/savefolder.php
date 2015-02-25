@@ -5,22 +5,18 @@ require_once 'ajax_common.php';
 $pars = post( 'params' );
 $idi = $pars['id'];
 
-if ( $result['success'] )
+if ( ANSWER::is_success())
 {
     if ( !$idi )
     {
-        $result['success'] = $db->insert( CONF_PREFIX.'_tables', pars_list( 'title,idparent', $pars ), 
-              GS::owner('isfolder=1'), true ); 
+        ANSWER::success( $db->insert( CONF_PREFIX.'_tables', pars_list( 'title,idparent', $pars ), 
+              GS::owner('isfolder=1'), true )); 
     }
     else
     {
-        $result['result'] = array();
-        if ( $db->update( CONF_PREFIX.'_tables', 
-                    pars_list( 'title', $pars ), '', $idi ))
-        {
-
-            $result['result']['title'] =  $pars['title'];
-        }
+        ANSWER::result( array());
+        if ( $db->update( CONF_PREFIX.'_tables', pars_list( 'title', $pars ), '', $idi ))
+            ANSWER::resultset( 'title', $pars['title'] );
     }
 }
-print json_encode( $result );
+ANSWER::answer();
