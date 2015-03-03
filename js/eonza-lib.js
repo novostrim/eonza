@@ -155,7 +155,7 @@ var types = {
         ] 
     },
     10 : { id: cnt.FT_PARENT, name: 'owner', verify: number_verify, number: 1,
-            edit: edit_linktable, view: view_linktable,
+            edit: edit_linktable, view: view_linktable, hidden: true,
          extend: [] 
     },    
     11 : { id: cnt.FT_FILE, name: 'ffile', verify: number_verify,

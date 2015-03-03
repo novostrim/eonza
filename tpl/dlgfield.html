@@ -4,7 +4,7 @@
         <tr><td class="formtxt">{{lng.commentjs}}: </td><td class="formval">
             <input type="text" ng-model="form.comment" class="form-control wbig"></td></tr>
         <tr><td class="formtxt extend">{{lng.type}}: </td><td class="formval extend"><select name="idtype" ng-model="form.idtype" class="form-control">
-            <option ng-repeat="itype in types" value="{{itype.id}}" ng-selected="form.idtype==itype.id">{{lng[itype.name]}}</option></select></td></tr>
+            <option ng-repeat="itype in types" value="{{itype.id}}" ng-selected="form.idtype==itype.id" ng-if="!itype.hidden">{{lng[itype.name]}}</option></select></td></tr>
         <tr><td colspan="2" class="extend">
             <table class="formtbl" style="margin: 0px 10px;">
                 <tr ng-repeat="ext in types[form.idtype].extend" ng-hide="ext.type==cnt.ET_HIDDEN"><td class="formtxt">
