@@ -1,12 +1,26 @@
 <?php
 /*
     Eonza 
-    (c) 2014 Novostrim, OOO. http://www.novostrim.com
+    (c) 2014-15 Novostrim, OOO. http://www.novostrim.com
     License: MIT
 */
 require_once "app.inc.php";
 require_once "lib/lib.php";
  
+function cmp_version( $curver ) 
+{
+    $newver = (int)APP_VERSION;
+    $prev = (int)$curver;
+    if ( $newver > $prev )
+    {
+        require_once "update/index.php";
+        eonza_update( $prev, $newver );
+    }
+    $_POST = array( 'params' => array( 'version' => APP_VERSION ));
+    require_once "ajax/answer.php";
+    require_once "ajax/savedb.php";
+}
+
 $lang = '';
 
 if ( file_exists( APP_DOCROOT.APP_ENTER."conf.inc.php"))
@@ -40,6 +54,9 @@ if ( file_exists( APP_DOCROOT.APP_ENTER."conf.inc.php"))
         if ( !is_array( $sval )) 
             $conf[ $skey ] = $sval;
     }
+    $curver = empty( $conf['version']) ? '0.0.0' : $conf['version'];
+    if ( APP_VERSION != $curver )
+        cmp_version( $curver );
     /**/
 //    $conf['title'] = $dbpar['name'];
 //    $conf['isalias'] = $dbpar['isalias'];

@@ -101,7 +101,8 @@ if ( !file_exists( $filename ))
             "loginshort": 1,
             "apitoken": "",
             "keeplog": 0,
-            "showhelp": 1
+            "showhelp": 1,
+            "version": "'.APP_VERSION.'"
             }';
         $db->query("insert into ?n set pass=?s, ctime=NOW(), settings=?s", APP_DB,
                     pass_md5( $form['psw'], true ), $settings );

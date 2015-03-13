@@ -1,74 +1,20 @@
 <?php
 /*
     Eonza 
-    (c) 2014 Novostrim, OOO. http://www.novostrim.com
+    (c) 2014-15 Novostrim, OOO. http://www.eonza.org
     License: MIT
 */
 
-require_once APP_EONZA.'lib/lib.php';
-require_once APP_EONZA.'lib/extmysql.class.php';
-
-class ANSWER {
-    protected static $instance;
-    protected static $answer;
-
-    public static function getInstance() { 
-        if ( self::$instance === null) 
-        { 
-            self::$instance = new ANSWER;
-        } 
-        return self::$instance;
-    }
-    public  function __construct() {
-        self::$answer = array( 'success'=> true, 'err' => 1, 'result' => 0, 'temp' => '' );
-    }
-    private function __clone() {
-    }
-    private function __wakeup() {
-    }
-    public static function set( $name, $value )
-    {
-        self::$answer[ $name ] = $value;
-    }
-    public static function get( $name )
-    {
-        return self::$answer[ $name ];
-    }
-    public static function result( $value )
-    {
-        self::$answer['result'] = $value;
-    }
-    public static function isresult( $value )
-    {
-        return  isset( self::$answer['result'][ $value ] );
-    }
-    public static function unsetresult( $value )
-    {
-        unset( self::$answer['result'][ $value ] );
-    }
-    public static function resultset( $field, $value )
-    {
-        self::$answer['result'][ $field ] = $value;
-    }
-    public static function resultget( $field )
-    {
-        return self::$answer['result'][ $field ];
-    }
-    public static function is_success()
-    {
-        return self::$answer['success'];
-    }
-    public static function success( $state )
-    {
-        self::$answer['success'] = $state;
-    }
-    public static function answer()
-    {
-        print json_encode( self::$answer );
-    }
+if ( defined('NOANSWER'))
+{
+    ANSWER::isajax( true );
+    $db = DB::getInstance();
+    return;
 }
 
-ANSWER::getInstance();
+require_once APP_EONZA.'lib/lib.php';
+require_once APP_EONZA.'lib/extmysql.class.php';
+require_once 'answer.php';
 
 function api_error( $err, $temp ='' )
 {

@@ -53,6 +53,10 @@ class GS {
         }
         return self::$user ? true : false;
     }
+    public static function isroot()
+    {
+        return isset( self::$user[ 'id' ] ) && self::$user[ 'id' ] == 1;
+    }
     public static function user( $par = '' )
     {
         return $par ? self::$user[ $par ] : self::$user;
