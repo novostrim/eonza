@@ -26,6 +26,7 @@ if ( !file_exists( $filename ))
 //$test = json_decode(trim(file_get_contents('php://input')), true);
 //header('Content-Type: application/json');
     require_once $epath.'/lib/extmysql.class.php';
+    require_once $epath.'/update/init-update.php';
 
 /*    $dir = dirname( $_SERVER['SCRIPT_NAME'] );
     if ( $dir[ strlen( $dir ) - 1] != '/' )
@@ -54,18 +55,21 @@ if ( !file_exists( $filename ))
         define( 'CONF_DB', $form['db'] );
         $tables = $db->tables();
         $prefix = post( 'prefix', APP_PREFIX );
-        if ( file_exists( $sqlname ) )
+        if ( in_array( APP_DB, $tables ))
         {
-            $step = 'err_system';
+            $step = 'err_dbbusy';
+            throw new Exception( 'busy' );
         }
+        elseif ( file_exists( $sqlname ) )
+            $step = 'err_system';
         else
         {
-            if ( !$prefix )
+/*            if ( !$prefix )
             {
                 $latest = in_array( APP_DB, $tables ) ?
                                $db->getone("select id from ?n order by id desc", APP_DB ) : 0;
                 $prefix = $latest ? $latest + 1 : 1;
-            }
+            }*/
 //            if ( !in_array( APP_DB, $tables ) || !$db->getone( 'select count(*) from ?n', APP_DB ))
 //            {
                 $sql = str_replace( array( 'xxx', 'app_db' ), array( $prefix, APP_DB ), 
@@ -113,7 +117,7 @@ if ( !file_exists( $filename ))
         define( 'CONF_DBID', $form['dbid'] );
         define( 'CONF_PREFIX', $prefix );
 
-        $db->query("insert into ?n set login='admin', pass=?s, lang=?s,  
+        $db->query("insert into ?n set login='admin', pass=X'?p', lang=?s,  
                     uptime=CURRENT_TIMESTAMP", $prefix.'_users', $passmd, $lang );
         $iduser = $db->insertid();
         cookie_set( 'iduser', $iduser, 120 );
@@ -133,11 +137,19 @@ if ( !file_exists( $filename ))
         @unlink( $htaccess );
         file_put_contents( $htaccess, str_replace( '/eonza/', APP_ENTER, 
         	       file_get_contents( $htaccess.'-i' )));
+        $confupd = json_decode( $settings, true );
+        GS::set( 'conf', $confupd );
+        GS::set( 'confupd', $confupd );
+        init_update();
+        $db->query( "update ?n set settings=?s where id=?s", 
+                     APP_DB, json_encode( GS::get( 'confupd' )), $form['dbid'] );
     }
     catch ( Exception $e )
     {
 //        print '='.$e->getMessage();
         $result['err'] = $step;
+        if ( $step == 'err_dbbusy' )
+            $result['temp'] = $form['db'];
         if ( $step == 'err_create' )
         {
             $result['temp'] = $_SERVER['HTTP_HOST'].APP_ENTER.'db.sql';

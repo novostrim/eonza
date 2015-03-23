@@ -5,6 +5,16 @@
    License: MIT
 */
 
+define('SYS_ID', 0xFFF0 );
+
+define('A_ROOT', 0 );
+define('A_READ', 1 );
+define('A_CREATE', 2 );
+define('A_EDIT', 3 );
+define('A_DEL', 4 );
+define('A_FILEGET', 5 );
+define('A_FILESET', 6 );
+
 define('FT_UNKNOWN', 0 );
 define('FT_NUMBER', 1 );
 define('FT_VAR' , 2 );

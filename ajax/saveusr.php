@@ -10,12 +10,14 @@ if ( defined( 'DEMO' )/* && ( isset( $fields['pass'] ) || isset( $fields['email'
 
 if ( ANSWER::is_success())
 {
+    $ext = '';
     if ( isset( $fields['pass'] ))
     {
         $ipass = $fields['pass'];
-        $fields['pass'] = pass_md5( $fields['pass'], true );
+        $ext = ", pass=X'".pass_md5( $fields['pass'], true )."'";
+        unset( $field['pass'] );
     }
-    ANSWER::success( $db->query( "update ?n set ?u where id=?s", 
+    ANSWER::success( $db->query( "update ?n set ?u $ext where id=?s", 
                                  CONF_PREFIX.'_users', $fields, GS::userid()));
     if ( ANSWER::is_success())
     {

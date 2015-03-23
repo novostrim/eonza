@@ -106,7 +106,8 @@ geapp.controller( 'IndexCtrl', function IndexCtrl($scope, $http, $routeSegment )
         { title: lng.tables, icon: 'table', href: '#/', name: 'tables'},
         { title: lng.sets, icon: 'list-alt', href: '#/sets', name: 'sets'},
         { title: lng.menu, icon: 'th-list', href: '#/menu', name: 'menu'},
-        { title: lng.settings, icon: 'cogs', href: '#/appsettings', name: 'appsettings'},
+        { title: lng.admin, icon: 'wrench', href: '#/appsettings', name: 'admin'},
+//        { title: lng.settings, icon: 'cogs', href: '#/appsettings', name: 'appsettings'},
     ];
     $scope.$routeSegment = $routeSegment;
 //    $state.transitionTo('index.menu');
@@ -126,7 +127,8 @@ geapp.controller( 'InstallCtrl', function InstallCtrl($scope, $http ) {
                     if ( data.success )
                     {
                         cfg.user = data.user;
-                        document.location = '#/';
+                        document.location = '';
+//                        document.location = '/';
                     }
                     else
                     {
@@ -354,6 +356,9 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
         DbApi( 'columns', $scope.params, function( data ) {
             if ( data.success )
             {
+                if ( data.db.title[0] == ':' )
+                    data.db.title = lng[ data.db.title.substr( 1 ) ];
+
                 $scope.db = data.db;
                 $scope.columns = data.columns;
                 var i = 0;
@@ -368,6 +373,14 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
                     var column = $scope.columns[i];
                     if ( column.idtype == cnt.FT_PARENT )
                         column.title = lng.parent;
+                    if ( column.title[0] == ':' )
+                        column.title = lng[ column.title.substr( 1 ) ];
+                    if ( column.idtype == cnt.FT_ENUMSET || column.idtype == cnt.FT_SETSET )
+                    {
+                        for ( var ikey in column.list )
+                            if ( column.list[ ikey ][0] == ':' )
+                                column.list[ ikey ] = lng[ column.list[ ikey ].substr( 1 )];
+                    }
                     column.number = angular.isDefined( types[column.idtype].number );
                     column.class += $rootScope.aligns[ column.align] + ' ';
                     if ( parseInt( column.visible ) > 0 )
@@ -944,16 +957,8 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
         DbApi( 'table', $scope.params, function( data ) {
             if ( data.success )
             {
-    /*            $scope.selectlist = [];
-                var i = 0;
-                if ( angular.isDefined( $scope.cookies[ data.db.id ] ))
-                {
-                    var atemp = $scope.cookies[ data.db.id ].split( ',' );
-                    i = atemp.length;
-                    while ( i-- )
-                        $scope.selectlist[ atemp[i]] = true;
-                }*/
-//                var previd = $scope.currow ? $scope.items[ $scope.currow ].id : 0;
+                if ( data.db.title[0] == ':' )
+                    data.db.title = lng[ data.db.title.substr( 1 ) ];
                 $scope.db = data.db;
                 $scope.allcount = data.pages.found;
                 $scope.offset = data.pages.offset;
@@ -1212,6 +1217,20 @@ function MenuCtrl($scope, $routeSegment, DbApi, $rootScope ) {
             items: "div.imenulist" } );
 }
 
+function AdminCtrl($scope, $rootScope, $routeSegment ) {
+    $scope.admmenu = [
+        { title: lng.settings, icon: 'cogs', href: '#/appsettings', name: 'appsettings'},
+        { title: lng.usrgroups, icon: 'users', href: '#/usergroups?id=' + cfg.idgroups, name: 'usergroups'},
+        { title: lng.users, icon: 'user', href: '#/users?id=' + cfg.idusers, name: 'users'},
+        { title: lng.accrights, icon: 'shield', href: '#/accessrights', name: 'accessrights'},
+    ];
+    $scope.$routeSegment = $routeSegment;
+}    
+
+function AccessCtrl($scope, $rootScope, $routeSegment ) {
+    $scope.$routeSegment = $routeSegment;
+}    
+
 function AppsettingsCtrl($scope, $rootScope, $routeSegment, DbApi ) {
     $scope.appsets = [
          { name: 'title', lang: lng.titlejs, visible: true, ctrl:"input", 'class': "form-control wbig" },
@@ -1243,20 +1262,6 @@ function AppsettingsCtrl($scope, $rootScope, $routeSegment, DbApi ) {
          });
     }
 
-/*    $scope.langlist = langlist;
-    $scope.form = { title: cfg.title, apitoken: cfg.apitoken, isalias: cfg.isalias };  
-    $scope.changealias = function( value, callback )
-    {
-         DbApi[ 'savedb' ]( { isalias: value }, function( data ) {
-            $scope.form.isalias = value;
-            cfg.isalias = value;
-            callback();
-         });
-    }
-    $scope.language = function()
-    {
-        DbApi[ 'savedb' ]( { lang: $scope.form.dblang }, function( data ) {});
-    }*/
     $scope.$routeSegment = $routeSegment;
 }    
 

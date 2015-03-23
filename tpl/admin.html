@@ -1,0 +1,13 @@
+<div >
+    <a href="{{imenu.href}}" class="flatbtn" style="margin: 0px 5px;" ng-class="{flatcur:$routeSegment.name == 'admin.' + imenu.name}" ng-repeat="imenu in admmenu"><i ng-show="imenu.icon" class="fa fa-{{imenu.icon}} fa-fw"></i>&nbsp;&nbsp;{{imenu.title}}</a>
+
+<div classss="dashpage" app-view-segment="1" >
+</div>    
+<div class="clear"></div>
+</div> 
+
+<!--div>
+
+    <a class="flatbtn" ng-if="cfg.showhelp" target="_blank" href="http://{{::cfg.website}}/application-settings.html" title="{{::lng.help}}"><i class="fa fa-question fa-lg"></i></a>
+
+</div-->

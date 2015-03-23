@@ -49,6 +49,8 @@ class ANSWER {
     }
     public static function resultset( $field, $value )
     {
+        if ( !self::$answer['result'] )
+            self::$answer['result'] = array();
         self::$answer['result'][ $field ] = $value;
     }
     public static function resultget( $field )
@@ -74,6 +76,14 @@ class ANSWER {
             self::$ajax = false;
         return self::$ajax;
     }
+    public static function is_access( $action = A_ROOT, $idtable = 0, $iditem = 0 )
+    {
+        if ( GS::isroot())
+            return true;
+        if ( $action == A_ROOT )
+            return api_error( 'iarights' );
+        return api_error( 'iarights' );
+    }    
 }
 
 ANSWER::getInstance();

@@ -4,11 +4,16 @@ require_once 'ajax_common.php';
 
 $form = post( 'params' );
 //print_r( $form );
-if ( ANSWER::is_success())
+if ( ANSWER::is_success() && ANSWER::is_access( A_EDIT, $form['table'], $form['id'] ))
 {
     $dbt = $db->getrow("select * from ?n where id=?s", CONF_PREFIX.'_tables', $form['table'] );
-    if ( $dbt )
+    if ( !$dbt )
+        api_error( 'err_id', "id=$form[table]" );
+    elseif ( defined( 'DEMO' ) && $dbt['idparent'] == SYS_ID )
+        api_error('This feature is disabled in the demo-version.');
+    else
     {
+
         $dbname = alias( $dbt, CONF_PREFIX.'_' );
         $columns = $db->getall("select * from ?n where idtable=?s", 
                                           CONF_PREFIX.'_columns', $form['table'] );

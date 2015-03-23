@@ -5,7 +5,7 @@ require_once 'index_common.php';
 
 $pars = post( 'params' );
 
-if ( ANSWER::is_success())
+if ( ANSWER::is_success() && ANSWER::is_access())
 {
     $list = '';
     $type = 'INDEX';

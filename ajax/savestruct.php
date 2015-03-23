@@ -60,7 +60,8 @@ foreach ( $pars['items'] as &$iext )
     }
 }
 $isnew = $idi;
-if ( ANSWER::is_success())
+$sys = false;
+if ( ANSWER::is_success() && ANSWER::is_access())
 {
     ANSWER::result( array());
 //    print_r( $tables );
@@ -106,41 +107,48 @@ if ( ANSWER::is_success())
                                    CONF_PREFIX.'_tables', $idi );
         if ( !$curtbl )
             api_error( 'err_id', "id=$idi" );
+        elseif ( defined( 'DEMO' ) && $curtbl['idparent'] == SYS_ID )
+            api_error('This feature is disabled in the demo-version.');
         else
         {
-            if ( $dbname != $curtbl['alias'] ) 
+            $sys = $curtbl['idparent'] == SYS_ID;
+            if ( !$sys )
             {
-                if ( !$dbname )
-                    $dbname = CONF_PREFIX."_$idi";
-                if ( in_array( $dbname, $tables ))
-                    api_error( 'err_dbexist', $dbname );
-                else
+                if ( $dbname != $curtbl['alias'] ) 
                 {
-                    if ( $db->query( "alter table ?n rename to ?n", alias( $curtbl, CONF_PREFIX.'_' ), $dbname ))
-                        $db->update( CONF_PREFIX.'_tables', array('alias' => $dbname ), '', $idi ); 
+                    if ( !$dbname )
+                        $dbname = CONF_PREFIX."_$idi";
+                    if ( in_array( $dbname, $tables ))
+                        api_error( 'err_dbexist', $dbname );
                     else
-                        api_error( 2, $dbname );
-                }
-            }
-            else
-                $dbname = alias( $curtbl, CONF_PREFIX.'_' );
-            if ( ANSWER::is_success() && (int)$pars['form']['istree'] != (int)$curtbl['istree'] )
-            {
-                if ( $curtbl['istree'] )    
-                {
-                    $db->query( "alter table ?n drop index ?n", $dbname, '_parent' );
-                    $db->query( "alter table ?n drop ?n", $dbname, '_parent' );
-                    $db->query( "delete from ?n where idtable=?s && idtype=?s", CONF_PREFIX.'_columns', $idi, FT_PARENT );
+                    {
+                        if ( $db->query( "alter table ?n rename to ?n", alias( $curtbl, CONF_PREFIX.'_' ), $dbname ))
+                            $db->update( CONF_PREFIX.'_tables', array('alias' => $dbname ), '', $idi ); 
+                        else
+                            api_error( 2, $dbname );
+                    }
                 }
                 else
+                    $dbname = alias( $curtbl, CONF_PREFIX.'_' );
+                if ( ANSWER::is_success() && (int)$pars['form']['istree'] != (int)$curtbl['istree'] )
                 {
-                    $db->query( "alter table ?n add ?p", $dbname, "`_parent` int(10) unsigned NOT NULL" );                    
-                    $db->query( "alter table ?n add index `_parent` ( `_parent` , `_uptime` ) ", $dbname );
+                    if ( $curtbl['istree'] )    
+                    {
+                        $db->query( "alter table ?n drop index ?n", $dbname, '_parent' );
+                        $db->query( "alter table ?n drop ?n", $dbname, '_parent' );
+                        $db->query( "delete from ?n where idtable=?s && idtype=?s", CONF_PREFIX.'_columns', $idi, FT_PARENT );
+                    }
+                    else
+                    {
+                        $db->query( "alter table ?n add ?p", $dbname, "`_parent` int(10) unsigned NOT NULL" );                    
+                        $db->query( "alter table ?n add index `_parent` ( `_parent` , `_uptime` ) ", $dbname );
+                    }
                 }
             }
             if ( ANSWER::is_success())
             {
-                ANSWER::success( $db->update( CONF_PREFIX.'_tables', 
+                if ( $curtbl['idparent'] != SYS_ID )
+                    ANSWER::success( $db->update( CONF_PREFIX.'_tables', 
                         pars_list( 'comment,title,istree', $pars['form'] ), '', $idi )); 
                 if ( ANSWER::is_success())
                 {
@@ -198,9 +206,8 @@ if ( ANSWER::is_success())
             }
         }
     }
-    if ( ANSWER::is_success() && !empty($pars['form']['istree'] ))
+    if ( ANSWER::is_success() && !$sys && !empty($pars['form']['istree'] ))
     {
-
         $curparent = $db->getone("select id from ?n where idtable=?s && idtype=?s", $tbl_columns, $idi, FT_PARENT );
         $first =  $db->getone("select id from ?n where idtable=?s && idtype!=?s order by `sort`", $tbl_columns, $idi, FT_PARENT );
         $extend = '{ "table": "'.$idi.'", "column":"'.$first.'","extbyte": "2"}';
@@ -212,6 +219,6 @@ if ( ANSWER::is_success())
                          array( "idtable = $idi", "`sort`=0" )); 
     }
 }
-if ( ANSWER::is_success())
+if ( ANSWER::is_success() )
     ANSWER::resultset( 'idparent', $isnew ? $curtbl['idparent'] : $pars['form']['idparent'] );
 ANSWER::answer();

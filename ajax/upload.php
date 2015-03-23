@@ -42,7 +42,7 @@ if ( ANSWER::is_success())
                 if ( $image->check( $_FILES['file'] ))
                     $image->original( $_FILES['file']['tmp_name'] );
             }
-            if ( ANSWER::is_success())
+            if ( ANSWER::is_success() && ANSWER::is_access( A_EDIT, $idtable, $iditem ))
             {
                 $idfile = $db->insert( TBL_FILES, array( '_owner' => GS::userid(),
                    'idtable' => $idtable, 'idcol' => $col['id'], 'iditem' => $iditem,

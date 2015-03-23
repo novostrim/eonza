@@ -4,7 +4,7 @@ require_once 'ajax_common.php';
 
 $id = get( 'id' );
 $table = get( 'table' );
-if ( $table && ANSWER::is_success())
+if ( $table && ANSWER::is_success() && ANSWER::is_access( A_READ, $table, $id ))
 {
     $ret = $db->getrow("select * from ?n where id=?s", CONF_PREFIX.'_tables', $table );
     if ( $ret )

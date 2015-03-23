@@ -7,7 +7,8 @@ if ( ANSWER::is_success())
     $pars = post( 'params' );
     $idi = (int)$pars['id'];
     $idtable = (int)$pars['idtable'];
-    if ( $idi && $idtable );
+    if ( $idi && $idtable && ANSWER::is_access( A_CREATE, $idtable ) &&
+                ANSWER::is_access( A_READ, $idtable, $idi ))
     {
         $tables = CONF_PREFIX.'_tables';
         $dbt = $db->getrow("select * from ?n where id=?s", $tables, $idtable );

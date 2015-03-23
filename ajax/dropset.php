@@ -2,7 +2,7 @@
 
 require_once 'ajax_common.php';
 
-if ( ANSWER::is_success())
+if ( ANSWER::is_success() && ANSWER::is_access())
 {
     $pars = post( 'params' );
     $idi = $pars['id'];

@@ -35,9 +35,13 @@ geapp
           .when('/install',     'install' )
           .when('/login',       'login' )
           .when('/settings',    'settings' )
+          .when('/admin',       'admin' )
           .when('/menu',        'index.menu' )
           .when('/sets',        'index.sets' )
-          .when('/appsettings', 'index.appsettings' )
+          .when('/appsettings', 'admin.appsettings' )
+          .when('/users',       'admin.users' )
+          .when('/usergroups',  'admin.usergroups' )
+          .when('/accessrights','admin.accessrights' )
           .when('/settings',    'settings' )
           .when('/edittable',   'index.edittable' )
           .when('/table',       'table' )
@@ -61,6 +65,23 @@ geapp
           .segment('import', {
             templateUrl: tpl('import.html'),
             controller: ImportCtrl })
+        .segment('admin', {
+            templateUrl: tpl('admin.html'),
+            controller: AdminCtrl
+             })
+            .within()
+                .segment('appsettings', {
+                    templateUrl: tpl('appsettings.html'),
+                    controller: AppsettingsCtrl })
+                .segment('users', {
+                    templateUrl: tpl('table.html'),
+                    controller: TableCtrl })
+                .segment('usergroups', {
+                    templateUrl: tpl('table.html'),
+                    controller: TableCtrl })
+                .segment('accessrights', {
+                    controller: AccessCtrl })
+            .up()
           .segment('index', {
             templateUrl: tpl('index.html') })
           .within()
@@ -76,9 +97,6 @@ geapp
                     templateUrl: tpl('menu.html'),
                     controller: MenuCtrl
                      })
-                .segment('appsettings', {
-                    templateUrl: tpl('appsettings.html'),
-                    controller: AppsettingsCtrl })
                 .segment('sets', {
                     templateUrl: tpl('sets.html'),
                     controller: SetsCtrl,

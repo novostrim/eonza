@@ -9,6 +9,8 @@ function index_list( $dbname, $fields )
     {
         if ( in_array( $ind['Key_name'], array( 'PRIMARY', '_uptime', '_parent' )))
             continue;
+        if ( !isset( $fields[ $ind['Column_name'] ] ))
+            continue;
         if ( $last == $ind['Key_name'] )
             $indexret[ count( $indexret ) - 1 ][1] .= ', '.$fields[ $ind['Column_name'] ];
         else

@@ -6,7 +6,7 @@ require_once 'index_common.php';
 
 $pars = post( 'params' );
 
-if ( ANSWER::is_success())
+if ( ANSWER::is_success() && ANSWER::is_access())
 {
     $table = $db->getrow("select * from ?n where id=?s", CONF_PREFIX.'_tables', $pars['id'] );
     if ( !$table )

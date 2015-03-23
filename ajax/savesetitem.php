@@ -3,7 +3,7 @@
 require_once 'ajax_common.php';
 
 $form = post( 'params' );
-if ( ANSWER::is_success())
+if ( ANSWER::is_success() && ANSWER::is_access())
 {
     $setname = CONF_PREFIX.'_sets';
     ANSWER::success( $db->getone( "select id from ?n where id=?s", $setname, $form['idset'] ));

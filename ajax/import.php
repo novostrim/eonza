@@ -4,7 +4,7 @@ require_once 'ajax_common.php';
 
 $pars = post( 'params' );
 
-if ( ANSWER::is_success())
+if ( ANSWER::is_success() && ANSWER::is_access())
 {
     ANSWER::success( $db->insert( CONF_PREFIX.'_tables', 
             array( 'title' => $pars['tblname'] ), GS::owner(), true )); 

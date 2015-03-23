@@ -196,7 +196,7 @@ var types = {
 
 function special_form( form, column )
 {
-    if ( column.extend.idtype == cnt.FNT_IPV4 )
+    if ( column.extend.type == cnt.FTM_IPV4 )
         form[ column.alias ] = js_long2ip( form[ column.alias ] );
 }
 
@@ -341,7 +341,10 @@ function js_list( item )
             case cnt.FT_ENUMSET:
                 var idi = parseInt( item[key] );
                 if ( idi > 0 && angular.isDefined( colnames[key]['list'][idi] ))
-                    item[key] = colnames[key]['list'][idi];
+                    if ( angular.isDefined( colnames[key]['listext'] ))
+                        item[key] = '<i class="fa fa-'+colnames[key]['listext'][idi]+'" title="'+ colnames[key]['list'][idi] +'"></i>';
+                    else
+                        item[key] = colnames[key]['list'][idi];
                 break;
             case cnt.FT_SETSET:
                 item[key] = js_getset( item[key], key ).join(', ');

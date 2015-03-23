@@ -37,17 +37,20 @@ if ( ANSWER::is_success())
     if ( $what && $idtable );
     {
         $tables = CONF_PREFIX.'_tables';
-        $curtbl = $db->getrow("select id,alias,istree from ?n where id=?s", $tables, $idtable );
+        $curtbl = $db->getrow("select id,alias,istree,idparent from ?n where id=?s", $tables, $idtable );
         GS::set( 'files_is', files_is( $idtable ));
         if ( !$curtbl )
             api_error( 'err_id', "idtable=$idtable" );
+        elseif ( defined( 'DEMO' ) && $curtbl['idparent'] == SYS_ID )
+            api_error('This feature is disabled in the demo-version.');
         else
         {
             GS::set('dbname', alias( $curtbl, CONF_PREFIX.'_' ));
             GS::set('istree', $curtbl['istree'] );
             GS::set('idtable', $idtable );
             foreach ( $what as $id )
-                ANSWER::success( deleteitem( (int)$id ));
+                if ( ANSWER::is_access( A_DEL, $idtable, $id ))
+                    ANSWER::success( deleteitem( (int)$id ));
         }
     }
 }

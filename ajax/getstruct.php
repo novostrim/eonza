@@ -3,7 +3,7 @@
 require_once 'ajax_common.php';
 require_once 'index_common.php';
 
-if ( ANSWER::is_success())
+if ( ANSWER::is_success() && ANSWER::is_access())
 {
     ANSWER::result( array( 'form' => array(), 'items' => array()));
 

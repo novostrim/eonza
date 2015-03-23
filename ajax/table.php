@@ -54,7 +54,7 @@ function fltcompare( $field, $not, $compare, $value, $names )
 }
 
 $id = get( 'id' );
-if ( $id && ANSWER::is_success() )
+if ( $id && ANSWER::is_success() && ANSWER::is_access( A_READ, $id ))
 {
     GS::set( 'urlparam', url_params( 'p' ));
     $sort = (int)get( 'sort' );

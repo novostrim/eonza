@@ -30,12 +30,11 @@ CREATE TABLE IF NOT EXISTS `xxx_tables` (
 CREATE TABLE IF NOT EXISTS `xxx_users` (
   `id` smallint(5) unsigned NOT NULL AUTO_INCREMENT,
   `login` varchar(32) NOT NULL,
-  `pass` char(32) NOT NULL,
+  `pass` binary(16) NOT NULL,
   `email` varchar(32) NOT NULL,
   `idgroup` smallint(5) unsigned NOT NULL,
   `name` varchar(64) NOT NULL,
   `lang` varchar(10) NOT NULL,
-  `ctime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `uptime` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (`id`),
   KEY `login` (`login`)
@@ -114,8 +113,25 @@ CREATE TABLE IF NOT EXISTS `xxx_files` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 ##
 CREATE TABLE IF NOT EXISTS `xxx_mimes` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(10) NOT NULL AUTO_INCREMENT,
   `name` varchar(64) NOT NULL,
   `ext` varchar(64) NOT NULL,
   PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+##
+CREATE TABLE IF NOT EXISTS `xxx_access` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `_uptime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `_owner` smallint(5) unsigned NOT NULL,
+  `idgroup` smallint(5) unsigned NOT NULL,
+  `idtable` int(10) unsigned NOT NULL,
+  `mask` varchar(32) NOT NULL,
+  `active` tinyint(3) NOT NULL,
+  `read` tinyint(3) unsigned NOT NULL,
+  `create` tinyint(3) unsigned NOT NULL,
+  `edit` tinyint(3) unsigned NOT NULL,
+  `del` tinyint(3) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `_uptime` (`_uptime`),
+  KEY `idgroup` (`idgroup`,`idtable`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;

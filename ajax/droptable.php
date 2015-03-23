@@ -3,7 +3,7 @@
 require_once 'ajax_common.php';
 require_once APP_EONZA.'lib/files.php';
 
-if ( ANSWER::is_success())
+if ( ANSWER::is_success() && ANSWER::is_access())
 {
     $pars = post( 'params' );
     $idi = $pars['id'];
@@ -14,6 +14,8 @@ if ( ANSWER::is_success())
         $curtable = $db->getrow("select * from ?n where id=?s", $tables, $idi );
         if ( !$curtable )
             api_error( 'err_id', "id=$idi" );
+        elseif ( defined( 'DEMO' ) && $curtable['idparent'] == SYS_ID )
+            api_error('This feature is disabled in the demo-version.');
         else
         {
             if ( $curtable['isfolder'])

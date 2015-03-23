@@ -20,7 +20,7 @@ function subfolder( $idparent, $title  )
     return $ret;
 }
 
-if ( ANSWER::is_success())
+if ( ANSWER::is_success() && ANSWER::is_access())
     ANSWER::result( subfolder( 0, '' ));
 
 ANSWER::answer();

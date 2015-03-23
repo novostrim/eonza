@@ -25,10 +25,21 @@ if ( $id && ANSWER::is_success())
             {
                 if ( $icol['idtype'] == FT_ENUMSET || $icol['idtype'] == FT_SETSET )
                 {
-                   $list = $db->getall('select iditem, title from ?n where idset=?s', 
+                    $setname = $db->getone('select title from ?n where id=?s', 
+                                CONF_PREFIX.'_sets', $icol['extend']['set'] );
+                    $icons = $setname[0] == '*';
+                    $list = $db->getall('select iditem, title from ?n where idset=?s', 
                               CONF_PREFIX.'_sets', $icol['extend']['set'] );
-                   foreach ( $list as $il )
-                       $icol['list'][$il['iditem']] = $il['title'];
+                    foreach ( $list as $il )
+                    {
+                        if ( $icons )
+                        {
+                            $iname = explode('*', $il['title'] );
+                            $il['title'] = empty( $iname[1] ) ? $iname[0] : $iname[1];
+                            $icol['listext'][$il['iditem']] = $iname[0];
+                        }
+                        $icol['list'][$il['iditem']] = $il['title'];
+                    }
                 }
             }
 //        $alias = alias( $icol );

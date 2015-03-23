@@ -5,7 +5,7 @@ require_once 'ajax_common.php';
 $pars = post( 'params' );
 $idi = $pars['id'];
 
-if ( ANSWER::is_success())
+if ( ANSWER::is_success() && ANSWER::is_access())
 {
     if ( !$idi )
     {

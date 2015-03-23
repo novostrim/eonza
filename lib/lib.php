@@ -38,7 +38,7 @@ class GS {
         // id=1 &&  TIMESTAMPDIFF( HOUR, uptime, NOW()) as lastdif
         self::$user = DB::getrow( "select id, login, email, 
             ( DATE_ADD( uptime, INTERVAL 1 HOUR ) < NOW()) as lastdif, lang from ?n 
-            where pass=?s && id=?s", 
+            where pass=X?s && id=?s", 
                         CONF_PREFIX.'_users', pass_md5( cookie('pass')), cookie('iduser'));
         if ( self::$user )
         {
@@ -56,6 +56,30 @@ class GS {
     public static function isroot()
     {
         return isset( self::$user[ 'id' ] ) && self::$user[ 'id' ] == 1;
+    }
+    public static function a_read( $idtable, $iditem = 0 )
+    {
+        if ( isroot())
+            return true;
+        return false;
+    }
+    public static function a_create( $idtable )
+    {
+        if ( isroot())
+            return true;
+        return false;
+    }
+    public static function a_edit( $idtable, $iditem = 0 )
+    {
+        if ( isroot())
+            return true;
+        return false;
+    }
+    public static function a_delete( $idtable, $iditem = 0 )
+    {
+        if ( isroot())
+            return true;
+        return false;
     }
     public static function user( $par = '' )
     {

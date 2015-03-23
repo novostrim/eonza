@@ -11,14 +11,16 @@ function cmp_version( $curver )
 {
     $newver = (int)APP_VERSION;
     $prev = (int)$curver;
+    GS::set( 'confupd', array( 'version' => APP_VERSION ));
     if ( $newver > $prev )
     {
         require_once "update/index.php";
         eonza_update( $prev, $newver );
     }
-    $_POST = array( 'params' => array( 'version' => APP_VERSION ));
+    $_POST = array( 'params' => GS::get( 'confupd' ));
     require_once "ajax/answer.php";
     require_once "ajax/savedb.php";
+    GS::set( 'conf', array_merge( GS::get( 'conf' ), GS::get( 'confupd' )));
 }
 
 $lang = '';
@@ -54,13 +56,16 @@ if ( file_exists( APP_DOCROOT.APP_ENTER."conf.inc.php"))
         if ( !is_array( $sval )) 
             $conf[ $skey ] = $sval;
     }
+    GS::set( 'conf', $conf );
     $curver = empty( $conf['version']) ? '0.0.0' : $conf['version'];
     if ( APP_VERSION != $curver )
+    {
         cmp_version( $curver );
+        $conf = GS::get( 'conf' );
+    }
     /**/
 //    $conf['title'] = $dbpar['name'];
 //    $conf['isalias'] = $dbpar['isalias'];
-
     $lang = $conf['dblang'];
     if ( !GS::login())
         $conf['module'] = 'login';

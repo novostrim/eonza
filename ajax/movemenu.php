@@ -24,7 +24,7 @@ function sortmenu( $idparent, $id, $sort )
 }
 
 $pars = post('params');
-if ( ANSWER::is_success())
+if ( ANSWER::is_success() && ANSWER::is_access())
 {
     $dbname = CONF_PREFIX.'_menu';
     if ( !$pars['prev'] )

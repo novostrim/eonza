@@ -1,9 +1,11 @@
 <?php
 /*
     Eonza 
-    (c) 2015 Novostrim, OOO. http://www.novostrim.com
+    (c) 2015 Novostrim, OOO. http://www.eonza.org
     License: MIT
 */
+
+require_once "init-update.php";
 
 function eonza_update( $curver, $newver )
 {
