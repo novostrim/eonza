@@ -2,16 +2,23 @@
 
 $mresult = $db->getall( "select * from ?n order by idparent,`sort`,title", CONF_PREFIX.'_menu' );
 $children = array();
-$ids = array();
-foreach ( $mresult as $mkey => &$value )
+$ret = array();
+for ( $i = 0; $i < count( $mresult ); $i++ )// as $mkey => &$value )
 {
+    $value = $mresult[$i];
+    if ( !GS::isroot())
+    {
+        $matches = array();
+        if ( preg_match( '/table?(.*)id=([0-9]+)/i', $value['url'], $matches ))
+            if ( !GS::a_read( array_pop( $matches )))
+                continue;
+    }
+    $ret[] = $value;
     if ( $value['idparent'] )
-        $children[ $value['idparent'] ][] = $mkey;
+        $children[ $value['idparent'] ][] = count( $ret ) - 1;
 }
-foreach ( $mresult as &$value )
-{
+foreach ( $ret as &$value )
     if ( isset( $children[ $value['id']] ))
         $value['children'] = $children[ $value['id']];
-}
 
-ANSWER::result( $mresult );
+ANSWER::result( $ret );

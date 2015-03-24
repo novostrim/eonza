@@ -184,6 +184,8 @@ if ( $id && ANSWER::is_success() && ANSWER::is_access( A_READ, $id ))
                 }
             }
         }
+        if ( ANSWER::is_own())
+           $qwhere .=  $db->parse( (!$qwhere ? "where 1":'')." && _owner =?s", GS::userid());
 
         $query = $db->parse( "select count(`id`) from ?n as t ?p", $dbname, $qwhere );
         $onpage = GS::get( 'options', 'perpage' );

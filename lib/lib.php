@@ -17,6 +17,7 @@ class GS {
     protected static $instance;
     protected static $user;
     protected static $glob;
+    protected static $alias;
 
     public static function getInstance() { 
         if ( self::$instance === null) 
@@ -33,10 +34,31 @@ class GS {
     }
     private function __wakeup() {
     }
+    private static function getaccess( $idtable )
+    {
+        $ret = array( A_READ => 0, A_CREATE => 0, A_EDIT => 0, A_DEL => 0 );
+        $access = DB::getall("select * from ?n where idgroup=?s && (idtable=?s || idtable=0 ) && active", 
+                            CONF_PREFIX.'_access', self::$user['idgroup'], $idtable );
+        self::$alias = DB::getone("select alias from ?n where id=?s",
+                                 CONF_PREFIX.'_tables', $idtable );
+        if ( !self::$alias )
+            self::$alias = CONF_PREFIX.'_'.$idtable;
+        foreach ( $access as $iacc ) 
+        {
+            if ( !$iacc['idtable'] )
+                if ( !preg_match( '/'.$iacc['mask'].'/i', self::$alias ))
+                    continue;
+            $ret[ A_READ ] |= $iacc['read'];
+            $ret[ A_CREATE ] |= $iacc['create'];
+            $ret[ A_EDIT ] |= $iacc['edit'];
+            $ret[ A_DEL ] |= $iacc['del'];
+        }
+        return $ret;
+    }
     public static function login() 
     {
         // id=1 &&  TIMESTAMPDIFF( HOUR, uptime, NOW()) as lastdif
-        self::$user = DB::getrow( "select id, login, email, 
+        self::$user = DB::getrow( "select id, login, email, idgroup,
             ( DATE_ADD( uptime, INTERVAL 1 HOUR ) < NOW()) as lastdif, lang from ?n 
             where pass=X?s && id=?s", 
                         CONF_PREFIX.'_users', pass_md5( cookie('pass')), cookie('iduser'));
@@ -57,29 +79,38 @@ class GS {
     {
         return isset( self::$user[ 'id' ] ) && self::$user[ 'id' ] == 1;
     }
-    public static function a_read( $idtable, $iditem = 0 )
+    public static function access( $action, $idtable=0, $iditem = 0 )
     {
-        if ( isroot())
+        if ( self::isroot())
             return true;
+        if ( $action == A_ROOT )
+            return false;
+        $acc = self::getaccess( $idtable );
+        if ( !$iditem )
+            return $acc[ $action ];
+        else
+        {
+            $owner = DB::getone("select _owner from ?n where id=?s", self::$alias, $iditem );
+            if ( $owner == self::$user['id'] )
+                return $acc[ $action ];
+        }
         return false;
     }
+    public static function a_read( $idtable=0, $iditem = 0 )
+    {
+        return self::access( A_READ, $idtable, $iditem );
+    }    
     public static function a_create( $idtable )
     {
-        if ( isroot())
-            return true;
-        return false;
+        return self::access( A_CREATE, $idtable, $iditem );
     }
     public static function a_edit( $idtable, $iditem = 0 )
     {
-        if ( isroot())
-            return true;
-        return false;
+        return self::access( A_EDIT, $idtable, $iditem );
     }
     public static function a_delete( $idtable, $iditem = 0 )
     {
-        if ( isroot())
-            return true;
-        return false;
+        return self::access( A_DELETE, $idtable, $iditem );
     }
     public static function user( $par = '' )
     {
@@ -123,11 +154,6 @@ class GS {
 }
 
 GS::getInstance();
-
-function access( $idtable, $action = '' )
-{
-   return true;
-}
 
 function alias( $pars, $prefix = '' )
 {

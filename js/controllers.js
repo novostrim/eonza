@@ -102,13 +102,17 @@ geapp.controller('UploadCtrl', function ($scope, FileUploader) {
 
 
 geapp.controller( 'IndexCtrl', function IndexCtrl($scope, $http, $routeSegment ) {
-    $scope.menu = [
-        { title: lng.tables, icon: 'table', href: '#/', name: 'tables'},
-        { title: lng.sets, icon: 'list-alt', href: '#/sets', name: 'sets'},
-        { title: lng.menu, icon: 'th-list', href: '#/menu', name: 'menu'},
-        { title: lng.admin, icon: 'wrench', href: '#/appsettings', name: 'admin'},
-//        { title: lng.settings, icon: 'cogs', href: '#/appsettings', name: 'appsettings'},
-    ];
+    $scope.isroot = cfg.user.id == 1;
+    if ( $scope.isroot )
+        $scope.menu = [
+            { title: lng.tables, icon: 'table', href: '#/', name: 'tables'},
+            { title: lng.sets, icon: 'list-alt', href: '#/sets', name: 'sets'},
+            { title: lng.menu, icon: 'th-list', href: '#/menu', name: 'menu'},
+            { title: lng.admin, icon: 'wrench', href: '#/appsettings', name: 'admin'},
+    //        { title: lng.settings, icon: 'cogs', href: '#/appsettings', name: 'appsettings'},
+        ];
+    else
+        $scope.menu = [];
     $scope.$routeSegment = $routeSegment;
 //    $state.transitionTo('index.menu');
 //    $state.go('index.menu');
@@ -282,6 +286,7 @@ function TablesCtrl($scope, $rootScope, $routeSegment, DbApi ) {
             foldermsg();
         }
     }
+    if ( $scope.isroot )
     DbApi( 'gettables', { parent: $scope.parent }, function( data ) {
         $scope.items = data.result;
         if ( angular.isDefined( data.crumbs ))

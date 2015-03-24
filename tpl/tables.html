@@ -1,3 +1,4 @@
+<div ng-if="isroot">
 <h1>{{lng.tables}}</h1>
 
  <a href="#/edittable?idparent={{parent}}" class="flatbtn"><i class="fa fa-plus-circle fa-lg"></i>&nbsp;&nbsp;{{lng.newtbl}}</a>
@@ -27,4 +28,4 @@
   <span ng-if="item.comment"><br><i><small>{{item.comment}}</small></i></span> 
   <span ng-show="isalias">{{item.alias}}</span><div class="clear"></div>
 </div>
-
+</div>

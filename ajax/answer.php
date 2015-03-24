@@ -11,6 +11,7 @@ class ANSWER {
     protected static $instance;
     protected static $answer;
     protected static $ajax;
+    protected static $own;
 
     public static function getInstance() { 
         if ( self::$instance === null) 
@@ -76,13 +77,17 @@ class ANSWER {
             self::$ajax = false;
         return self::$ajax;
     }
+    public static function is_own()
+    {
+        return self::$own;
+    }
     public static function is_access( $action = A_ROOT, $idtable = 0, $iditem = 0 )
     {
-        if ( GS::isroot())
-            return true;
-        if ( $action == A_ROOT )
+        $acc = GS::access( $action, $idtable, $iditem ); 
+        if ( !$acc )
             return api_error( 'iarights' );
-        return api_error( 'iarights' );
+        self::$own = !( $acc & 1 );
+        return true;
     }    
 }
 
