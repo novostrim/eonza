@@ -7,7 +7,7 @@
 
 define( 'APP_DB', 'enz_db');
 //define( 'APP_NAME', 'Eonza');
-define( 'APP_VERSION', '1.1.0' );
+define( 'APP_VERSION', '1.2.0' );
 define( 'APP_PREFIX', 'enz' );
 define( 'APP_STORAGE', 'storage' ); // Default name of the storage folder
 define( 'CONF_HOST', $_SERVER['HTTP_HOST'] );

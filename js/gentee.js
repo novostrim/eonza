@@ -79,8 +79,9 @@ geapp
                 .segment('usergroups', {
                     templateUrl: tpl('table.html'),
                     controller: TableCtrl })
-                .segment('accessrights', {
-                    controller: AccessCtrl })
+                .segment('accessrights', { 
+                    templateUrl: tpl('table.html'),
+                    controller: TableCtrl })
             .up()
           .segment('index', {
             templateUrl: tpl('index.html') })

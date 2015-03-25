@@ -1227,12 +1227,8 @@ function AdminCtrl($scope, $rootScope, $routeSegment ) {
         { title: lng.settings, icon: 'cogs', href: '#/appsettings', name: 'appsettings'},
         { title: lng.usrgroups, icon: 'users', href: '#/usergroups?id=' + cfg.idgroups, name: 'usergroups'},
         { title: lng.users, icon: 'user', href: '#/users?id=' + cfg.idusers, name: 'users'},
-        { title: lng.accrights, icon: 'shield', href: '#/accessrights', name: 'accessrights'},
+        { title: lng.accrights, icon: 'shield', href: '#/accessrights?id=' + cfg.idaccess, name: 'accessrights'},
     ];
-    $scope.$routeSegment = $routeSegment;
-}    
-
-function AccessCtrl($scope, $rootScope, $routeSegment ) {
     $scope.$routeSegment = $routeSegment;
 }    
 

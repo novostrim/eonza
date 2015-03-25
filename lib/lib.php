@@ -86,7 +86,7 @@ class GS {
         if ( $action == A_ROOT )
             return false;
         $acc = self::getaccess( $idtable );
-        if ( !$iditem )
+        if ( !$iditem || ( $acc[ $action ] & 1 ))
             return $acc[ $action ];
         else
         {
