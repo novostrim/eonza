@@ -63,7 +63,7 @@ if ( !file_exists( $filename ))
             $step = 'err_system';
         else
         {
-            $sql = str_replace( array( 'xxx', 'app_db' ), array( ENZ_PREFIX, ENZ_DB ), 
+            $sql = str_replace( array( 'xxx_', 'app_db' ), array( ENZ_PREFIX, ENZ_DB ), 
                          file_get_contents( "$epath/lib/db.sql" ));
             foreach ( explode( '##', $sql ) as $isql )
             {
