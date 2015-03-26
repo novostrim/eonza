@@ -102,7 +102,7 @@ if ( !file_exists( $filename ))
                     pass_md5( $form['psw'], true ), $settings );
         $form['dbid'] = 1;//$db->insertid();
         define( 'CONF_DBID', $form['dbid'] );
-        define( 'CONF_PREFIX', ENZ_PREFIX );
+        define( 'CONF_PREFIX', 'enz' );//ENZ_PREFIX );
 
         $db->query("insert into ?n set login='admin', pass=X'?p', lang=?s,  
                     uptime=CURRENT_TIMESTAMP", ENZ_USERS, $passmd, $lang );
@@ -111,7 +111,7 @@ if ( !file_exists( $filename ))
         cookie_set( 'pass', md5( $ipass ), 120 );
 //        $form['dir'] = $dir;
         $form['quotes'] = CONF_QUOTES;
-        $form['prefix'] = ENZ_PREFIX;
+        $form['prefix'] = 'enz';//ENZ_PREFIX;
         if ( empty( $form['dbhost'] ))
             $form['dbhost'] = 'localhost';
         foreach ( $form as $kp => $ip )
