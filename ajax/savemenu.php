@@ -9,7 +9,7 @@ if ( ANSWER::is_success() && ANSWER::is_access())
 {
     if ( !$idi )
     {
-        ANSWER::success( $db->insert( CONF_PREFIX.'_menu', pars_list( 'title,idparent,isfolder'.
+        ANSWER::success( $db->insert( ENZ_MENU, pars_list( 'title,idparent,isfolder'.
                          ( $pars['isfolder'] ? '' : ',hint,url'), $pars ), 
               array( 'sort=1000' ), true )); 
         if ( ANSWER::is_success())
@@ -18,7 +18,7 @@ if ( ANSWER::is_success() && ANSWER::is_access())
     else
     {
 //        print "=$idi=$pars[title]";
-        ANSWER::success( $db->update( CONF_PREFIX.'_menu', pars_list( 'title'.
+        ANSWER::success( $db->update( ENZ_MENU, pars_list( 'title'.
             ( $pars['isfolder'] ? '' : ',hint,url'), $pars ), '', $idi ));
     }
 }

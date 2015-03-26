@@ -5,11 +5,11 @@ require_once 'ajax_common.php';
 $id = get( 'id' );
 if ( $id && ANSWER::is_success())
 {
-    ANSWER::set( 'db', $db->getrow("select * from ?n where id=?s", CONF_PREFIX.'_tables', $id ));
+    ANSWER::set( 'db', $db->getrow("select * from ?n where id=?s", ENZ_TABLES, $id ));
 
     if ( ANSWER::get( 'db' ))
     {
-        $columns = $db->getall("select * from ?n where idtable=?s order by `sort`", CONF_PREFIX.'_columns', $id );
+        $columns = $db->getall("select * from ?n where idtable=?s order by `sort`", ENZ_COLUMNS, $id );
         $i = 0;
         foreach ( $columns as &$icol )
         {
@@ -26,10 +26,10 @@ if ( $id && ANSWER::is_success())
                 if ( $icol['idtype'] == FT_ENUMSET || $icol['idtype'] == FT_SETSET )
                 {
                     $setname = $db->getone('select title from ?n where id=?s', 
-                                CONF_PREFIX.'_sets', $icol['extend']['set'] );
+                                ENZ_SETS, $icol['extend']['set'] );
                     $icons = $setname[0] == '*';
                     $list = $db->getall('select iditem, title from ?n where idset=?s', 
-                              CONF_PREFIX.'_sets', $icol['extend']['set'] );
+                              ENZ_SETS, $icol['extend']['set'] );
                     foreach ( $list as $il )
                     {
                         if ( $icons )

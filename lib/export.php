@@ -49,11 +49,11 @@ function export( $pars )
     foreach ( $pars['table'] as $tid )
     {
         $cmd = '';
-        $table = $db->getrow("select * from ?n where id=?s", CONF_PREFIX.'_tables', $tid );
+        $table = $db->getrow("select * from ?n where id=?s", ENZ_TABLES, $tid );
         $cmd .= pack( 'V2C', $table['id'], strtotime( $table['_uptime'] ), $table['istree'] );
         packstr( $cmd, $table['title'], $table['alias'], $table['comment'] );
         $columns = $db->getall("select * from ?n where idtable=?s && idtype!=?s order by `sort`", 
-                           CONF_PREFIX.'_columns', $tid, FT_PARENT );
+                           ENZ_COLUMNS, $tid, FT_PARENT );
         $cmd .= pack( 'v', count( $columns ));
         foreach ( $columns as $cid )
         {

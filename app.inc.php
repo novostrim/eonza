@@ -1,14 +1,21 @@
 <?php 
 /*
     Eonza 
-    (c) 2014 Novostrim, OOO. http://www.novostrim.com
+    (c) 2014-15 Novostrim, OOO. http://www.eonza.org
     License: MIT
 */
 
-define( 'APP_DB', 'enz_db');
-//define( 'APP_NAME', 'Eonza');
-define( 'APP_VERSION', '1.2.0' );
-define( 'APP_PREFIX', 'enz' );
+define( 'ENZ_PREFIX', 'enz_' );
+// Names of system tables
+define( 'ENZ_ACCESS', ENZ_PREFIX.'access' );
+define( 'ENZ_DB', ENZ_PREFIX.'db' );
+define( 'ENZ_COLUMNS', ENZ_PREFIX.'columns' );
+define( 'ENZ_MENU', ENZ_PREFIX.'menu' );
+define( 'ENZ_SETS', ENZ_PREFIX.'sets' );
+define( 'ENZ_TABLES', ENZ_PREFIX.'tables' );
+define( 'ENZ_USERS', ENZ_PREFIX.'users' );
+
+define( 'APP_VERSION', '1.2.1' );
 define( 'APP_STORAGE', 'storage' ); // Default name of the storage folder
 define( 'CONF_HOST', $_SERVER['HTTP_HOST'] );
 define( 'APP_DOCROOT', $_SERVER['DOCUMENT_ROOT'] );

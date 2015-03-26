@@ -36,7 +36,7 @@ if ( ANSWER::is_success())
     $idtable = (int)$pars['idtable'];
     if ( $what && $idtable );
     {
-        $tables = CONF_PREFIX.'_tables';
+        $tables = ENZ_TABLES;
         $curtbl = $db->getrow("select id,alias,istree,idparent from ?n where id=?s", $tables, $idtable );
         GS::set( 'files_is', files_is( $idtable ));
         if ( !$curtbl )

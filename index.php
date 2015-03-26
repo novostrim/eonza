@@ -39,18 +39,8 @@ if ( file_exists( APP_DOCROOT.APP_ENTER."conf.inc.php"))
     );
     $db = DB::getInstance( $options );
 
-    $dbpar = $db->getrow( "select * from ?n where id=?s && pass=?s", APP_DB, 
-                          CONF_DBID, pass_md5( CONF_PSW, true ));
-    if ( !$dbpar )
-    {
-        print "System Error";
-        exit();
-    }
-    // Change from below in 2015 
-//    $conf = array_merge( $conf, json_decode( $dbpar['settings'], true ));
-    /* Change to above in 2015 */
+    $settings = GS::dbsettings();
     $conf['dblang'] = 'en';
-    $settings = json_decode( $dbpar['settings'], true );
     foreach ( $settings as $skey => $sval )
     {
         if ( !is_array( $sval )) 
@@ -64,15 +54,12 @@ if ( file_exists( APP_DOCROOT.APP_ENTER."conf.inc.php"))
         $conf = GS::get( 'conf' );
     }
     /**/
-//    $conf['title'] = $dbpar['name'];
-//    $conf['isalias'] = $dbpar['isalias'];
     $lang = $conf['dblang'];
     if ( !GS::login())
         $conf['module'] = 'login';
     else
     {
         $lang = GS::user('lang');
-//        $conf['apitoken'] = $dbpar['apitoken'];
     }
     $conf['user'] = GS::user();
 //    REQUEST_URI

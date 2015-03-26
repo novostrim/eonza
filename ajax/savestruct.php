@@ -36,7 +36,7 @@ foreach ( $pars['items'] as $ialias )
 }
 $tables = $db->tables();
 $dbname = empty( $pars['form']['alias'] ) ? '' : $pars['form']['alias'];
-$tbl_columns = CONF_PREFIX.'_columns';
+$tbl_columns = ENZ_COLUMNS;
 if ( $dbname )
 {
      if ( !is_name( $dbname ))
@@ -67,7 +67,7 @@ if ( ANSWER::is_success() && ANSWER::is_access())
 //    print_r( $tables );
     if ( !$idi )
     {
-        ANSWER::success( $db->insert( CONF_PREFIX.'_tables', pars_list( 'comment,title,alias,idparent,istree', $pars['form'] ), 
+        ANSWER::success( $db->insert( ENZ_TABLES, pars_list( 'comment,title,alias,idparent,istree', $pars['form'] ), 
                      GS::owner(), true )); 
         if ( ANSWER::is_success())
         {
@@ -87,7 +87,7 @@ if ( ANSWER::is_success() && ANSWER::is_access())
               }
             foreach ( $pars['items'] as $ifield )
             {
-                $idfield = $db->insert( CONF_PREFIX.'_columns', pars_list( 'title,extend,comment,idtype,alias,visible,align', $ifield ), 
+                $idfield = $db->insert( ENZ_COLUMNS, pars_list( 'title,extend,comment,idtype,alias,visible,align', $ifield ), 
                      array( "idtable = $idi", "`sort`=$sort" ), true ); 
                 $sort++;
                 $gsfield = GS::field( $ifield['idtype'] );
@@ -104,7 +104,7 @@ if ( ANSWER::is_success() && ANSWER::is_access())
     else
     {
         $curtbl = $db->getrow("select id,alias,idparent,istree from ?n where id=?s",
-                                   CONF_PREFIX.'_tables', $idi );
+                                   ENZ_TABLES, $idi );
         if ( !$curtbl )
             api_error( 'err_id', "id=$idi" );
         elseif ( defined( 'DEMO' ) && $curtbl['idparent'] == SYS_ID )
@@ -123,7 +123,7 @@ if ( ANSWER::is_success() && ANSWER::is_access())
                     else
                     {
                         if ( $db->query( "alter table ?n rename to ?n", alias( $curtbl, CONF_PREFIX.'_' ), $dbname ))
-                            $db->update( CONF_PREFIX.'_tables', array('alias' => $dbname ), '', $idi ); 
+                            $db->update( ENZ_TABLES, array('alias' => $dbname ), '', $idi ); 
                         else
                             api_error( 2, $dbname );
                     }
@@ -136,7 +136,7 @@ if ( ANSWER::is_success() && ANSWER::is_access())
                     {
                         $db->query( "alter table ?n drop index ?n", $dbname, '_parent' );
                         $db->query( "alter table ?n drop ?n", $dbname, '_parent' );
-                        $db->query( "delete from ?n where idtable=?s && idtype=?s", CONF_PREFIX.'_columns', $idi, FT_PARENT );
+                        $db->query( "delete from ?n where idtable=?s && idtype=?s", ENZ_COLUMNS, $idi, FT_PARENT );
                     }
                     else
                     {
@@ -148,12 +148,12 @@ if ( ANSWER::is_success() && ANSWER::is_access())
             if ( ANSWER::is_success())
             {
                 if ( $curtbl['idparent'] != SYS_ID )
-                    ANSWER::success( $db->update( CONF_PREFIX.'_tables', 
+                    ANSWER::success( $db->update( ENZ_TABLES, 
                         pars_list( 'comment,title,istree', $pars['form'] ), '', $idi )); 
                 if ( ANSWER::is_success())
                 {
                     api_log( $idi, 0, 'edit' );
-                    $coldb = CONF_PREFIX.'_columns';
+                    $coldb = ENZ_COLUMNS;
                     $db->query( "update $coldb set `sort`=30000 where idtable=?s && idtype != ?s", $idi, FT_PARENT );
                     //$allcol = $db->getall("select * from $coldb where idtable=?s", $idi );
     //                $columns = columns_list( $dbname );
@@ -179,7 +179,7 @@ if ( ANSWER::is_success() && ANSWER::is_access())
                         }
                         else
                         {
-                            $idcol = $db->insert( CONF_PREFIX.'_columns', 
+                            $idcol = $db->insert( ENZ_COLUMNS, 
                                 pars_list( 'title,comment,idtype,extend,alias,sort,visible,align', $ipar ), 
                                          array( "idtable = $idi" ), true );
                             if ( $idcol && isset( $gsfield['sql'] ))

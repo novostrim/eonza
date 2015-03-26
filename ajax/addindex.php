@@ -13,7 +13,7 @@ if ( ANSWER::is_success() && ANSWER::is_access())
     {
         if ( !(int)$ifield )
             continue;
-        $col = $db->getrow("select id, alias, idtype from ?n where id=?s", CONF_PREFIX.'_columns', $ifield );
+        $col = $db->getrow("select id, alias, idtype from ?n where id=?s", ENZ_COLUMNS, $ifield );
         if ( in_array( $col['idtype'], array( FT_UNKNOWN, FT_PARENT, FT_FILE, FT_IMAGE )))
             continue;
         $alias = $col['alias'] ? $col['alias'] : $col['id'];
@@ -27,7 +27,7 @@ if ( ANSWER::is_success() && ANSWER::is_access())
             $list .= ', ';
         $list .= $db->parse( '?n', $alias );
     }
-    $table = $db->getrow("select * from ?n where id=?s", CONF_PREFIX.'_tables', $pars['id'] );
+    $table = $db->getrow("select * from ?n where id=?s", ENZ_TABLES, $pars['id'] );
     if ( !$table )
         api_error( 'err_id', "id=$pars[id]" );
     else

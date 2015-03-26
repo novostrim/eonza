@@ -5,7 +5,7 @@ require_once 'ajax_common.php';
 $form = post( 'params' );
 if ( ANSWER::is_success() && ANSWER::is_access())
 {
-    $setname = CONF_PREFIX.'_sets';
+    $setname = ENZ_SETS;
     ANSWER::success( $db->getone( "select id from ?n where id=?s", $setname, $form['idset'] ));
     if ( ANSWER::is_success())
     {

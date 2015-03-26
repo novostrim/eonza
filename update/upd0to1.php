@@ -1,7 +1,7 @@
 <?php
 /*
     Eonza 
-    (c) 2015 Novostrim, OOO. http://www.novostrim.com
+    (c) 2015 Novostrim, OOO. http://www.eonza.org
     License: MIT
 */
 
@@ -14,7 +14,7 @@ function init_v1()
     $conf = GS::get('conf');
     if ( !isset( $conf['idgroups'] ))
     {
-        $dbtables = CONF_PREFIX.'_tables';
+        $dbtables = ENZ_TABLES;
         $dbgroup = CONF_PREFIX.'_group';
         extuptime( $dbgroup );
 
@@ -27,11 +27,10 @@ function init_v1()
         GS::set( 'idcoltable', $idgroups );
         $groupcol = addcolumn( FT_VAR, ':name', 32 );
 
-        $dbusers = CONF_PREFIX.'_users';
-        extuptime( $dbusers );
+        extuptime( ENZ_USERS );
 
         $idusers = $db->insert( $dbtables, 
-                    array( 'idparent' => SYS_ID, 'alias' => $dbusers,
+                    array( 'idparent' => SYS_ID, 'alias' => ENZ_USERS,
                            'title' => ':users' ), '', true );
         $confupd['idusers'] = $idusers;
         GS::set( 'idcoltable', $idusers );
@@ -55,9 +54,8 @@ function init_v1()
         addcolumn( FT_VAR, ':alias', 24 );
         addcolumn( FT_VAR, ':commentjs', 128, 'comment' );
 
-        $dbaccess = CONF_PREFIX.'_access';
         $idaccess = $db->insert( $dbtables, 
-                    array( 'idparent' => SYS_ID, 'alias' => $dbaccess,
+                    array( 'idparent' => SYS_ID, 'alias' => ENZ_ACCESS,
                            'title' => ':accrights' ), '', true );
         $confupd['idaccess'] = $idaccess;
         GS::set( 'idcoltable', $idaccess );
@@ -80,15 +78,13 @@ function init_v1()
 function upd0to1()
 {
     $db = DB::getInstance();
-    $dbusers = CONF_PREFIX.'_users';
 
-    $db->query( "alter table ?n drop ?n", $dbusers, 'ctime' );
-    $pass = $db->getone( "select pass from ?n where id=1", $dbusers );
-    $db->query( "alter table ?n CHANGE `pass` `pass` BINARY( 16 ) NOT NULL", $dbusers ); 
-    print $pass;
-    $db->update( $dbusers, '', array( "pass=X'$pass'" ), 1 );
+    $db->query( "alter table ?n drop ?n", ENZ_USERS, 'ctime' );
+    $pass = $db->getone( "select pass from ?n where id=1", ENZ_USERS );
+    $db->query( "alter table ?n CHANGE `pass` `pass` BINARY( 16 ) NOT NULL", ENZ_USERS ); 
+    $db->update( ENZ_USERS, '', array( "pass=X'$pass'" ), 1 );
 
-    $db->query( "CREATE TABLE IF NOT EXISTS `".CONF_PREFIX."_access` (
+    $db->query( "CREATE TABLE IF NOT EXISTS `".ENZ_PREFIX."access` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `_uptime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `_owner` smallint(5) unsigned NOT NULL,

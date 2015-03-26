@@ -18,7 +18,7 @@ if ( ANSWER::is_success())
        else
     {
         $iditem = (int)$_POST['iditem'];
-        $col = $db->getrow("select * from ?n where id=?s", CONF_PREFIX.'_columns', (int)$_POST['idcol'] );
+        $col = $db->getrow("select * from ?n where id=?s", ENZ_COLUMNS, (int)$_POST['idcol'] );
         if ( !$col || !$iditem || ($col['idtype']!= FT_FILE && $col['idtype']!= FT_IMAGE ))
             api_error( 'Wrong parameters', 2 );
         else

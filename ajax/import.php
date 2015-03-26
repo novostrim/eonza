@@ -6,7 +6,7 @@ $pars = post( 'params' );
 
 if ( ANSWER::is_success() && ANSWER::is_access())
 {
-    ANSWER::success( $db->insert( CONF_PREFIX.'_tables', 
+    ANSWER::success( $db->insert( ENZ_TABLES, 
             array( 'title' => $pars['tblname'] ), GS::owner(), true )); 
     $extend = array();
     if ( ANSWER::is_success())
@@ -17,7 +17,7 @@ if ( ANSWER::is_success() && ANSWER::is_access())
             $ret = $db->query("insert into ?n select * from ?n", $table, $pars['tblname'] );
         if ( !$ret )
         {
-            $db->query("delete from ?n where id=?s", CONF_PREFIX.'_tables', ANSWER::is_success() );
+            $db->query("delete from ?n where id=?s", ENZ_TABLES, ANSWER::is_success() );
             api_error( 101 );
         }
         else {
@@ -125,7 +125,7 @@ if ( ANSWER::is_success() && ANSWER::is_access())
                             'visible' => ( $sort < 7 ? 1 : 0 ), 'align' => 0 );
                     if ( $extend )
                         $fields['extend'] = json_encode( $extend );
-                    $db->insert( CONF_PREFIX.'_columns', $fields,
+                    $db->insert( ENZ_COLUMNS, $fields,
                          array( "idtable = ".ANSWER::is_success(), "`sort`=$sort" ), true ); 
                     $sort++;
                 }
@@ -187,7 +187,7 @@ if ( ANSWER::is_success())
 //    print_r( $tables );
     if ( !$idi )
     {
-        $xresult['success'] = $db->insert( CONF_PREFIX.'_tables', pars_list( 'comment,title,alias,idparent', $pars['form'] ), 
+        $xresult['success'] = $db->insert( ENZ_TABLES, pars_list( 'comment,title,alias,idparent', $pars['form'] ), 
                      GS::owner( '_uptime = NOW()' ), true ); 
         if ( ANSWER::is_success())
         {
@@ -202,7 +202,7 @@ if ( ANSWER::is_success())
             $sort = 0;
             foreach ( $pars['items'] as $ifield )
             {
-                $idfield = $db->insert( CONF_PREFIX.'_columns', pars_list( 'title,extpar,comment,idtype,alias,visible,align', $ifield ), 
+                $idfield = $db->insert( ENZ_COLUMNS, pars_list( 'title,extpar,comment,idtype,alias,visible,align', $ifield ), 
                      array( "idtable = $idtable", "`sort`=$sort" ), true ); 
                 $sort++;
                 $query .= column_query( $idfield, $ifield ).", \r\n";
@@ -215,7 +215,7 @@ if ( ANSWER::is_success())
     else
     {
         $curtbl = $db->getrow("select id,alias,idparent from ?n where id=?s",
-                                   CONF_PREFIX.'_tables', $idi );
+                                   ENZ_TABLES, $idi );
         if ( !$curtbl )
             api_error( 'err_id', "id=$idi" );
         else
@@ -230,7 +230,7 @@ if ( ANSWER::is_success())
                 {
                     if ( !$db->query( "alter table ?n rename to ?n", 
                         $curtbl['alias'] ? $curtbl['alias'] : CONF_PREFIX."_$idi", $dbname ))
-                        $db->update( CONF_PREFIX.'_tables', array('alias' => $dbname ), '', $idi ); 
+                        $db->update( ENZ_TABLES, array('alias' => $dbname ), '', $idi ); 
                     else
                         api_error( 2, $dbname );
                 }
@@ -238,11 +238,11 @@ if ( ANSWER::is_success())
             else
                 $dbname = $curtbl['alias'] ? $curtbl['alias'] : CONF_PREFIX."_$idi";
 
-            $xresult['success'] = $db->update( CONF_PREFIX.'_tables', 
+            $xresult['success'] = $db->update( ENZ_TABLES, 
                     pars_list( 'comment,title', $pars['form'] ), '', $idi ); 
             if ( ANSWER::is_success())
             {
-                $coldb = CONF_PREFIX.'_columns';
+                $coldb = ENZ_COLUMNS;
                 $db->query( "update $coldb set `sort`=30000 where idtable=?s", $idi );
                 //$allcol = $db->getall("select * from $coldb where idtable=?s", $idi );
 //                $columns = columns_list( $dbname );
@@ -269,7 +269,7 @@ if ( ANSWER::is_success())
                     }
                     else
                     {
-                        $idcol = $db->insert( CONF_PREFIX.'_columns', 
+                        $idcol = $db->insert( ENZ_COLUMNS, 
                             pars_list( 'title,extpar,comment,idtype,alias,sort,visible,align', $ipar ), 
                                      array( "idtable = $idi" ), true );
                         if ( $idcol )

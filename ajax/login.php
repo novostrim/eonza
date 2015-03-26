@@ -1,7 +1,7 @@
 <?php
 /*
     Eonza 
-    (c) 2014 Novostrim, OOO. http://www.novostrim.com
+    (c) 2014-15 Novostrim, OOO. http://www.eonza.org
     License: MIT
 */
 
@@ -9,11 +9,10 @@ require_once 'ajax_common.php';
 
 $form = post( 'form' );
 
-$settings = json_decode( $db->getone( "select settings from ?n where id=?s", APP_DB, 
-                          CONF_DBID ), true );
+$settings = GS::dbsettings();
 $ext = empty( $settings['loginshort'] ) ? $db->parse( " && login=?s", $form['login'] ): '';
 $usr = $db->getrow( "select id, login,lang from ?n where pass=X?s ?p", 
-                          CONF_PREFIX.'_users', pass_md5( $form['psw'], true ), $ext );
+                          ENZ_USERS, pass_md5( $form['psw'], true ), $ext );
 if ( !$usr )
     ANSWER::set( 'err', 'err_login' );
 else

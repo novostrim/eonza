@@ -6,40 +6,39 @@ function sortmenu( $idparent, $id, $sort )
 {
     $db = DB::getInstance();
 
-    $dbname = CONF_PREFIX.'_menu';
     $i = 1;
     $list = $db->getall( "select id from ?n where idparent = ?s order by idparent,`sort`,title", 
-                         $dbname, $idparent );
+                         ENZ_MENU, $idparent );
     $isort = $sort;
     foreach ( $list as $il )
     {
         if ( $il['id'] == $sort )
-        {
             $isort = $i++;
-        }    
-        $db->query( "update ?n set sort=?s where id=?s", $dbname, $i++, $il['id'] );
+        $db->query( "update ?n set sort=?s where id=?s", ENZ_MENU, $i++, $il['id'] );
     }
-    $db->query( "update ?n set sort=?s, idparent=?s  where id=?s", $dbname, 
+    $db->query( "update ?n set sort=?s, idparent=?s  where id=?s", ENZ_MENU, 
               $isort == -1 ? $i + 1 : $isort, $idparent, $id );
+}
+
+function getmenuparent( $id )
+{
+    return DB::getone("select idparent from ?n where id=?s", ENZ_MENU, $id );
 }
 
 $pars = post('params');
 if ( ANSWER::is_success() && ANSWER::is_access())
 {
-    $dbname = CONF_PREFIX.'_menu';
     if ( !$pars['prev'] )
-    {
         sortmenu( 0, $pars['id'], 0 );
-    }
     elseif ( !$pars['next'] )
     {
-        $idparent = $db->getone("select idparent from ?n where id=?s", $dbname, $pars['prev'] );
+        $idparent = getmenuparent( $pars['prev'] );
         sortmenu( $idparent, $pars['id'], -1 );
     }
     else
     {
-        $idprev = $db->getone("select idparent from ?n where id=?s", $dbname, $pars['prev'] );
-        $idnext = $db->getone("select idparent from ?n where id=?s", $dbname, $pars['next'] );
+        $idprev = getmenuparent( $pars['prev'] );
+        $idnext = getmenuparent( $pars['next'] );
         if ( $idprev != $idnext )
         {
             if ( $idnext == $pars['prev'] )

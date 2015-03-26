@@ -54,8 +54,7 @@ if ( !file_exists( $filename ))
         $step = 'err_create';
         define( 'CONF_DB', $form['db'] );
         $tables = $db->tables();
-        $prefix = post( 'prefix', APP_PREFIX );
-        if ( in_array( APP_DB, $tables ))
+        if ( in_array( ENZ_DB, $tables ))
         {
             $step = 'err_dbbusy';
             throw new Exception( 'busy' );
@@ -64,22 +63,13 @@ if ( !file_exists( $filename ))
             $step = 'err_system';
         else
         {
-/*            if ( !$prefix )
+            $sql = str_replace( array( 'xxx', 'app_db' ), array( ENZ_PREFIX, ENZ_DB ), 
+                         file_get_contents( "$epath/lib/db.sql" ));
+            foreach ( explode( '##', $sql ) as $isql )
             {
-                $latest = in_array( APP_DB, $tables ) ?
-                               $db->getone("select id from ?n order by id desc", APP_DB ) : 0;
-                $prefix = $latest ? $latest + 1 : 1;
-            }*/
-//            if ( !in_array( APP_DB, $tables ) || !$db->getone( 'select count(*) from ?n', APP_DB ))
-//            {
-                $sql = str_replace( array( 'xxx', 'app_db' ), array( $prefix, APP_DB ), 
-                             file_get_contents( "$epath/lib/db.sql" ));
-                foreach ( explode( '##', $sql ) as $isql )
-                {
-                    if ( trim( $isql ))
-                        $db->query( $isql );
-                }
-//            }
+                if ( trim( $isql ))
+                    $db->query( $isql );
+            }
         }
 
         $form['salt'] = pass_generate();
@@ -108,30 +98,27 @@ if ( !file_exists( $filename ))
             "showhelp": 1,
             "version": "'.APP_VERSION.'"
             }';
-        $db->query("insert into ?n set pass=?s, ctime=NOW(), settings=?s", APP_DB,
+        $db->query("insert into ?n set pass=?s, ctime=NOW(), settings=?s", ENZ_DB,
                     pass_md5( $form['psw'], true ), $settings );
-        $form['dbid'] = $db->insertid();
-        if ( !$prefix )
-            $prefix = $form['dbid'];
-        $db->query("update ?n set prefix=?s where id=?s", APP_DB, $prefix, $form['dbid'] );
+        $form['dbid'] = 1;//$db->insertid();
         define( 'CONF_DBID', $form['dbid'] );
-        define( 'CONF_PREFIX', $prefix );
+        define( 'CONF_PREFIX', ENZ_PREFIX );
 
         $db->query("insert into ?n set login='admin', pass=X'?p', lang=?s,  
-                    uptime=CURRENT_TIMESTAMP", $prefix.'_users', $passmd, $lang );
+                    uptime=CURRENT_TIMESTAMP", ENZ_USERS, $passmd, $lang );
         $iduser = $db->insertid();
         cookie_set( 'iduser', $iduser, 120 );
         cookie_set( 'pass', md5( $ipass ), 120 );
 //        $form['dir'] = $dir;
         $form['quotes'] = CONF_QUOTES;
-        $form['prefix'] = $prefix;
+        $form['prefix'] = ENZ_PREFIX;
         if ( empty( $form['dbhost'] ))
             $form['dbhost'] = 'localhost';
         foreach ( $form as $kp => $ip )
             $lines[] = "define( 'CONF_".strtoupper($kp)."', '$ip' );";
 //                $lines[] = '$CONF['."'$kp'] = '$ip';";
         $result['user'] = $db->getrow( "select id, login,lang from ?n where id=?s", 
-                          $prefix.'_users', $iduser );
+                            ENZ_USERS, $iduser );
         $result['success'] = isset( $lines ) && file_put_contents( $filename, 
             "<?php \r\n".implode( "\r\n", $lines )."\r\n" ) ? 1 : 0;
         @unlink( $htaccess );
@@ -141,8 +128,8 @@ if ( !file_exists( $filename ))
         GS::set( 'conf', $confupd );
         GS::set( 'confupd', $confupd );
         init_update();
-        $db->query( "update ?n set settings=?s where id=?s", 
-                     APP_DB, json_encode( GS::get( 'confupd' )), $form['dbid'] );
+        $db->query( "update ?n set settings=?s where id=1", 
+                     ENZ_DB, json_encode( GS::get( 'confupd' )) );
     }
     catch ( Exception $e )
     {

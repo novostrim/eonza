@@ -8,7 +8,7 @@ $pars = post( 'params' );
 
 if ( ANSWER::is_success() && ANSWER::is_access())
 {
-    $table = $db->getrow("select * from ?n where id=?s", CONF_PREFIX.'_tables', $pars['id'] );
+    $table = $db->getrow("select * from ?n where id=?s", ENZ_TABLES, $pars['id'] );
     if ( !$table )
         api_error( 'err_id', "id=$pars[id]" );
     else

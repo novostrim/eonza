@@ -1,5 +1,10 @@
 <?php
-
+/*
+    Eonza 
+    (c) 2014-15 Novostrim, OOO. http://www.eonza.org
+    License: MIT
+*/
+    
 require_once 'ajax_common.php';
 
 if ( ANSWER::is_success() && ANSWER::is_access())
@@ -7,11 +12,9 @@ if ( ANSWER::is_success() && ANSWER::is_access())
     $pars = post( 'params' );
     $idi = $pars['id'];
     $dest = $pars['dest'];
-    $tables = CONF_PREFIX.'_tables';
-    $columns = CONF_PREFIX.'_columns';
     if ( $idi )
     {
-        $curtable = $db->getrow("select * from ?n where id=?s", $tables, $idi );
+        $curtable = $db->getrow("select * from ?n where id=?s", ENZ_TABLES, $idi );
         if ( !$curtable || $curtable['isfolder'])
             api_error( 'err_id', "id=$idi" );
         else
@@ -19,21 +22,21 @@ if ( ANSWER::is_success() && ANSWER::is_access())
             $curtable['title'] = $dest;
             foreach ( array( 'alias', '_uptime', 'id', '_owner' ) as $iun )
                 unset( $curtable[ $iun ] );
-            ANSWER::success( $db->insert( $tables, $curtable, GS::owner(), true )); 
+            ANSWER::success( $db->insert( ENZ_TABLES, $curtable, GS::owner(), true )); 
             if ( ANSWER::is_success())
             {
                 api_log( ANSWER::is_success(), 0, 'create' );
                 $dbname = api_dbname( $idi );
                 $newname = CONF_PREFIX.'_'.( ANSWER::is_success());
 
-                $cols = $db->getall( "select * from ?n where idtable=?s", $columns, $idi );
+                $cols = $db->getall( "select * from ?n where idtable=?s", ENZ_COLUMNS, $idi );
                 $after = array();
                 foreach ( $cols as $icol )
                 {
                     $column = $icol;
                     $icol['idtable'] = ANSWER::is_success();
                     unset( $icol['id'] );
-                    $newid = $db->insert( $columns, $icol, '', true );
+                    $newid = $db->insert( ENZ_COLUMNS, $icol, '', true );
                     if ( !$column['alias'] )
                     {
                         $field = GS::field( $icol['idtype'] );

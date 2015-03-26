@@ -3,7 +3,6 @@ CREATE TABLE IF NOT EXISTS `app_db` (
   `pass` char(32) NOT NULL,
   `ctime` datetime NOT NULL,
   `settings` text NOT NULL,
-  `prefix` varchar(16) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 ##

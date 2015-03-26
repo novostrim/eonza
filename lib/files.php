@@ -79,7 +79,7 @@ function files_getfolder( $idtable )
 function files_is( $idi )
 {
     return DB::getone( "select count(*) from ?n where idtable=?s && ( idtype=?s || idtype=?s )",
-                                       CONF_PREFIX.'_columns', $idi, FT_FILE, FT_IMAGE ) ? 1 : 0;
+                                       ENZ_COLUMNS, $idi, FT_FILE, FT_IMAGE ) ? 1 : 0;
 }
 
 function files_delcolumn( $col )
@@ -122,7 +122,7 @@ function files_delfile( $idi, $toresult )
         DB::query("delete from ?n where id=?s", TBL_FILES, $idi );
         if ( $toresult )
         {
-            $col = DB::getrow("select * from ?n where id=?s", CONF_PREFIX.'_columns', (int)$fitem['idcol'] );
+            $col = DB::getrow("select * from ?n where id=?s", ENZ_COLUMNS, (int)$fitem['idcol'] );
             if ( $col )
                 ANSWER::result( files_result( $fitem['idtable'], $col, $fitem['iditem'], true ));
         }

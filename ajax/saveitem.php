@@ -6,7 +6,7 @@ $form = post( 'params' );
 //print_r( $form );
 if ( ANSWER::is_success() && ANSWER::is_access( A_EDIT, $form['table'], $form['id'] ))
 {
-    $dbt = $db->getrow("select * from ?n where id=?s", CONF_PREFIX.'_tables', $form['table'] );
+    $dbt = $db->getrow("select * from ?n where id=?s", ENZ_TABLES, $form['table'] );
     if ( !$dbt )
         api_error( 'err_id', "id=$form[table]" );
     elseif ( defined( 'DEMO' ) && $dbt['idparent'] == SYS_ID )
@@ -16,7 +16,7 @@ if ( ANSWER::is_success() && ANSWER::is_access( A_EDIT, $form['table'], $form['i
 
         $dbname = alias( $dbt, CONF_PREFIX.'_' );
         $columns = $db->getall("select * from ?n where idtable=?s", 
-                                          CONF_PREFIX.'_columns', $form['table'] );
+                                          ENZ_COLUMNS, $form['table'] );
         $out = array();
         $outext = '';
         foreach ( $columns as &$icol )

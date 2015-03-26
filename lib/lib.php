@@ -38,11 +38,11 @@ class GS {
     {
         $ret = array( A_READ => 0, A_CREATE => 0, A_EDIT => 0, A_DEL => 0 );
         $access = DB::getall("select * from ?n where idgroup=?s && (idtable=?s || idtable=0 ) && active", 
-                            CONF_PREFIX.'_access', self::$user['idgroup'], $idtable );
+                            ENZ_ACCESS, self::$user['idgroup'], $idtable );
         self::$alias = DB::getone("select alias from ?n where id=?s",
-                                 CONF_PREFIX.'_tables', $idtable );
+                                 ENZ_TABLES, $idtable );
         if ( !self::$alias )
-            self::$alias = CONF_PREFIX.'_'.$idtable;
+            self::$alias = ENZ_PREFIX.$idtable;
         foreach ( $access as $iacc ) 
         {
             if ( !$iacc['idtable'] )
@@ -61,14 +61,14 @@ class GS {
         self::$user = DB::getrow( "select id, login, email, idgroup,
             ( DATE_ADD( uptime, INTERVAL 1 HOUR ) < NOW()) as lastdif, lang from ?n 
             where pass=X?s && id=?s", 
-                        CONF_PREFIX.'_users', pass_md5( cookie('pass')), cookie('iduser'));
+                        ENZ_USERS, pass_md5( cookie('pass')), cookie('iduser'));
         if ( self::$user )
         {
             self::$user['access'] = array();
             if ( self::$user['lastdif'] )
             {
                 DB::query( "update ?n set uptime = NOW() where id=?i", 
-                           CONF_PREFIX.'_users', self::$user['id'] );
+                           ENZ_USERS, self::$user['id'] );
                 cookie_set( 'pass', cookie('pass'), 120 );
                 cookie_set( 'iduser', self::$user['id'], 120 );
             }
@@ -151,6 +151,17 @@ class GS {
     {
         self::$glob['fields'][$index][$name] = $val;
     }
+    public static function dbsettings()
+    {
+        $settings = DB::getone( "select settings from ?n where id=1 && pass=?s", 
+                                ENZ_DB, pass_md5( CONF_PSW, true ));
+        if ( !$settings )
+        {
+            print "System Error";
+            exit();
+        }
+        return json_decode( $settings, true );
+    }
 }
 
 GS::getInstance();
@@ -162,13 +173,13 @@ function alias( $pars, $prefix = '' )
 
 function cookie( $name, $default = '' )
 {
-   $icook = CONF_PREFIX.'_'.$name;
+   $icook = ENZ_PREFIX.$name;
    return isset( $_COOKIE[ $icook ] ) ? $_COOKIE[ $icook ] : $default;
 }
 
 function cookie_set( $name, $value='', $time = 1, $domain = APP_ENTER )
 {
-   $icook = CONF_PREFIX.'_'.$name;
+   $icook = ENZ_PREFIX.$name;
    setcookie( $icook, $value, $value ? time() + 3600*$time : 0, $domain );
    if ( $value )
       $_COOKIE[ $icook ] = $value;

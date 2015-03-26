@@ -9,13 +9,13 @@ if ( ANSWER::is_success() && ANSWER::is_access())
 {
     if ( !$idi )
     {
-        ANSWER::success( $db->insert( CONF_PREFIX.'_sets', pars_list( 'title', $pars ), 
+        ANSWER::success( $db->insert( ENZ_SETS, pars_list( 'title', $pars ), 
               GS::owner(), true )); 
     }
     else
     {
         ANSWER::result( array());
-        if ( $db->update( CONF_PREFIX.'_sets', 
+        if ( $db->update( ENZ_SETS, 
                     pars_list( 'title', $pars ), '', $idi ))
         {
             ANSWER::resultset( 'title', $pars['title'] );

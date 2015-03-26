@@ -5,7 +5,7 @@ require_once 'ajax_common.php';
 if ( ANSWER::is_success())
 {
     $icol = $db->getrow("select * from ?n where id=?s && ( idtype=?s ||  idtype=?s )", 
-                 CONF_PREFIX.'_columns', (int)get( 'id' ), FT_LINKTABLE, FT_PARENT );
+                 ENZ_COLUMNS, (int)get( 'id' ), FT_LINKTABLE, FT_PARENT );
     if ( $icol )
     {
         $icol['extend'] = json_decode( $icol['extend'], true );

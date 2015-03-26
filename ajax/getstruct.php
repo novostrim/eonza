@@ -11,7 +11,7 @@ if ( ANSWER::is_success() && ANSWER::is_access())
     if ( $idi )
     {
         $form = $db->getrow("select * from ?n where id=?s",
-                                       CONF_PREFIX.'_tables', $idi );
+                                       ENZ_TABLES, $idi );
         if ( !$form )
             api_error( 'err_id', "id=$idi" );
         else
@@ -19,7 +19,7 @@ if ( ANSWER::is_success() && ANSWER::is_access())
             ANSWER::resultset( 'form', $form );
             $fields = array();
             $items = $db->getall("select * from ?n where idtable=?s && idtype!=?s order by ?n",
-                                       CONF_PREFIX.'_columns', $idi, FT_PARENT, 'sort' );
+                                       ENZ_COLUMNS, $idi, FT_PARENT, 'sort' );
             foreach ( $items as &$iext )
             {
                 $iext['extend'] = json_decode( $iext['extend'] );

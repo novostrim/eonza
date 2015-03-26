@@ -76,14 +76,14 @@ function import( $pars )
                     $off = unpackstr( $indlist, "$indcount[count]", $in, $off );
                 }                
                 $tblcur = $db->getone("select id from ?n where ( alias != '' && alias=?s )", 
-                     CONF_PREFIX.'_tables', $tbl['alias'] );
+                     ENZ_TABLES, $tbl['alias'] );
                 if ( $tblcur || ( $tbl['alias'] && in_array( $tbl['alias'], $db->tables() ) ))
                 {
                     print "SKIP table<br>";
                 }
                 else
                 {
-                    $idtable = $db->insert( CONF_PREFIX.'_tables', 
+                    $idtable = $db->insert( ENZ_TABLES, 
                         pars_list( 'comment,title,alias,istree', $tbl ), GS::owner(), true ); 
                     if ( !$tbl['alias'])
                         $tbl['alias'] = CONF_PREFIX."_$idtable";
@@ -99,7 +99,7 @@ function import( $pars )
                     }
                     foreach ( $tbl['columns'] as $ifield )
                     {
-                        $idfield = $db->insert( CONF_PREFIX.'_columns', 
+                        $idfield = $db->insert( ENZ_COLUMNS, 
                         pars_list( 'title,extend,comment,idtype,alias,visible,align,sort', $ifield ), 
                              array( "idtable = $idtable" ), true );
                         $gsfield = $GS::field( $ifield['idtype'] );

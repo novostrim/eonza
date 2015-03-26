@@ -18,7 +18,7 @@ if ( ANSWER::is_success())
         unset( $field['pass'] );
     }
     ANSWER::success( $db->query( "update ?n set ?u $ext where id=?s", 
-                                 CONF_PREFIX.'_users', $fields, GS::userid()));
+                                 ENZ_USERS, $fields, GS::userid()));
     if ( ANSWER::is_success())
     {
         if ( isset( $ipass ))

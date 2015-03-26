@@ -6,7 +6,7 @@ require_once APP_EONZA.'lib/utf.php';
 $id = get( 'id' );
 if ( $id && ANSWER::is_success() )
 {
-    $setname = CONF_PREFIX.'_sets';
+    $setname = ENZ_SETS;
     ANSWER::resultset( 'title', $db->getone("select title from ?n where id=?s", $setname, $id ));
     if ( ANSWER::resultget('title'))
         ANSWER::result( $db->getall("select * from ?n where idset=?s order by title", $setname, $id ));

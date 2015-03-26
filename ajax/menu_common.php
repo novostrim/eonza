@@ -1,6 +1,6 @@
 <?php
 
-$mresult = $db->getall( "select * from ?n order by idparent,`sort`,title", CONF_PREFIX.'_menu' );
+$mresult = $db->getall( "select * from ?n order by idparent,`sort`,title", ENZ_MENU );
 $children = array();
 $ret = array();
 for ( $i = 0; $i < count( $mresult ); $i++ )// as $mkey => &$value )

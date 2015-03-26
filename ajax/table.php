@@ -67,7 +67,7 @@ if ( $id && ANSWER::is_success() && ANSWER::is_access( A_READ, $id ))
     $total = array();
     ANSWER::set( 'total', array());
     $totallist = array();
-    $retdb = $db->getrow("select * from ?n where id=?s", CONF_PREFIX.'_tables', $id );
+    $retdb = $db->getrow("select * from ?n where id=?s", ENZ_TABLES, $id );
     if ( $retdb )
     {
         $dbname = alias( $retdb, CONF_PREFIX.'_' );
@@ -76,7 +76,7 @@ if ( $id && ANSWER::is_success() && ANSWER::is_access( A_READ, $id ))
         $leftjoin = '';
         $field2ind = array();
         $columns = $db->getall("select * from ?n where idtable=?s  
-                                          order by `sort`", CONF_PREFIX.'_columns', $id );
+                                          order by `sort`", ENZ_COLUMNS, $id );
         $cind = 0;
         foreach ( $columns as &$icol )
         {

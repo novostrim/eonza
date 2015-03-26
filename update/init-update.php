@@ -28,7 +28,7 @@ function addcolumn( $idtype, $title, $extend, $alias = '' )
     if ( $idtype == FT_ENUMSET )
         $extend = "{\"set\":\"$extend\"}";
 
-    $ret = DB::insert( CONF_PREFIX.'_columns', array( 'idtable' => GS::get('idcoltable'), 
+    $ret = DB::insert( ENZ_COLUMNS, array( 'idtable' => GS::get('idcoltable'), 
                     'idtype' => $idtype, 'title' => $title, 'alias' => $alias,
                     'align' => GS::get('align'),
                     'visible' => 1, 'sort' => $sort, 'extend' => $extend ), '', true );
@@ -40,7 +40,7 @@ function addset( $list )
 {
     $db = DB::getInstance();
     $items = explode(',', $list );
-    $dbset = CONF_PREFIX.'_sets';
+    $dbset = ENZ_SETS;
     $ret = DB::insert( $dbset, array( 'idset' => SYS_ID, 'iditem' => 0, 
                      'title' => $items[0] ), '', true );
     for ( $i=1; $i < count( $items ); $i++ )

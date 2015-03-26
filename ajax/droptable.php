@@ -7,8 +7,8 @@ if ( ANSWER::is_success() && ANSWER::is_access())
 {
     $pars = post( 'params' );
     $idi = $pars['id'];
-    $tables = CONF_PREFIX.'_tables';
-    $columns = CONF_PREFIX.'_columns';
+    $tables = ENZ_TABLES;
+    $columns = ENZ_COLUMNS;
     if ( $idi )
     {
         $curtable = $db->getrow("select * from ?n where id=?s", $tables, $idi );

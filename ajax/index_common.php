@@ -29,7 +29,7 @@ function index_list_table( $table )
 
     $fields = array();
     $items = DB::getall("select * from ?n where idtable=?s && idtype!=?s order by ?n",
-                                   CONF_PREFIX.'_columns', $table['id'], FT_PARENT, 'sort' );
+                                   ENZ_COLUMNS, $table['id'], FT_PARENT, 'sort' );
     foreach ( $items as $iext )
         $fields[ alias( $iext )] = $iext['title'];
     $ret = index_list( alias( $table, CONF_PREFIX."_" ), $fields );

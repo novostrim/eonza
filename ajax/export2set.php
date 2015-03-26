@@ -6,8 +6,8 @@ if ( ANSWER::is_success() && ANSWER::is_access())
 {
     $pars = post( 'params' );
     $idi = $pars['id'];
-    $tables = CONF_PREFIX.'_tables';
-    $columns = CONF_PREFIX.'_columns';
+    $tables = ENZ_TABLES;
+    $columns = ENZ_COLUMNS;
 
     if ( $idi )
     {
@@ -26,13 +26,13 @@ if ( ANSWER::is_success() && ANSWER::is_access())
                     api_error( 'err_limitset' );
                 else
                 {
-                    ANSWER::success( $db->insert( CONF_PREFIX.'_sets', 
+                    ANSWER::success( $db->insert( ENZ_SETS, 
                                    array( 'title' => $curtable['title'] ), GS::owner(), true )); 
                     if ( ANSWER::is_success())
                     {
                         $i = 1;
                         foreach ( $list as $val )
-                            $db->insert(  CONF_PREFIX.'_sets', array('title'=> $val[ $colname ], 
+                            $db->insert(  ENZ_SETS, array('title'=> $val[ $colname ], 
                                  'idset' => ANSWER::is_success(), 'iditem' => $i++ ), GS::owner()); 
                     }
                 }

@@ -16,7 +16,7 @@ class ExtMySQL extends SafeMySQL
     
     public function getset( $idset )
     {
-        $set = $this->getall( "select iditem as id, title from ?n where idset=?s order by title", CONF_PREFIX.'_sets', $idset );
+        $set = $this->getall( "select iditem as id, title from ?n where idset=?s order by title", ENZ_SETS, $idset );
         $ret = array();
         foreach ( $set as $iset )
             $ret[ $iset['id']] = $iset;

@@ -26,13 +26,13 @@ function api_error( $err, $temp ='' )
 
 function api_dbname( $idtable )
 {
-    $alias = DB::getone("select alias from ?n where id=?s", CONF_PREFIX.'_tables', $idtable );
+    $alias = DB::getone("select alias from ?n where id=?s", ENZ_TABLES, $idtable );
     return ( $alias ? $alias : CONF_PREFIX."_$idtable" );
 }
 
 function api_colname( $idcol )
 {
-    $alias = DB::getone("select alias from ?n where id=?s", CONF_PREFIX.'_columns', $idcol );
+    $alias = DB::getone("select alias from ?n where id=?s", ENZ_COLUMNS, $idcol );
     return ( $alias ? $alias : $idcol );
 }
 
@@ -121,7 +121,7 @@ function get_linklist( $icol, $offset, $search = '', $parent = 0, $filter=0 )
     $db = DB::getInstance();
     $dblink = api_dbname( $icol['extend']['table'] );
     $collink = api_colname( (int)$icol['extend']['column'] );
-    $istree = $db->getone("select istree from ?n where id=?s", CONF_PREFIX.'_tables', $icol['extend']['table'] );
+    $istree = $db->getone("select istree from ?n where id=?s", ENZ_TABLES, $icol['extend']['table'] );
     $onpage = 15;
 
     $wsearch = $istree ? 'where _parent='.(int)$parent : 'where 1';
@@ -178,15 +178,5 @@ if ( CONF_QUOTES ) {
 if ( !GS::userid() )
     api_error( 'err_login' );
 else
-{
-    $dbsets = $db->getone( "select settings from ?n where id=?s && pass=?s", APP_DB, 
-                              CONF_DBID, pass_md5( CONF_PSW, true ));
-    $options = array();
-    if ( $dbsets )
-    {
-        foreach ( json_decode( $dbsets, true ) as $okey => $oval )
-            $options[ $okey ] = $oval;
-    }
-    GS::set( 'options', $options );
-}
+    GS::set( 'options', GS::dbsettings());
 

@@ -14,13 +14,11 @@ if ( defined( 'DEMO' ))
 
 if ( ANSWER::is_success() && ( $isupdate || ANSWER::is_access()))
 {
-    $psw = pass_md5( CONF_PSW, true );
-    $settings = json_decode( $db->getone( "select settings from ?n where id=?s && pass=?s", APP_DB, 
-                          CONF_DBID, $psw ), true );
+    $settings = GS::dbsettings();
     foreach ( $fields as $ikey => $ival )
         $settings[ $ikey ] = $ival;
-    $db->query( "update ?n set settings=?s where id=?s && pass=?s", 
-                APP_DB, json_encode( $settings ), CONF_DBID, $psw );
+    $db->query( "update ?n set settings=?s where id=1 && pass=?s", 
+                 ENZ_DB, json_encode( $settings ), pass_md5( CONF_PSW, true ));
 }
 
 ANSWER::answer();
