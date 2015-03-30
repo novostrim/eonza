@@ -1,8 +1,13 @@
 <?php
-
+/*
+    Eonza 
+    (c) 2014-15 Novostrim, OOO. http://www.eonza.org
+    License: MIT
+*/
+    
 require_once 'ajax_common.php';
 
-GS::set( 'dbname', CONF_PREFIX.'_'.get( 'dbname' ));
+GS::set( 'dbname', ENZ_PREFIX.get( 'dbname' ));
 GS::set( 'id', get( 'id' ));
 
 function subfolder( $idparent, $title  )

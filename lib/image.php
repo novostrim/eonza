@@ -173,7 +173,7 @@ class Image
             }
             $params['ispreview'] = 1;
         }
-        DB::update( TBL_FILES, $params, '', $idfile );
+        DB::update( ENZ_FILES, $params, '', $idfile );
     }
 }
 

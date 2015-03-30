@@ -1,5 +1,10 @@
 <?php
-
+/*
+    Eonza 
+    (c) 2014-15 Novostrim, OOO. http://www.eonza.org
+    License: MIT
+*/
+    
 function index_list( $dbname, $fields )
 {
     $index = DB::getall("show index from ?n", $dbname );
@@ -32,7 +37,7 @@ function index_list_table( $table )
                                    ENZ_COLUMNS, $table['id'], FT_PARENT, 'sort' );
     foreach ( $items as $iext )
         $fields[ alias( $iext )] = $iext['title'];
-    $ret = index_list( alias( $table, CONF_PREFIX."_" ), $fields );
+    $ret = index_list( alias( $table, ENZ_PREFIX ), $fields );
 
     return $ret;
 }

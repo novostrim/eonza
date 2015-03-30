@@ -619,7 +619,25 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
             $scope.view[ alias ] = '';
             switch ( parseInt( icol.idtype ))
             {
-                 case cnt.FT_ENUMSET:
+                case cnt.FT_TEXT:
+                    switch ( parseInt( icol.extend.weditor ))
+                    {
+                        case 1:// Simple Text
+                            $scope.view[ alias ] = $scope.form[ alias ].replace( /\n/g,'\n<br>' );
+                            break;
+                        case 2:// HTML Text
+                            $scope.view[ alias ] = $scope.form[ alias ];
+                            break;
+                        case 3:// Markdown Text
+                            $scope.view[ alias ] = markdown.makeHtml( $scope.form[ alias ] ).replace( 
+                                     /<p>(.|\n)+?<\/p>/g, 
+                                     function ( str ){
+                                              return str.replace( /\n/g, '\n<br>');
+                                    });
+                            break;
+                    }
+                    break;
+                case cnt.FT_ENUMSET:
                     var idi = parseInt( $scope.form[alias] );
                     if ( idi > 0 && angular.isDefined( icol['list'][idi] ))
                         $scope.view[ alias ] = icol['list'][idi];

@@ -1,7 +1,7 @@
 <?php
 /*
    Eonza
-   (c) 2014 Novostrim, OOO. http://www.novostrim.com
+   (c) 2014-15 Novostrim, OOO. http://www.eonza.org
    License: MIT
 */
 
@@ -106,7 +106,6 @@ function linktable_sql( &$form )
 {
     $db = DB::getInstance();
 
-    $colname = CONF_PREFIX."_columns";
     $extbyte = $form['ext']['extbyte'];
     $extupd = false;
     $maxid = $db->getone("select max(id) from ?n", api_dbname( $form['ext']['table'] ));
@@ -125,7 +124,7 @@ function linktable_sql( &$form )
     if ( !empty( $form['ext']['filter'] ))
     {
         $links = $db->getall("select extend,id from ?n where idtable=?s && idtype=?s",
-                              $colname, $form['ext']['table'], FT_LINKTABLE );
+                              ENZ_COLUMNS, $form['ext']['table'], FT_LINKTABLE );
         $fltok = false;
         foreach ( $links as $il )
         {
@@ -152,7 +151,7 @@ function linktable_sql( &$form )
     if ( $extupd )
     {
         $form['extend'] = json_encode( $form['ext'] );
-        $db->update( $colname, array('extend' => $form['extend'] ), '', $form['id'] );
+        $db->update( ENZ_COLUMNS, array('extend' => $form['extend'] ), '', $form['id'] );
     }
     return "$ftype unsigned NOT NULL";
 }
@@ -280,7 +279,6 @@ function linktable_save( &$out, $form, $icol, &$outext )
     if ( ( $val > 65000 && $extbyte < 2 ) ||
          ( $val > 250 && $extbyte < 1 ))
     {
-        $colname = CONF_PREFIX."_columns";
         if ( $val > 65000 )
         {
             $ftype = 'mediumint(8)';
@@ -293,7 +291,7 @@ function linktable_save( &$out, $form, $icol, &$outext )
         }
         $dbname = api_dbname( $icol['idtable'] );
         if ( $db->query( "alter table ?n change ?n ?n $ftype unsigned NOT NULL", $dbname, $alias, $alias ))
-            $db->update( $colname, array('extend' => json_encode( $extend )), '', $icol['id'] );
+            $db->update( ENZ_COLUMNS, array('extend' => json_encode( $extend )), '', $icol['id'] );
     }
     $out[ $alias ] = empty( $form[$alias] ) ? 0 : $val;
 }

@@ -1,9 +1,10 @@
 <?php
 /*
     Eonza 
-    (c) 2014 Novostrim, OOO. http://www.novostrim.com
+    (c) 2014-15 Novostrim, OOO. http://www.eonza.org
     License: MIT
 */
+    
 define( 'CONF_QUOTES', get_magic_quotes_gpc());
 $epath = dirname( dirname( $_SERVER['SCRIPT_FILENAME'] ));
 
@@ -63,30 +64,24 @@ if ( !file_exists( $filename ))
             $step = 'err_system';
         else
         {
-            $sql = str_replace( array( 'xxx_', 'app_db' ), array( ENZ_PREFIX, ENZ_DB ), 
-                         file_get_contents( "$epath/lib/db.sql" ));
+            $sql = str_replace( 'xxx_', ENZ_PREFIX, file_get_contents( "$epath/lib/db.sql" ));
             foreach ( explode( '##', $sql ) as $isql )
-            {
                 if ( trim( $isql ))
                     $db->query( $isql );
-            }
         }
 
         $form['salt'] = pass_generate();
         define( 'CONF_SALT', $form['salt'] );
         
         $ipass = $form['psw'];
-
         $passmd = pass_md5( $form['psw'], true );
         $form['psw'] = pass_generate();
         if ( empty( $form['storage']))
             $form['storage'] = '/storage';
         $storage = addfname( $_SERVER['DOCUMENT_ROOT'], $form['storage'] );
         if ( !is_dir( $storage ))
-        {
         	mkdir( $storage, 0777 );
-//            chmod( $storage, 0666 );
-        }
+
         $lang = post( 'lang' );
         $settings = '{ "title": "'.$conf['appname'].'",
             "isalias": 0,
@@ -100,14 +95,11 @@ if ( !file_exists( $filename ))
             }';
         $db->query("insert into ?n set pass=?s, ctime=NOW(), settings=?s", ENZ_DB,
                     pass_md5( $form['psw'], true ), $settings );
-        $form['dbid'] = 1;//$db->insertid();
-        define( 'CONF_DBID', $form['dbid'] );
         define( 'CONF_PREFIX', 'enz' );//ENZ_PREFIX );
 
         $db->query("insert into ?n set login='admin', pass=X'?p', lang=?s,  
                     uptime=CURRENT_TIMESTAMP", ENZ_USERS, $passmd, $lang );
-        $iduser = $db->insertid();
-        cookie_set( 'iduser', $iduser, 120 );
+        cookie_set( 'iduser', 1, 120 );
         cookie_set( 'pass', md5( $ipass ), 120 );
 //        $form['dir'] = $dir;
         $form['quotes'] = CONF_QUOTES;
@@ -117,8 +109,8 @@ if ( !file_exists( $filename ))
         foreach ( $form as $kp => $ip )
             $lines[] = "define( 'CONF_".strtoupper($kp)."', '$ip' );";
 //                $lines[] = '$CONF['."'$kp'] = '$ip';";
-        $result['user'] = $db->getrow( "select id, login,lang from ?n where id=?s", 
-                            ENZ_USERS, $iduser );
+        $result['user'] = $db->getrow( "select id, login, lang from ?n where id=1", 
+                            ENZ_USERS );
         $result['success'] = isset( $lines ) && file_put_contents( $filename, 
             "<?php \r\n".implode( "\r\n", $lines )."\r\n" ) ? 1 : 0;
         @unlink( $htaccess );

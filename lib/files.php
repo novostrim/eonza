@@ -1,7 +1,11 @@
 <?php
+/*
+   Eonza
+   (c) 2014-15 Novostrim, OOO. http://www.eonza.org
+   License: MIT
+*/
 
 define( 'STORAGE', APP_DOCROOT.CONF_STORAGE.( substr( CONF_STORAGE, -1 ) != '/' ? '/' : '' ));
-define( 'TBL_FILES', CONF_PREFIX."_files" );
 
 function files_download( $id, $browser = false, $thumb = false, $public = '' )
 {
@@ -9,7 +13,7 @@ function files_download( $id, $browser = false, $thumb = false, $public = '' )
                      ifnull( m.name, 'application/octet-stream' ) as mime from ?n as f
                     left join ?n as m on m.id=f.mime
                     where f.id=?s",
-                        TBL_FILES, CONF_PREFIX.'_mimes', $id );
+                        ENZ_FILES, ENZ_MIMES, $id );
     if ( !$file || ( $public && !in_array( $file['idtable'], $public )))
         return;
 
@@ -55,14 +59,14 @@ function files_getfolder( $idtable )
 {
     $idfolder = 0;
     $count = DB::getrow("select count( id ) as count, folder from ?n where idtable=?s group by folder order by count", 
-           CONF_PREFIX."_files", $idtable );
+           ENZ_FILES, $idtable );
     if ( $count && $count['count'] < 500 )
         $idfolder = $count['folder'];
     $path = STORAGE.$idtable;
     if ( !$idfolder )
     {
         $idfolder = DB::getone("select ifnull( max( folder ) +1, 1 ) from ?n where idtable=?s", 
-                                   CONF_PREFIX."_files", $idtable );
+                                   ENZ_FILES, $idtable );
         if ( !is_dir( $path ))
                mkdir( $path, 0777 );
            $folder = "$path/$idfolder";
@@ -85,7 +89,7 @@ function files_is( $idi )
 function files_delcolumn( $col )
 {
     $list = DB::getall("select id from ?n 
-                         where idtable=?s && idcol=?s", TBL_FILES, $col['idtable'], $col['id'] );
+                         where idtable=?s && idcol=?s", ENZ_FILES, $col['idtable'], $col['id'] );
     foreach ( $list as $il )
         files_delfile( $il['id'], false );
 }
@@ -93,7 +97,7 @@ function files_delcolumn( $col )
 function files_delitem( $idtable, $id )
 {
     $list = DB::getall("select id from ?n 
-                         where idtable=?s && iditem=?s", TBL_FILES, $idtable, $id );
+                         where idtable=?s && iditem=?s", ENZ_FILES, $idtable, $id );
     foreach ( $list as $il )
         files_delfile( $il['id'], false );
 }
@@ -101,7 +105,7 @@ function files_delitem( $idtable, $id )
 function files_deltable( $idtable )
 {
     $list = DB::getall("select id from ?n 
-                         where idtable=?s", TBL_FILES, $idtable );
+                         where idtable=?s", ENZ_FILES, $idtable );
     foreach ( $list as $il )
         files_delfile( $il['id'], false );
 }
@@ -109,7 +113,7 @@ function files_deltable( $idtable )
 function files_delfile( $idi, $toresult )
 {
     $fitem = DB::getrow("select id, idtable, idcol, ispreview, iditem, folder from ?n where id=?s",
-                          TBL_FILES, $idi );
+                          ENZ_FILES, $idi );
     if ( $fitem )
     {
         if ( $fitem['folder'] )
@@ -119,7 +123,7 @@ function files_delfile( $idi, $toresult )
             if ( $fitem['ispreview'] )
                 @unlink( $path.'_'.$idi );
         }
-        DB::query("delete from ?n where id=?s", TBL_FILES, $idi );
+        DB::query("delete from ?n where id=?s", ENZ_FILES, $idi );
         if ( $toresult )
         {
             $col = DB::getrow("select * from ?n where id=?s", ENZ_COLUMNS, (int)$fitem['idcol'] );
@@ -136,7 +140,7 @@ function files_edit( $data )
     $par =  array( 'comment' => $data['comment'] );
     if ( !empty( $data['filename'] ))
         $par['filename'] = $data['filename'];
-    return DB::update( TBL_FILES, $par, '', $data['id'] );
+    return DB::update( ENZ_FILES, $par, '', $data['id'] );
 }
 
 function files_result( $idtable, $col, $iditem, $full = false )
@@ -147,7 +151,7 @@ function files_result( $idtable, $col, $iditem, $full = false )
         ANSWER::set( 'alias', alias( $col ));
     }
     return DB::getall("select id, filename, comment, size, w, h, ispreview from ?n
-        where idtable=?s && idcol=?s && iditem=?s order by `sort`", TBL_FILES, 
+        where idtable=?s && idcol=?s && iditem=?s order by `sort`", ENZ_FILES, 
         $idtable, $col['id'], $iditem );    
 }
 

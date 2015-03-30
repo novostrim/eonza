@@ -116,7 +116,8 @@ var types = {
     4 : { id: cnt.FT_TEXT, name: 'ftext', verify: number_verify, filter: { mask: 0x3d0 },
             edit: edit_text, pattern: pattern_wide, patternview: patternview_wide, 
          extend: [  { name: 'weditor', type: cnt.ET_COMBO, def: 2, 
-                     list: [ {id: 1, title: '---' }, { title: lng.htmleditor, id: 2 }
+                     list: [ {id: 1, title: '---' }, { title: lng.htmleditor, id: 2 }, 
+                             { title: 'Markdown', id: 3 }
             ] },  
             { name: 'bigtext', type: cnt.ET_CHECK, def: 0 } 
         ] 
@@ -441,7 +442,7 @@ function js_redactorpaste( html )
 function edit_text( i, icol )
 {
     var alias = icol.alias;
-    if ( icol.extend.weditor < 2 )
+    if ( icol.extend.weditor != 2 )
         return "<textarea name='"+alias +"' ng-model='form[columns["+i+"].alias]' class='form-control whuge' style='height: 5em;'></textarea><span class='length'>{{form[columns["+i+"].alias].length}}</span>";
 
     var iclass = angular.isDefined( cfg.htmleditor ) ? cfg.htmleditor.class : 'redactor';

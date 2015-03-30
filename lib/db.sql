@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS `app_db` (
+CREATE TABLE IF NOT EXISTS `xxx_db` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `pass` char(32) NOT NULL,
   `ctime` datetime NOT NULL,

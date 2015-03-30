@@ -1,6 +1,10 @@
-
 <?php
-
+/*
+    Eonza 
+    (c) 2014-15 Novostrim, OOO. http://www.eonza.org
+    License: MIT
+*/
+    
 require_once 'ajax_common.php';
 require_once 'index_common.php';
 
@@ -13,8 +17,8 @@ if ( ANSWER::is_success() && ANSWER::is_access())
         api_error( 'err_id', "id=$pars[id]" );
     else
     {
-        $dbname = alias( $table, CONF_PREFIX.'_' );
-        ANSWER::success( $db->query( "alter table ?n drop index ?n", $dbname, $pars['field'] ));
+        ANSWER::success( $db->query( "alter table ?n drop index ?n", 
+                                     alias( $table, ENZ_PREFIX ), $pars['field'] ));
         if ( ANSWER::is_success())
             ANSWER::set( 'index', index_list_table( $table ));
     }

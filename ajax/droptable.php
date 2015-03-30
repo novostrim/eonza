@@ -1,4 +1,9 @@
 <?php
+/*
+    Eonza 
+    (c) 2014-15 Novostrim, OOO. http://www.eonza.org
+    License: MIT
+*/
 
 require_once 'ajax_common.php';
 require_once APP_EONZA.'lib/files.php';
@@ -7,11 +12,9 @@ if ( ANSWER::is_success() && ANSWER::is_access())
 {
     $pars = post( 'params' );
     $idi = $pars['id'];
-    $tables = ENZ_TABLES;
-    $columns = ENZ_COLUMNS;
     if ( $idi )
     {
-        $curtable = $db->getrow("select * from ?n where id=?s", $tables, $idi );
+        $curtable = $db->getrow("select * from ?n where id=?s", ENZ_TABLES, $idi );
         if ( !$curtable )
             api_error( 'err_id', "id=$idi" );
         elseif ( defined( 'DEMO' ) && $curtable['idparent'] == SYS_ID )
@@ -20,17 +23,17 @@ if ( ANSWER::is_success() && ANSWER::is_access())
         {
             if ( $curtable['isfolder'])
             {
-                $count = $db->getone("select count(*) from ?n where idparent=?s", $tables, $idi );
+                $count = $db->getone("select count(*) from ?n where idparent=?s", ENZ_TABLES, $idi );
                 if ( $count )
                     api_error( 'err_notempty' );
             }
             else
             {
-                $dbname = alias( $curtable, CONF_PREFIX.'_' );
+                $dbname = alias( $curtable, ENZ_PREFIX );
                 $islink = 0;
                 $links = $db->getall("select col.extend, col.title as icol, t.title as itable from ?n as col
                     left join ?n as t on t.id = col.idtable
-                    where col.idtype=?s", $columns, $tables, FT_LINKTABLE  );
+                    where col.idtype=?s", ENZ_COLUMNS, ENZ_TABLES, FT_LINKTABLE  );
                 foreach ( $links as $il )
                 {
                     $extend = json_decode( $il['extend'], true );
@@ -51,8 +54,8 @@ if ( ANSWER::is_success() && ANSWER::is_access())
             }
             if ( ANSWER::is_success())
             {
-                $db->query("delete from ?n where id=?s", $tables, $idi );
-                $db->query("delete from ?n where idtable=?s", $columns, $idi );
+                $db->query("delete from ?n where id=?s", ENZ_TABLES, $idi );
+                $db->query("delete from ?n where idtable=?s", ENZ_COLUMNS, $idi );
                 files_deltable( $idi );
             }
         }

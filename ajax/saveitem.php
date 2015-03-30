@@ -1,4 +1,9 @@
 <?php
+/*
+    Eonza 
+    (c) 2014-15 Novostrim, OOO. http://www.eonza.org
+    License: MIT
+*/
 
 require_once 'ajax_common.php';
 
@@ -14,7 +19,7 @@ if ( ANSWER::is_success() && ANSWER::is_access( A_EDIT, $form['table'], $form['i
     else
     {
 
-        $dbname = alias( $dbt, CONF_PREFIX.'_' );
+        $dbname = alias( $dbt, ENZ_PREFIX );
         $columns = $db->getall("select * from ?n where idtable=?s", 
                                           ENZ_COLUMNS, $form['table'] );
         $out = array();

@@ -117,7 +117,7 @@ if ( $id && ANSWER::is_success() && ANSWER::is_access( A_READ, $id ))
                elseif ( $icol['idtype'] == FT_FILE || $icol['idtype'] == FT_IMAGE )
                {
                 $fields[] = $db->parse( "( select count(id) from ?n where idtable=?s && idcol = ?s && iditem=t.id ) as `$icol[alias]`", 
-                        CONF_PREFIX.'_files', $id, $icol['id'] );
+                        ENZ_FILES, $id, $icol['id'] );
                }
                else
                {

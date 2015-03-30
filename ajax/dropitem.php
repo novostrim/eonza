@@ -1,4 +1,9 @@
 <?php
+/*
+    Eonza 
+    (c) 2014-15 Novostrim, OOO. http://www.eonza.org
+    License: MIT
+*/
 
 require_once 'ajax_common.php';
 require_once APP_EONZA.'lib/files.php';
@@ -45,7 +50,7 @@ if ( ANSWER::is_success())
             api_error('This feature is disabled in the demo-version.');
         else
         {
-            GS::set('dbname', alias( $curtbl, CONF_PREFIX.'_' ));
+            GS::set('dbname', alias( $curtbl, ENZ_PREFIX ));
             GS::set('istree', $curtbl['istree'] );
             GS::set('idtable', $idtable );
             foreach ( $what as $id )
