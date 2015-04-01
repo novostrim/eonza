@@ -57,7 +57,6 @@ CREATE TABLE IF NOT EXISTS `xxx_columns` (
 CREATE TABLE IF NOT EXISTS `xxx_menu` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(64) NOT NULL,
-  `idowner` int(10) unsigned NOT NULL,
   `sort` int(11) NOT NULL,
   `url` varchar(128) NOT NULL,
   `hint` varchar(128) NOT NULL,

@@ -85,6 +85,15 @@ class GS {
             return true;
         if ( $action == A_ROOT )
             return false;
+        if ( $action == A_FILEGET || $action == A_FILESET )
+        {
+            $fi = DB::getrow("select id, idtable, iditem from ?n where id=?s", ENZ_FILES, $idtable ); 
+            if ( !$fi )
+              return false;
+            $idtable = $fi['idtable'];
+            $iditem = $fi['iditem'];
+            $action = $action == A_FILEGET ? A_READ : A_EDIT;
+        }
         $acc = self::getaccess( $idtable );
         if ( !$iditem || ( $acc[ $action ] & 1 ))
             return $acc[ $action ];
