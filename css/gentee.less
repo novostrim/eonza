@@ -1046,6 +1046,22 @@ a {
     color: #5B7F00;
 }
 
+.systable {
+    margin: 10px 0px;
+    font-size: 1.1em;
+    tr:nth-child( odd ) {
+      border-top: 1px solid #bbb;
+      border-bottom: 1px solid #bbb;
+    }
+    tr:nth-child( even ) {
+      background-color: @cstrip;
+    }
+    td {
+      padding: 0.3em 1em;
+      text-align: left;
+    }
+}
+
 /*.modal-footer:before,
 .modal-footer:after {
   display: table;

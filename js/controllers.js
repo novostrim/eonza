@@ -1246,6 +1246,7 @@ function AdminCtrl($scope, $rootScope, $routeSegment ) {
         { title: lng.usrgroups, icon: 'users', href: '#/usergroups?id=' + cfg.idgroups, name: 'usergroups'},
         { title: lng.users, icon: 'user', href: '#/users?id=' + cfg.idusers, name: 'users'},
         { title: lng.accrights, icon: 'shield', href: '#/accessrights?id=' + cfg.idaccess, name: 'accessrights'},
+        { title: lng.systeminfo, icon: 'info-circle', href: '#/systeminfo', name: 'systeminfo'},
     ];
     $scope.$routeSegment = $routeSegment;
 }    
@@ -1282,6 +1283,20 @@ function AppsettingsCtrl($scope, $rootScope, $routeSegment, DbApi ) {
     }
 
     $scope.$routeSegment = $routeSegment;
+}    
+
+function SysteminfoCtrl($scope, $rootScope, $routeSegment, DbApi ) {
+    $scope.$routeSegment = $routeSegment;
+    DbApi( 'sysinfo', {}, function( data ) {
+        $scope.items = data.result;
+        var length = $scope.items.length;
+        while ( length-- )
+        {
+            var item = $scope.items[ length ];
+            if ( item.date )
+                item.value = item.value + '      (' +  moment( item.date ).format('L') + ')';
+        }
+    });
 }    
 
 function EdittableCtrl( $rootScope, $scope, $routeSegment, DbApi ) {

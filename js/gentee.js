@@ -42,6 +42,7 @@ geapp
           .when('/users',       'admin.users' )
           .when('/usergroups',  'admin.usergroups' )
           .when('/accessrights','admin.accessrights' )
+          .when('/systeminfo',  'admin.systeminfo' )
           .when('/settings',    'settings' )
           .when('/edittable',   'index.edittable' )
           .when('/table',       'table' )
@@ -82,6 +83,9 @@ geapp
                 .segment('accessrights', { 
                     templateUrl: tpl('table.html'),
                     controller: TableCtrl })
+                .segment('systeminfo', {
+                    templateUrl: tpl('systeminfo.html'),
+                    controller: SysteminfoCtrl })
             .up()
           .segment('index', {
             templateUrl: tpl('index.html') })
@@ -406,7 +410,7 @@ geapp.factory( 'DbApi', function( $rootScope, $http ) {
                  'savemenu', 'saveset', 'savesetitem', 'savestruct', 'saveusr', 'truncatetable' ];
 */
     var get = [ 'columns', 'getdb', 'getitem', 'getlink', 'getmenu', 'getsets', 'getstruct', 'gettables', 
-                'gettree', 'set', 'table' ];
+                'gettree', 'set', 'sysinfo', 'table' ];
     function dbapi( method, params, callback ){ 
         var ispost = true;
         var i = get.length;

@@ -1,0 +1,9 @@
+    <h1>{{lng.systeminfo}}</h1>
+
+<!--div><a class="flatbtn" ng-if="cfg.showhelp" target="_blank" href="http://{{::cfg.website}}/application-settings.html" title="{{::lng.help}}"><i class="fa fa-question fa-lg"></i></a>
+</div-->
+<center>
+<table class="systable">
+    <tr ng-repeat="item in items"><td style="font-weight:bold;">{{::lng[item.name]}}</td><td>{{::item.value}}</td></tr>
+</table>
+</center>
