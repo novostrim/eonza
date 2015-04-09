@@ -681,6 +681,10 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
 //                            if ( $scope.form[ alias ] != $scope.view[ alias ] )
 //                                $scope.form[ alias ] = $scope.view[ alias ];
                             break;                            
+                        case cnt.FTM_IMAGELINK:
+                            if ( $scope.form[ alias ] )
+                                $scope.view[ alias ] = view_imagelink( $scope.form[ alias ], icol );
+                            break;
                     }
                     break;
                 default:

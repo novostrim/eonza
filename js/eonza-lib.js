@@ -33,6 +33,7 @@ var cnt = {
     FTM_PHONE: 3,
     FTM_HASH: 4,
     FTM_IPV4: 5,
+    FTM_IMAGELINK: 6,
 
 // Date
     FTM_DATETIME: 1,
@@ -49,6 +50,7 @@ var cnt = {
     ET_COLUMN: 6,
     ET_HIDDEN: 7,
     ET_SET: 8,
+    ET_TEXT: 9,
 }
 "use strict";  
 
@@ -182,12 +184,13 @@ var types = {
                  ] 
     },
     13 : { id: cnt.FT_SPECIAL, name: 'fspecial', form: special_form, verify: number_verify, /*view: view_special,*/
-         filter: { mask: 0xffff, extend: 'type', extmask: { 1: 0x77, 2: 0x77, 3: 0x471, 5: 0x1 }},
+         filter: { mask: 0xffff, extend: 'type', extmask: { 1: 0x77, 2: 0x77, 3: 0x471, 5: 0x1, 6: 0x77 }},
          extend: [ { name: 'type', title: lng.more, type: cnt.ET_COMBO, def: 1, 
                      list: [ {id: 1, title: lng.website }, { title: lng.email, id: 2  },
                       { title: lng.phone, id: 3}, { title: lng.fhash, id: 4},
-                      { title: lng.ipv4, id: 5}
-            ] }
+                      { title: lng.ipv4, id: 5}, { title: lng.imagelink, id: 6}
+            ] },
+            { name: 'options', title: lng.moreoptions, type: cnt.ET_TEXT, def: '' } 
         ] 
     },    
     99 : { id: cnt.FT_SQL, name: 'fsql', verify: sql_verify,
@@ -374,12 +377,28 @@ function js_list( item )
                     case cnt.FTM_IPV4:
                         item[key] = js_long2ip( item[key] );
                         break;
+                    case cnt.FTM_IMAGELINK:
+                        if ( item[key] )
+                            item[key] = view_imagelink( item[key], colnames[key] );
+                        break;
                 }
                 break;
         }
         if ( item[key] == '0' && colnames[key]['number'] )
             item[key] = '';
     }
+}
+
+function view_imagelink( value, icol )
+{
+    if ( icol.extend.options )
+    {
+        if ( icol.extend.options.url )
+            value = icol.extend.options.url + value;
+        if ( icol.extend.options.ext )
+            value = value + '.' + icol.extend.options.ext;
+    } 
+    return '<a href="' + value + '"><img src="' + value + '" class="listimg"></a>';
 }
 
 function edit_default( i, icol )

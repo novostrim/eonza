@@ -36,6 +36,7 @@ define('FTM_EMAIL', 2 );
 define('FTM_PHONE', 3 );
 define('FTM_HASH', 4 );
 define('FTM_IPV4', 5 );
+define('FTM_IMAGELINK', 6 );
 //define('FT_DATE', 7 );
 //define('FT_HTML', 10 );
 //define('FT_UBYTE', 80 );
@@ -65,7 +66,7 @@ GS::set( 'fields', array(
                            'save' => 'parent_save'),
    FT_FILE => array( 'pars' => 'storedb' ),
    FT_IMAGE => array( 'pars' => 'storedb,max,min,ratio,side,thumb,thumb_ratio,thumb_side' ),
-   FT_SPECIAL => array( 'pars' => 'type', 'sql' => 'special_sql', 
+   FT_SPECIAL => array( 'pars' => 'type,options', 'sql' => 'special_sql', 
                               'save' => 'special_save' ),
    FT_SQL => array( 'pars' => 'sqlcmd', 'sql' => 'sql_sql' ),
 ));
@@ -91,6 +92,7 @@ function special_sql( $form )
         case FTM_PHONE: $type = 'bigint';break;
         case FTM_HASH: $type = 'binary(16)';break;
         case FTM_IPV4: $type = 'int(10) unsigned'; break;
+        case FTM_IMAGELINK: $type = 'varchar(128)';break;
         default: 
             $type = 'varchar(256)';
     }
@@ -237,6 +239,8 @@ function special_save( &$out, $form, $icol, &$outext )
     $val = $form[$alias];
     $extend = json_decode( $icol['extend'], true );
     switch ( $extend['type'] ) {
+        case FTM_WEBSITE: 
+            $val = str_replace('http://', '', utf_lower( $val )); break;
         case FTM_EMAIL: $val = utf_lower( $val );break;
         case FTM_PHONE: 
             $len = strlen( $val );
@@ -262,8 +266,6 @@ function special_save( &$out, $form, $icol, &$outext )
             if ( strpos( $val, '.'))
                 $val = ip2long( $val );
             break;
-        default: 
-            $val = str_replace('http://', '', utf_lower( $val ));
     }    
     $out[ $alias ] = $val;
 }

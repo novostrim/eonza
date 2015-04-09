@@ -22,7 +22,14 @@ if ( ANSWER::is_success() && ANSWER::is_access())
                                        ENZ_COLUMNS, $idi, FT_PARENT, 'sort' );
             foreach ( $items as &$iext )
             {
-                $iext['extend'] = json_decode( $iext['extend'] );
+                $iext['extend'] = json_decode( $iext['extend'], true );
+                if ( isset( $iext['extend']['options'] ))
+                {
+                    $ini = '';
+                    foreach ( $iext['extend']['options'] as $ikey => $ival )
+                        $ini .= "$ikey=$ival\r\n";
+                    $iext['extend']['options'] = rtrim( $ini );   
+                }
                 $fields[ alias( $iext )] = $iext['title'];
             }
             ANSWER::resultset( 'items', $items );

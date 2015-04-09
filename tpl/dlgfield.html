@@ -21,6 +21,7 @@
                     <option ng-repeat="icols in linkcols" value="{{icols.id}}" ng-selected="form.extend[ext.name]==icols.id">{{icols.title}}</option></select>
                     <select ng-if="ext.type==cnt.ET_SET" ng-model="form.extend[ext.name]" class="form-control">
                     <option ng-repeat="iset in sets" value="{{iset.id}}" ng-selected="form.extend[ext.name]==iset.id">{{iset.title}}</option></select>
+                    <textarea ng-if="ext.type==cnt.ET_TEXT" ng-model="form.extend[ext.name]" class="form-control wbig" style="height: 50px;"></textarea>
                 </td></tr>
                 <tr><td>
                 </td></tr>

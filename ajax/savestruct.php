@@ -51,6 +51,21 @@ foreach ( $pars['items'] as &$iext )
     if ( $extpars['pars'] )
     {
         $iext['ext'] = pars_list( $extpars['pars'], $iext['extend'] );
+        if ( !empty( $iext['ext']['options'] ))
+        {
+            $io = explode( "\n", $iext['ext']['options'] );
+            $json = array();
+            foreach ( $io as $ival ) 
+            {
+                $ival = trim($ival);
+                if ( !$ival )
+                    continue;
+                $lr = explode( '=', $ival, 2 );
+                if ( count( $lr ) == 2 )
+                    $json[ trim( $lr[0] ) ] = trim( $lr[1] );
+            }
+            $iext['ext']['options'] = $json;
+        }
         $iext['extend'] = json_encode( $iext['ext'] );
     }
     else
