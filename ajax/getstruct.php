@@ -23,7 +23,7 @@ if ( ANSWER::is_success() && ANSWER::is_access())
             foreach ( $items as &$iext )
             {
                 $iext['extend'] = json_decode( $iext['extend'], true );
-                if ( isset( $iext['extend']['options'] ))
+                if ( isset( $iext['extend']['options'] ) && $iext['extend']['options'] )
                 {
                     $ini = '';
                     foreach ( $iext['extend']['options'] as $ikey => $ival )

@@ -421,6 +421,8 @@ geapp.factory( 'DbApi', function( $rootScope, $http ) {
                 break;
             }
         $rootScope.loading = true;
+        
+        params.nocache = new Date().getTime();        
         if ( ispost )
             ajaxpost( params, method, callback );
         else
