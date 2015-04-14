@@ -180,3 +180,7 @@ if ( !GS::userid() )
 else
     GS::set( 'options', GS::dbsettings());
 
+if ( isset( $_POST['params']['nocache']))
+    unset( $_POST['params']['nocache'] );
+
+
