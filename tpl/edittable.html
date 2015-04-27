@@ -24,7 +24,7 @@
         <tr><td></td><td class="formval"><input type="submit" value="{{action}}" class="btn btn-primary btn-lg" ></td></tr>
     </table>
     </form> 
-    <form class="form">
+    <form class="form" ng-if="id">
     <h2 ng-if="id">{{lng.indexes}}</h2>
     <table class="formtbl fields" ng-if="id">
         <tr  ng-repeat="ind in index" ord="{{$index}}"><td colspan="3" align="left">{{ind[1]}}</td>

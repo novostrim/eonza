@@ -48,6 +48,7 @@ var lng = {
 	delfld: 'Are you sure you want to delete the folder #temp#?',
 	delitem: 'Are you sure you want to delete this item?',
 	delset: 'Are you sure you want to delete the set #temp#?',
+	downloadjs: 'Download',
 	dropzone: 'Drag & drop your file(s) here',
 	duplicate: 'Duplicate',
 	edit: 'Edit',

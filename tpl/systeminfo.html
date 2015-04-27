@@ -6,4 +6,14 @@
 <table class="systable">
     <tr ng-repeat="item in items"><td style="font-weight:bold;">{{::lng[item.name]}}</td><td>{{::item.value}}</td></tr>
 </table>
+<div class="message">
+<i ng-if="!ver.newer" class="fa fa-3x fa-info-circle" style="color: #5B7F00"></i>
+<i ng-if="ver.newer" class="fa fa-3x fa-warning" style="color: #FFD800"></i>
+   <b>{{::ver.msg}}</b>
+   <table class="systable" ng-if="ver.newer">
+   <tr><td>{{::ver.lngver}}</td><td>{{::ver.version}}</td></tr>
+   <tr><td>{{::ver.lngdate}}</td><td>{{::ver.date}}</td></tr>
+   <tr><td>{{::lng.downloadjs}}</td><td><a href="{{dwn.link}}" ng-repeat="dwn in ver.download">{{dwn.name}}</a></td></tr>
+   </table>
+</div>
 </center>

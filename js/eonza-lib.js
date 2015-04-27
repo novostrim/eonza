@@ -232,7 +232,7 @@ pattern = {
     12 : { 'view': view_file, 'edit': edit_image, pattern: pattern_file, patternview: patternview_file  },
 };
 */
-function js_access( idtable, action )
+/*function js_access( idtable, action )
 {
     return true;
 }
@@ -246,13 +246,13 @@ function js_footer( hoff ) {
     alert( document.getElementById("xfooter").clientHeight  );
     h = h - hfoot - hoff;  
     ch = document.getElementById("main").clientHeight;
-    alert( ch + ' ' + hfoot + ' ' + h );
+//    alert( ch + ' ' + hfoot + ' ' + h );
     if ( parseInt( ch ) < h  )
     {
         $("#main").css( 'min-height', h + 'px' );
         ch = h;
     }
-}
+}*/
 
 function js_getset( val, key )
 {

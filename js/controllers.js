@@ -1289,10 +1289,13 @@ function AppsettingsCtrl($scope, $rootScope, $routeSegment, DbApi ) {
     $scope.$routeSegment = $routeSegment;
 }    
 
-function SysteminfoCtrl($scope, $rootScope, $routeSegment, DbApi ) {
+function SysteminfoCtrl($scope, $rootScope, $routeSegment, DbApi, $http ) {
     $scope.$routeSegment = $routeSegment;
-    DbApi( 'sysinfo', {}, function( data ) {
+    DbApi( 'sysinfo', {lang: $scope.lng.code }, function( data ) {
         $scope.items = data.result;
+        $scope.ver = data.latestver;
+        $scope.ver.date = moment( $scope.ver.date ).format('L');
+//        console.log( data.latestver, JSON.parse( data.latestver ));
         var length = $scope.items.length;
         while ( length-- )
         {
