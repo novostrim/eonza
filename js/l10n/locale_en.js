@@ -158,7 +158,7 @@ var lng = {
 	ownrecords: 'Own Records Only',
 	parent: 'Рarent',
 	password: 'Password',
-	perpage: 'Rows per page',
+	perpage: 'Records per page',
 	phone: 'Phone',
 	phpver: 'PHP Version',
 	prev: 'Previous',

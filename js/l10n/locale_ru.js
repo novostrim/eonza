@@ -158,7 +158,7 @@ var lng = {
 	ownrecords: 'Только свои записи',
 	parent: 'Родитель',
 	password: 'Пароль',
-	perpage: 'Строк на страницу',
+	perpage: 'Записей на страницу',
 	phone: 'Телефон',
 	phpver: 'Версия PHP',
 	prev: 'Предыдущая',

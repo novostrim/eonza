@@ -315,6 +315,8 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
     $scope.edititems = '';
     $scope.viewitems = '';
     $scope.carditems = '';
+    $scope.onpage = 0;
+    $scope.perpage = [];
     $scope.compare = compare;
     $scope.logic = logic;
     $scope.filter = [];
@@ -980,6 +982,7 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
             }
             i++;
         }
+        $scope.params.op = $scope.onpage;
         $scope.params.filter = filter.length ? filter.join('!') : undefined;
         DbApi( 'table', $scope.params, function( data ) {
             if ( data.success )
@@ -1000,6 +1003,16 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
                 $scope.items = data.result;
                 $scope.pages = data.pages;
                 $scope.total = data.total;
+                $scope.onpage = data.op;
+                $scope.perpage = [10, 20, 30, 40, 50, 75, 100];
+                if ( $scope.perpage.indexOf( $scope.onpage ) < 0 )
+                {
+                    $scope.perpage.push( $scope.onpage );
+                    $scope.perpage.sort(function(a, b) {
+                        if (a > b) return 1;
+                        if (a < b) return -1;
+                    });
+                }
                 $scope.filter = data.filter;
                 if ( angular.isDefined($scope.params.parent))
                     $scope.crumbs = data.crumbs;
@@ -1418,9 +1431,7 @@ function EdittableCtrl( $rootScope, $scope, $routeSegment, DbApi ) {
         $rootScope.msg( { title: add ? lng.newitem : lng.edititem, template: tpl('dlgfield.html'),
               btns: [ {text: add ? lng.add : lng.savejs, func: $scope.savefield, class: 'btn-primary btn-near' },
                      {text: lng.cancel, class: 'btn-default btn-near' }
-        ]  } );
-
-//        if ( add )
+        ], help: 'data-types' } );
     }
     $scope.sortfield = function( val ) {
         jQuery( "#fields" ).sortable( { disabled: val } );

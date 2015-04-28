@@ -188,7 +188,9 @@ if ( $id && ANSWER::is_success() && ANSWER::is_access( A_READ, $id ))
            $qwhere .=  $db->parse( (!$qwhere ? "where 1":'')." && _owner =?s", GS::userid());
 
         $query = $db->parse( "select count(`id`) from ?n as t ?p", $dbname, $qwhere );
-        $onpage = GS::get( 'options', 'perpage' );
+        $onpage = (int)get( 'op' );
+        if ( !$onpage )
+            $onpage = GS::get( 'options', 'perpage' );
         if ( $onpage < 1 )
             $onpage = 50;
         $pages = pages( $query, array( 'onpage' => $onpage, 'page' => (int)get('p') ), 'pagelink' );
@@ -209,6 +211,7 @@ if ( $id && ANSWER::is_success() && ANSWER::is_access( A_READ, $id ))
             $retfilter = array( array( 'logic' => 0, 'field' => 0, 'not' => false,
                         'compare' => 0, 'value' => '' ));
         ANSWER::set( 'filter', $retfilter );
+        ANSWER::set( 'op', $onpage );
     }
     else
         ANSWER::success( false );

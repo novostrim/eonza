@@ -1,5 +1,9 @@
   <h1>{{title}}</h1>
  
+ <div><a ng-if="form.id" href="#/table?id={{form.id}}" class="flatbtn"><i class="fa fa-table fa-lg"></i>&nbsp;&nbsp;{{::lng.view}}</a>
+ <a class="flatbtn" ng-if="cfg.showhelp" target="_blank" href="http://{{::cfg.website}}/table-structure.html" title="{{::lng.help}}"><i class="fa fa-question fa-lg"></i></a>
+</div>
+
   <form class="form" ng-submit="submit()">
     <table class="formtbl">
         <tr><td class="formtxt">{{lng.name}}: </td><td class="formval"><input type="text" ng-model="form.title" required class="form-control"></td></tr>
@@ -25,6 +29,7 @@
     </table>
     </form> 
     <form class="form" ng-if="id">
+    <a class="btn btn-primary topright" ng-if="cfg.showhelp" target="_blank"  title="{{::lng.help}}" href="http://{{::cfg.website}}/table-indexes.html"><i class="fa fa-question"></i></a>
     <h2 ng-if="id">{{lng.indexes}}</h2>
     <table class="formtbl fields" ng-if="id">
         <tr  ng-repeat="ind in index" ord="{{$index}}"><td colspan="3" align="left">{{ind[1]}}</td>
