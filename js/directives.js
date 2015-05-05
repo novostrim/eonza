@@ -1,6 +1,6 @@
 /*
     Eonza 
-    (c) 2014 Novostrim, OOO. http://www.novostrim.com
+    (c) 2014 Novostrim, OOO. http://www.eonza.org
     License: MIT
 */
 

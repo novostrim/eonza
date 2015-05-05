@@ -14,11 +14,10 @@ if ( ANSWER::is_success())
     if ( isset( $fields['pass'] ))
     {
         $ipass = $fields['pass'];
-        $ext = ", pass=X'".pass_md5( $fields['pass'], true )."'";
-        unset( $field['pass'] );
+        $ext = array( "pass=X'".pass_md5( $fields['pass'], true )."'" );
+        unset( $fields['pass'] );
     }
-    ANSWER::success( $db->query( "update ?n set ?u $ext where id=?s", 
-                                 ENZ_USERS, $fields, GS::userid()));
+    ANSWER::success( $db->update( ENZ_USERS, $fields, $ext, GS::userid()));
     if ( ANSWER::is_success())
     {
         if ( isset( $ipass ))

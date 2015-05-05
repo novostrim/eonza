@@ -1,10 +1,9 @@
 <?php
 /*
     Eonza
-    (c) 2014 Novostrim, OOO. http://www.novostrim.com
+    (c) 2014-15 Novostrim, OOO. http://www.eonza.org
     License: MIT
 */
-//print_r( $_SERVER );
 
 require_once 'conf.inc.php';
 require_once "app.inc.php";
