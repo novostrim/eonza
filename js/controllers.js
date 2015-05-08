@@ -1277,7 +1277,8 @@ function AppsettingsCtrl($scope, $rootScope, $routeSegment, DbApi ) {
 //         { name: 'apitoken', value: "", visible: false, ctrl: "input", 'class': "form-control whuge"},
          { name: 'keeplog', lang: lng.keeplog, visible: true, ctrl: "switch"},
          { name: 'loginshort', lang: lng.loginshort, visible: true, ctrl :"switch" },
-         { name: 'showhelp', lang: lng.showhelp, visible: true, ctrl :"switch" }
+         { name: 'showhelp', lang: lng.showhelp, visible: true, ctrl :"switch" },
+         { name: 'customjs', lang: lng.customjs, visible: true, ctrl:"input", 'class': "form-control wbig" }
     ];
     for ( var i=0; i < $scope.appsets.length; i++ )
         $scope.appsets[i].value = cfgdefault[ $scope.appsets[i].name ];

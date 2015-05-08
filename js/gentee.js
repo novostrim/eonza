@@ -125,7 +125,8 @@ geapp.controller( 'GenteeCtrl', function GenteeCtrl($scope, $location,
 //    cfg.apphead = $sce.trustAsHtml( cfg.appname );
     rootScope = $rootScope;
     $rootScope.filter = $filter;
-    $rootScope.cfg = cfg; 
+    $rootScope.cfg = cfg;
+    $rootScope.enz = enz; 
     $rootScope.lng = lng;
     $rootScope.loading = false;
     $rootScope.types = types;

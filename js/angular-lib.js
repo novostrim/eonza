@@ -41,21 +41,3 @@ function toParam( object, prefix ) {
 
 //}());
 
-function js_loadjs( jsfile, f )
-{
-    var head = document.getElementsByTagName("head")[0];
-    var script = document.createElement('script');
-    script.type = 'text/javascript';
-    script.src = jsfile;
-    var done = false;
-    script.onload = script.onreadystatechange = function() { 
-        if ( !done && (!this.readyState ||
-          this.readyState == "loaded" || this.readyState == "complete") ) {
-          done = true;
-          if (typeof f == 'function') f();
-            script.onload = script.onreadystatechange = null;
-            head.removeChild(script);
-        }
-    };
-    head.appendChild(script);
-}

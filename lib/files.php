@@ -58,7 +58,7 @@ function files_download( $id, $browser = false, $thumb = false, $public = '' )
 function files_getfolder( $idtable )
 {
     $idfolder = 0;
-    $count = DB::getrow("select count( id ) as count, folder from ?n where idtable=?s group by folder order by count", 
+    $count = DB::getrow("select count( id ) as count, folder from ?n where idtable=?s && folder>0 group by folder order by count", 
            ENZ_FILES, $idtable );
     if ( $count && $count['count'] < 500 )
         $idfolder = $count['folder'];

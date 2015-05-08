@@ -8,7 +8,9 @@ Eonza = function() {
 	this.website = 'http://www.eonza.org/';
 	// Link to How to restore the password
 	this.resetPass = this.website + 'how-to-reset-password.html';
-
+    // The custom text of the footer
+    this.footer = '';
+    
     this.testProp = "Hello World";
 }
 
