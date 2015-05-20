@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS `xxx_users` (
   `idgroup` smallint(5) unsigned NOT NULL,
   `name` varchar(64) NOT NULL,
   `lang` varchar(10) NOT NULL,
-  `uptime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `uptime` timestamp NOT NULL,
   PRIMARY KEY (`id`),
   KEY `login` (`login`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;

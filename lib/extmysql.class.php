@@ -49,6 +49,10 @@ class ExtMySQL extends SafeMySQL
                              $parse ? ( $pf ? ',' : '' ).implode( ', ', $parse ) : '', $idi ) ? $idi : 0;
     }
 
+    public function escape( $value )
+    {
+        return $this->parse( '?s', $value );
+    }
 }
 
 class DB {

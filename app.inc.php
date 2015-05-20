@@ -11,14 +11,15 @@ define( 'ENZ_ACCESS', ENZ_PREFIX.'access' );
 define( 'ENZ_DB', ENZ_PREFIX.'db' );
 define( 'ENZ_COLUMNS', ENZ_PREFIX.'columns' );
 define( 'ENZ_FILES', ENZ_PREFIX.'files' );
+define( 'ENZ_GROUP', ENZ_PREFIX.'group' );
 define( 'ENZ_MENU', ENZ_PREFIX.'menu' );
 define( 'ENZ_MIMES', ENZ_PREFIX.'mimes' );
 define( 'ENZ_SETS', ENZ_PREFIX.'sets' );
 define( 'ENZ_TABLES', ENZ_PREFIX.'tables' );
 define( 'ENZ_USERS', ENZ_PREFIX.'users' );
 
-define( 'APP_VERSION', '1.7.2' );
-define( 'APP_DATE', '2015/05/07' );
+define( 'APP_VERSION', '1.7.3' );
+define( 'APP_DATE', '2015/05/20' );
 define( 'APP_STORAGE', 'storage' ); // Default name of the storage folder
 define( 'CONF_HOST', $_SERVER['HTTP_HOST'] );
 define( 'APP_DOCROOT', $_SERVER['DOCUMENT_ROOT'] );

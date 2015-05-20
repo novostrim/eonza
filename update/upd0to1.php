@@ -14,14 +14,12 @@ function init_v1()
     $conf = GS::get('conf');
     if ( !isset( $conf['idgroups'] ))
     {
-        $dbtables = ENZ_TABLES;
-        $dbgroup = CONF_PREFIX.'_group';
-        extuptime( $dbgroup );
+        extuptime( ENZ_GROUP );
 
-        $params = array( 'idparent' => SYS_ID, 'alias' => $dbgroup,
+        $params = array( 'idparent' => SYS_ID, 'alias' => ENZ_GROUP,
                          'title' => ':usrgroups' );
-        $idgroups = $db->insert( $dbtables, 
-                    array( 'idparent' => SYS_ID, 'alias' => $dbgroup,
+        $idgroups = $db->insert( ENZ_TABLES, 
+                    array( 'idparent' => SYS_ID, 'alias' => ENZ_GROUP,
                            'title' => ':usrgroups' ), '', true );
         $confupd['idgroups'] = $idgroups;      
         GS::set( 'idcoltable', $idgroups );
@@ -29,7 +27,7 @@ function init_v1()
 
         extuptime( ENZ_USERS );
 
-        $idusers = $db->insert( $dbtables, 
+        $idusers = $db->insert( ENZ_TABLES, 
                     array( 'idparent' => SYS_ID, 'alias' => ENZ_USERS,
                            'title' => ':users' ), '', true );
         $confupd['idusers'] = $idusers;
@@ -45,8 +43,8 @@ function init_v1()
         $idacctype = addset( '*accesstype,circle*:allrecords,adjust*:ownrecords' );
         $confupd['idacctype'] = $idacctype;
 
-        $idtables = $db->insert( $dbtables, 
-                    array( 'idparent' => SYS_ID, 'alias' => $dbtables,
+        $idtables = $db->insert( ENZ_TABLES, 
+                    array( 'idparent' => SYS_ID, 'alias' => ENZ_TABLES,
                            'title' => ':tables' ), '', true );
         $confupd['idtables'] = $idtables;
         GS::set( 'idcoltable', $idtables );
@@ -54,7 +52,7 @@ function init_v1()
         addcolumn( FT_VAR, ':alias', 24 );
         addcolumn( FT_VAR, ':commentjs', 128, 'comment' );
 
-        $idaccess = $db->insert( $dbtables, 
+        $idaccess = $db->insert( ENZ_TABLES, 
                     array( 'idparent' => SYS_ID, 'alias' => ENZ_ACCESS,
                            'title' => ':accrights' ), '', true );
         $confupd['idaccess'] = $idaccess;
