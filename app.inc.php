@@ -36,7 +36,7 @@ if ( substr( $file, 0, $rootlen ) == APP_DOCROOT )
 else
 	$appdir = basename( $file );
 
-define( 'APP_DIR', basename( APP_DOCROOT ) == $appdir ? '/' : "/$appdir/");
+define( 'APP_DIR', !$appdir || basename( APP_DOCROOT ) == $appdir ? '/' : "/$appdir/");
 define( 'APP_EONZA', APP_DOCROOT.APP_DIR );
 
 $conf = array(
