@@ -108,6 +108,7 @@ geapp.controller( 'IndexCtrl', function IndexCtrl($scope, $http, $routeSegment )
             { title: lng.tables, icon: 'table', href: '#/', name: 'tables'},
             { title: lng.sets, icon: 'list-alt', href: '#/sets', name: 'sets'},
             { title: lng.menu, icon: 'th-list', href: '#/menu', name: 'menu'},
+            { title: lng.backup, icon: 'database', href: '#/backup', name: 'backup'},
             { title: lng.admin, icon: 'wrench', href: '#/appsettings', name: 'admin'},
     //        { title: lng.settings, icon: 'cogs', href: '#/appsettings', name: 'appsettings'},
         ];
@@ -1134,6 +1135,30 @@ function EdititemCtrl($scope, $routeSegment, DbApi, $rootScope ) {
     }
 }
 */
+
+function BackupCtrl($scope, $routeSegment, DbApi, $rootScope ) {
+    $scope.$routeSegment = $routeSegment;
+    $scope.createbackup = function() {
+        DbApi( 'createbackup', {}, function( data ) {
+            $rootScope.items = data.result;
+        })
+    }
+    $scope.delbackup = function( index ) {
+        cfg.temp = $scope.items[index].title;
+        $rootScope.msg_quest( 'deltemp', function(){ 
+            DbApi( 'delbackup', { 'filename': cfg.temp }, function( data ) {
+                    $rootScope.items = data.result;
+                })
+            });
+        return false;
+    }
+    DbApi( 'getbackup', {}, function( data ) {
+            if ( data.success )
+                $rootScope.items = data.result;
+    });
+}
+
+
 function MenuCtrl($scope, $routeSegment, DbApi, $rootScope ) {
     $scope.$routeSegment = $routeSegment;
     $scope.savemenu = function() {

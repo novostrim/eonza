@@ -1,5 +1,10 @@
 <?php
-
+/*
+    Eonza 
+    (c) 2015 Novostrim, OOO. http://www.eonza.org
+    License: MIT
+*/
+    
 $mresult = $db->getall( "select * from ?n order by idparent,`sort`,title", ENZ_MENU );
 $children = array();
 $ret = array();

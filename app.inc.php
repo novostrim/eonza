@@ -18,18 +18,24 @@ define( 'ENZ_SETS', ENZ_PREFIX.'sets' );
 define( 'ENZ_TABLES', ENZ_PREFIX.'tables' );
 define( 'ENZ_USERS', ENZ_PREFIX.'users' );
 
-define( 'APP_VERSION', '1.7.3' );
-define( 'APP_DATE', '2015/05/20' );
+define( 'APP_VERSION', '1.8.0' );
+define( 'APP_DATE', '2015/05/28' );
 define( 'APP_STORAGE', 'storage' ); // Default name of the storage folder
 define( 'CONF_HOST', $_SERVER['HTTP_HOST'] );
-define( 'APP_DOCROOT', $_SERVER['DOCUMENT_ROOT'] );
+define( 'APP_DOCROOT', rtrim( $_SERVER['DOCUMENT_ROOT'], '/' ));
 
 if ( !defined( 'APP_ENTER' ))
 {
     $dir = dirname( $_SERVER['SCRIPT_NAME'] );
     define( 'APP_ENTER', ( $dir == '/' || $dir =="\\" ? '' : $dir ).'/' );
 }
-$appdir = basename( dirname( __FILE__ ));
+$rootlen = strlen( APP_DOCROOT );
+$file = dirname( __FILE__ );
+if ( substr( $file, 0, $rootlen ) == APP_DOCROOT )
+	$appdir = substr( $file, $rootlen + 1 );
+else
+	$appdir = basename( $file );
+
 define( 'APP_DIR', basename( APP_DOCROOT ) == $appdir ? '/' : "/$appdir/");
 define( 'APP_EONZA', APP_DOCROOT.APP_DIR );
 

@@ -5,7 +5,8 @@
    License: MIT
 */
 
-define( 'STORAGE', APP_DOCROOT.CONF_STORAGE.( substr( CONF_STORAGE, -1 ) != '/' ? '/' : '' ));
+define( 'STORAGEURL', '/'.trim( CONF_STORAGE, '/' ).'/' );
+define( 'STORAGE', APP_DOCROOT.STORAGEURL );
 
 function files_download( $id, $browser = false, $thumb = false, $public = '' )
 {

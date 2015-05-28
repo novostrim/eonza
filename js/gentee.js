@@ -36,6 +36,7 @@ geapp
           .when('/login',       'login' )
           .when('/settings',    'settings' )
           .when('/admin',       'admin' )
+          .when('/backup',      'index.backup' )
           .when('/menu',        'index.menu' )
           .when('/sets',        'index.sets' )
           .when('/appsettings', 'admin.appsettings' )
@@ -101,6 +102,10 @@ geapp
                 .segment('menu', {
                     templateUrl: tpl('menu.html'),
                     controller: MenuCtrl
+                     })
+                .segment('backup', {
+                    templateUrl: tpl('backup.html'),
+                    controller: BackupCtrl
                      })
                 .segment('sets', {
                     templateUrl: tpl('sets.html'),
@@ -404,13 +409,13 @@ geapp.factory( 'DbApi', function( $rootScope, $http ) {
             .error( ajaxerror );
     }
 /*   POST methods
-    var post = [ 'addindex','changefld', 'delfile', 'delmenu', 'dropindex', 'dropitem', 'dropset',
+    var post = [ 'addindex','changefld', 'createbackup', 'delbackup', 'delfile', 'delmenu', 'dropindex', 'dropitem', 'dropset',
                  'dropsetitem', 'droptable', 'dupitem',
                     'duptable', 'editfile',
                  'export2set', 'gettables', 'import', 'movemenu', 'savedb', 'savefolder', 'saveitem', 
                  'savemenu', 'saveset', 'savesetitem', 'savestruct', 'saveusr', 'truncatetable' ];
 */
-    var get = [ 'columns', 'getdb', 'getitem', 'getlink', 'getmenu', 'getsets', 'getstruct', 'gettables', 
+    var get = [ 'columns', 'getbackup', 'getdb', 'getitem', 'getlink', 'getmenu', 'getsets', 'getstruct', 'gettables', 
                 'gettree', 'set', 'sysinfo', 'table' ];
     function dbapi( method, params, callback ){ 
         var ispost = true;

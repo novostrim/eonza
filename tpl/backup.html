@@ -1,0 +1,28 @@
+<h1>{{lng.backup}}</h1>
+
+ <a href="" ng-click="createbackup()" class="flatbtn"><i class="fa fa-plus-circle fa-lg"></i>&nbsp;&nbsp;{{lng.create}}</a>
+<!--a href="" ng-click="editfolder()" class="flatbtn"><i class="fa fa-plus-circle fa-lg"></i>&nbsp;&nbsp;{{lng.newfld}}</a-->
+ <a class="flatbtn" ng-if="cfg.showhelp" target="_blank" href="http://{{::cfg.website}}/backup.html" title="{{::lng.help}}"><i class="fa fa-question fa-lg"></i></a>
+
+<script type="text/ng-template"  id="topback.html">
+     <div class="imenulist" ng-class-odd="'strip'" ind="{{item.id}}" >
+        <a ng-href="{{item.url}}" >{{item.title}}</a>
+        <div class="fabtn-group">
+
+               <a href="" ng-click="delbackup( item.id )" class="fabtn"><i class="fa fa-times fa-fw"></i></a>&nbsp;
+        </div>
+    </div>
+</script>
+
+<div class="ilist strip" ng-repeat="item in items" ind="{{item.id}}" >
+    <div class="btn-group" onMouseOver='js_menuover( this );' onMouseOut='js_menuout( this );' >
+  <a ng-href="{{item.url}}" class="btn btn-default">{{lng.downloadjs}}</a>
+    <div class="btnsubmenu">
+      <a href='' ng-click="restorebackup( $index )">{{lng.restore}}</a>
+        <a href='' ng-click="delbackup( $index )">{{lng.del}}</a>
+  </div>
+  <button type="button" class="btn btn-default btnmenu"><i class="fa fa-caret-down"></i></button>
+  </div>  
+    <a ng-href="{{item.url}}">{{item.title}}</a> <span>{{item.size}} KB</span>
+</div>
+
