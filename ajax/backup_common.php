@@ -8,6 +8,8 @@
 require_once APP_EONZA.'lib/files.php';
 
 define( 'BACKUP', STORAGE.'backup' );
+define( 'MODE_SQL', 0 );
+define( 'MODE_GZ', 1 );
 
 if ( !file_exists( STORAGE.'backup' ))
     mkdir( STORAGE.'backup' );

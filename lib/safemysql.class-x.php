@@ -3,7 +3,7 @@
  * @author col.shrapnel@gmail.com
  * @link http://phpfaq.ru/safemysql
  * 
- * Safe and convenient way to handle SQL queries utilizing type-hinted placeholders.
+ * Safe and convenient vay to handle SQL queries utilizing type-hinted placeholders.
  * 
  * Key features
  * - set of helper functions to get the desired result right out of query, like in PEAR::DB
@@ -26,7 +26,7 @@
  * and
  * ?p ("parsed") - special type placeholder, for inserting already parsed statements without any processing, to avoid double parsing.
  * 
- * Connection:
+ * Some examples:
  *
  * $db = new SafeMySQL(); // with default settings
  * 
@@ -38,13 +38,6 @@
  * );
  * $db = new SafeMySQL($opts); // with some of the default settings overwritten
  * 
- * Alternatively, you can just pass an existing mysqli instance that will be used to run queries 
- * instead of creating a new connection.
- * Excellent choice for migration!
- * 
- * $db = new SafeMySQL(['mysqli' => $mysqli]);
- * 
- * Some examples:
  * 
  * $name = $db->getOne('SELECT name FROM table WHERE id = ?i',$_GET['id']);
  * $data = $db->getInd('id','SELECT * FROM ?n WHERE id IN ?a','table', array(1,2));
@@ -83,7 +76,7 @@ class SafeMySQL
         'socket'    => NULL,
         'pconnect'  => FALSE,
         'charset'   => 'utf8',
-        'errmode'   => 'exception', //or 'error'
+        'errmode'   => 'error', //or exception
         'exception' => 'Exception', //Exception class name
     );
 
@@ -96,19 +89,6 @@ class SafeMySQL
 
         $this->emode  = $opt['errmode'];
         $this->exname = $opt['exception'];
-
-        if (isset($opt['mysqli']))
-        {
-            if ($opt['mysqli'] instanceof mysqli)
-            {
-                $this->conn = $opt['mysqli'];
-                return;
-
-            } else {
-
-                $this->error("mysqli option must be valid instance of mysqli class");
-            }
-        }
 
         if ($opt['pconnect'])
         {
@@ -460,7 +440,7 @@ class SafeMySQL
      * @param string $query - a regular SQL query
      * @return mysqli result resource or FALSE on error
      */
-    public function rawQuery($query)
+    private function rawQuery($query)
     {
         $start = microtime(TRUE);
         $res   = mysqli_query($this->conn, $query);

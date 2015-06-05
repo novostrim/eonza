@@ -62,6 +62,8 @@ class DB {
     public static function getInstance( $opt = '' ) { 
         if ( self::$instance === null) 
         { 
+            if ( !isset( $opt['errmode'] ))
+                $opt['errmode'] = 'error';
             self::$instance = new DB( $opt );
         } 
         return self::$db;

@@ -2,7 +2,7 @@
 
  <a href="" ng-click="createbackup()" class="flatbtn"><i class="fa fa-plus-circle fa-lg"></i>&nbsp;&nbsp;{{lng.create}}</a>
 <!--a href="" ng-click="editfolder()" class="flatbtn"><i class="fa fa-plus-circle fa-lg"></i>&nbsp;&nbsp;{{lng.newfld}}</a-->
- <a class="flatbtn" ng-if="cfg.showhelp" target="_blank" href="http://{{::cfg.website}}/backup.html" title="{{::lng.help}}"><i class="fa fa-question fa-lg"></i></a>
+ <a class="flatbtn" ng-if="cfg.showhelp" target="_blank" href="http://{{::cfg.website}}/backup-database.html" title="{{::lng.help}}"><i class="fa fa-question fa-lg"></i></a>
 
 <script type="text/ng-template"  id="topback.html">
      <div class="imenulist" ng-class-odd="'strip'" ind="{{item.id}}" >
@@ -13,6 +13,15 @@
         </div>
     </div>
 </script>
+
+ <div class='uploadcont'>
+        <p>
+            <input type='file' id='uploadfile' class="btn btn-default"> <a id='_submit'  class="btn btn-primary btn-lg" ng-click="uploadfile()"><i class="fa fa-upload"></i>&nbsp;{{::lng.upload}}!</a>
+        </p>
+        <div class='uploadout' id="upout">
+            <div id='progress' class='uploadprog'></div>
+        </div>
+</div>
 
 <div class="ilist strip" ng-repeat="item in items" ind="{{item.id}}" >
     <div class="btn-group" onMouseOver='js_menuover( this );' onMouseOut='js_menuout( this );' >

@@ -9,8 +9,6 @@ require_once 'ajax_common.php';
 
 define( 'LIMIT', 100 );
 define( 'BUF_SIZE', 1000000 );
-define( 'MODE_SQL', 0 );
-define( 'MODE_GZ', 1 );
 
 function getdata( $itbl, $from, &$buf, $cols )
 {

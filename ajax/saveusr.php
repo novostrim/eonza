@@ -4,11 +4,7 @@ require_once 'ajax_common.php';
 
 $fields = post( 'params' );
 
-if ( defined( 'DEMO' )/* && ( isset( $fields['pass'] ) || isset( $fields['email'] ) ||
-      isset( $fields['login'] ) )*/)
-    api_error('This feature is disabled in the demo-version.');
-
-if ( ANSWER::is_success())
+if ( ANSWER::is_success( true ))
 {
     $ext = '';
     if ( isset( $fields['pass'] ))

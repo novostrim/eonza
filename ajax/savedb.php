@@ -9,10 +9,8 @@ $isupdate = defined( 'NOANSWER' );
 require_once 'ajax_common.php';
 
 $fields = post( 'params' );
-if ( defined( 'DEMO' ))
-    api_error('This feature is disabled in the demo-version.');
 
-if ( ANSWER::is_success() && ( $isupdate || ANSWER::is_access()))
+if ( ANSWER::is_success( true ) && ( $isupdate || ANSWER::is_access()))
 {
     $settings = GS::dbsettings();
     foreach ( $fields as $ikey => $ival )

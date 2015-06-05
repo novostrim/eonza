@@ -170,7 +170,7 @@ geapp.controller( 'GenteeCtrl', function GenteeCtrl($scope, $location,
                 $scope.msg_error( $scope.lng[ data.err ] );
         })
     }
-    $rootScope.msg = function( dlg_opt )
+    $rootScope.msg = function( dlg_opt, ext )
     {
         if ( angular.isUndefined( dlg_opt.template ))
         {
@@ -178,6 +178,9 @@ geapp.controller( 'GenteeCtrl', function GenteeCtrl($scope, $location,
                 dlg_opt.body = this.lng[ dlg_opt.body ];
             dlg_opt.template = false;
         }
+        if ( ext )
+            angular.extend( dlg_opt, ext );
+        
         $scope.dlg_opt = dlg_opt;
         var modalInstance = $modal.open({
             templateUrl: 'dialog.html',
@@ -191,7 +194,13 @@ geapp.controller( 'GenteeCtrl', function GenteeCtrl($scope, $location,
 
         });
         modalInstance.result.then( function() {
-        }, function () {});
+                if ( $scope.dlg_opt.funcok )
+                    $scope.dlg_opt.funcok();
+            }, function () { 
+                if ( $scope.dlg_opt.funcfail )
+                    $scope.dlg_opt.funcfail();
+                }
+         );
     }
     $rootScope.msg_error = function( text )
     {
@@ -203,9 +212,9 @@ geapp.controller( 'GenteeCtrl', function GenteeCtrl($scope, $location,
     {
         this.msg( { title: lng.warning, body: text, icon: 'fa-exclamation-triangle', icon_class: 'yellow'  } );
     }
-    $rootScope.msg_info = function( text )
+    $rootScope.msg_info = function( text, extend )
     {
-        this.msg( { title: lng.inform, body: text, icon: 'fa-info-circle', icon_class: 'blue'  } );
+        this.msg( { title: lng.inform, body: text, icon: 'fa-info-circle', icon_class: 'blue'  }, extend );
     }
     $rootScope.msg_quest = function( text, funcyes )
     {
@@ -412,8 +421,8 @@ geapp.factory( 'DbApi', function( $rootScope, $http ) {
     var post = [ 'addindex','changefld', 'createbackup', 'delbackup', 'delfile', 'delmenu', 'dropindex', 'dropitem', 'dropset',
                  'dropsetitem', 'droptable', 'dupitem',
                     'duptable', 'editfile',
-                 'export2set', 'gettables', 'import', 'movemenu', 'savedb', 'savefolder', 'saveitem', 
-                 'savemenu', 'saveset', 'savesetitem', 'savestruct', 'saveusr', 'truncatetable' ];
+                 'export2set', 'gettables', 'import', 'movemenu', 'restorebackup', 'savedb', 'savefolder', 'saveitem', 
+                 'savemenu', 'saveset', 'savesetitem', 'savestruct', 'saveusr', 'truncatetable', 'uploadfile' ];
 */
     var get = [ 'columns', 'getbackup', 'getdb', 'getitem', 'getlink', 'getmenu', 'getsets', 'getstruct', 'gettables', 
                 'gettree', 'set', 'sysinfo', 'table' ];

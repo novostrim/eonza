@@ -58,8 +58,10 @@ class ANSWER {
     {
         return self::$answer['result'][ $field ];
     }
-    public static function is_success()
+    public static function is_success( $demo = false )
     {
+        if ( $demo && defined( 'DEMO' ))
+            api_error('This feature is disabled in the demo-version.');
         return self::$answer['success'];
     }
     public static function success( $state )

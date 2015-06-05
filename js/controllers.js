@@ -1136,25 +1136,78 @@ function EdititemCtrl($scope, $routeSegment, DbApi, $rootScope ) {
 }
 */
 
+function reload()
+{
+    document.location = '';
+}
+
 function BackupCtrl($scope, $routeSegment, DbApi, $rootScope ) {
     $scope.$routeSegment = $routeSegment;
+//    Scope = $scope;
+
+    $scope.uploadfile = function() 
+    {
+        var _file = document.getElementById('uploadfile');
+        var _progress = document.getElementById('progress');
+
+        if(_file.files.length === 0){
+            return;
+        }
+        $("#upout").show();
+        var data = new FormData();
+        data.append('file', _file.files[0]);
+        data.append('path', 'backup');
+
+        var request = new XMLHttpRequest();
+        request.onreadystatechange = function(){
+            if(request.readyState == 4){
+                $("#upout").hide();
+                var data = JSON.parse(request.response);
+                if ( data.success )
+                {
+                    $scope.items = data.result;
+                    $scope.$apply();
+                }
+                else
+                   $rootScope.msg_error( data.err );
+            }
+        };
+
+        request.upload.addEventListener('progress', function(e){
+            _progress.style.width = Math.ceil(e.loaded/e.total) * 100 + '%';
+        }, false);
+
+        request.open('POST', ajax( 'uploadfile' ));
+        request.send(data);
+    }
+
     $scope.createbackup = function() {
         DbApi( 'createbackup', {}, function( data ) {
-            $rootScope.items = data.result;
+            $scope.items = data.result;
         })
+    }
+    $scope.restorebackup = function( index ) {
+        cfg.temp = $scope.items[index].title;
+        $rootScope.msg_quest( 'qrestore', function(){ 
+            DbApi( 'restorebackup', { 'filename': cfg.temp }, function( data ) {
+                    if ( data.success )
+                        $rootScope.msg_info( 'restoreok', { funcok: reload, funcfail: reload } );
+                })
+            });
+        return false;
     }
     $scope.delbackup = function( index ) {
         cfg.temp = $scope.items[index].title;
         $rootScope.msg_quest( 'deltemp', function(){ 
             DbApi( 'delbackup', { 'filename': cfg.temp }, function( data ) {
-                    $rootScope.items = data.result;
+                    $scope.items = data.result;
                 })
             });
         return false;
     }
     DbApi( 'getbackup', {}, function( data ) {
             if ( data.success )
-                $rootScope.items = data.result;
+                $scope.items = data.result;
     });
 }
 
