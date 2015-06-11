@@ -8,6 +8,7 @@ class Image
     private $thumb = 0;
     private $file;
     private $ftype;
+    private $options;
     private $x, $y, $offx, $offy, $lenx, $leny, $w, $h;
     private $defaults = array(
                     'max' => 0,
@@ -16,12 +17,16 @@ class Image
                     'side' => 0, // 0 - longest, 1 - width, 2 - height
                     'thumb' => 0,
                     'thumb_ratio' => 1,
-                    'thumb_side' => 0
+                    'thumb_side' => 0,
+                    'options' => array(),
     );
 
     function __construct($opt = array())
     {
         $this->opt = array_merge( $this->defaults, $opt);
+        $this->options = $this->opt['options'];
+        if ( empty( $this->options['quality'] ))
+            $this->options['quality'] = 85;
     }
 
     function __destruct() 
@@ -86,7 +91,7 @@ class Image
         if ( is_file( $filename ))
             unlink( $filename );
         if ( $this->ftype == 'jpeg' )
-            imagejpeg( $thumb ? $this->thumb : $this->dest, $filename, 85 );
+            imagejpeg( $thumb ? $this->thumb : $this->dest, $filename, $this->options['quality'] );
         elseif ( $this->ftype == 'png' )
             imagepng( $thumb ? $this->thumb : $this->dest, $filename );
         elseif ( $this->ftype == 'gif' )
@@ -99,6 +104,44 @@ class Image
             imagepng( $image, $name );
         }*/
     }
+
+    function watermark( $filename )
+    {
+        $left = empty( $this->options['waterleft']) ? 0 : (int)$this->options['waterleft'];
+        $top = empty( $this->options['watertop']) ? 0 : (int)$this->options['watertop'];
+
+        $width = imagesx( $this->dest ? $this->dest : $this->src );
+        $height = imagesy( $this->dest ? $this->dest : $this->src );
+
+        $waterdest = imagecreatetruecolor( $width, $height );
+        imagecopy( $waterdest, $this->dest ? $this->dest : $this->src, 0, 0, 0, 0, $width, $height );
+        $watermark = imagecreatefrompng( APP_DOCROOT.$this->options['watermark'] ); 
+        $water_width = imagesx($watermark);
+        $water_height = imagesy($watermark); 
+        if ( !$left )
+            $w_x = $width/2 - $water_width/2;
+        elseif ( $left > 0 )
+            $w_x = $left;
+        elseif ( $left < 0 )
+            $w_x = $width + $left - $water_width;
+        if ( !$top )
+            $w_y = $height/2 - $water_height/2;
+        elseif ( $top > 0 )
+            $w_y = $top;
+        elseif ( $top < 0 )
+            $w_y = $height + $top - $water_height;
+
+//                imagealphablending($this->dest ? $this->dest : $this->src, true);
+//                imagealphablending($watermark, true);
+        imagecopy( $waterdest, $watermark, $w_x, $w_y, 0, 0, $water_width, $water_height);
+        if ( is_file( $filename ))
+            unlink( $filename );
+        if ( $this->ftype == 'jpeg' )
+            imagejpeg( $waterdest, $filename, 85 );
+        elseif ( $this->ftype == 'png' )
+            imagepng( $waterdest, $filename );
+        imagedestroy( $waterdest );
+     }
 
     public function check( $file )
     {
@@ -126,7 +169,8 @@ class Image
     {
         $side = $this->opt['side'] == 2 || (!$this->opt['side'] && $this->y > $this->x ) ? 
                              $this->y : $this->x;
-        if ( $this->opt['max'] < $side || $this->opt['min'] > $side || $this->opt['thumb'] )
+        if ( $this->opt['max'] < $side || $this->opt['min'] > $side || $this->opt['thumb'] ||
+             !empty( $this->options['watermark'] ))
         {
             $load = "imagecreatefrom".$this->ftype;
             $this->src = $load( $filename );
@@ -136,11 +180,14 @@ class Image
                 $this->dest = imagecreatetruecolor( $this->w, $this->h );
                 imagecopyresampled( $this->dest, $this->src, 0,0, $this->offx, $this->offy, 
                                     $this->w, $this->h, $this->lenx, $this->leny );
+
                 $this->savetofile( $filename );
                 imagedestroy( $this->src );
                 $this->src = 0;
             }
         }
+        if ( !empty( $this->options['watermark'] ))
+            $this->watermark( $filename );
     }
 
     public function finish( $idfile, $path )
@@ -173,6 +220,7 @@ class Image
             }
             $params['ispreview'] = 1;
         }
+
         DB::update( ENZ_FILES, $params, '', $idfile );
     }
 }

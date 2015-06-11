@@ -181,6 +181,7 @@ var types = {
                     list: [ {id: 0, title: lng.longside }, { title: lng.width, id: 1 },
                     { title: lng.height, id: 2 },
                     ] },
+                    { name: 'options', title: lng.moreoptions, type: cnt.ET_TEXT, def: '' } 
                  ] 
     },
     13 : { id: cnt.FT_SPECIAL, name: 'fspecial', form: special_form, verify: number_verify, /*view: view_special,*/

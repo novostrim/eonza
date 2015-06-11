@@ -65,7 +65,7 @@ GS::set( 'fields', array(
    FT_PARENT => array( 'pars' => '', 'sql' => '',
                            'save' => 'parent_save'),
    FT_FILE => array( 'pars' => 'storedb' ),
-   FT_IMAGE => array( 'pars' => 'storedb,max,min,ratio,side,thumb,thumb_ratio,thumb_side' ),
+   FT_IMAGE => array( 'pars' => 'storedb,max,min,ratio,side,thumb,thumb_ratio,thumb_side,options' ),
    FT_SPECIAL => array( 'pars' => 'type,options', 'sql' => 'special_sql', 
                               'save' => 'special_save' ),
    FT_SQL => array( 'pars' => 'sqlcmd', 'sql' => 'sql_sql' ),
