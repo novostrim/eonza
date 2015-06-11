@@ -130,14 +130,14 @@ class Image
             $w_y = $top;
         elseif ( $top < 0 )
             $w_y = $height + $top - $water_height;
-
+   
 //                imagealphablending($this->dest ? $this->dest : $this->src, true);
 //                imagealphablending($watermark, true);
         imagecopy( $waterdest, $watermark, $w_x, $w_y, 0, 0, $water_width, $water_height);
         if ( is_file( $filename ))
             unlink( $filename );
         if ( $this->ftype == 'jpeg' )
-            imagejpeg( $waterdest, $filename, 85 );
+            imagejpeg( $waterdest, $filename, $this->options['quality'] );
         elseif ( $this->ftype == 'png' )
             imagepng( $waterdest, $filename );
         imagedestroy( $waterdest );
