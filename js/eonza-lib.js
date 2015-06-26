@@ -399,7 +399,7 @@ function view_imagelink( value, icol )
         if ( icol.extend.options.ext )
             value = value + '.' + icol.extend.options.ext;
     } 
-    return '<a href="' + value + '"><img src="' + value + '" class="listimg"></a>';
+    return '<a class="viewbox" onclick="return viewbox()" rel="emb" href="' + value + '"><img src="' + value + '" class="listimg"></a>';
 }
 
 function edit_default( i, icol )
@@ -541,14 +541,21 @@ function view_default( i, icol )
 }
 
 
+function viewbox()
+{
+    $.colorbox.remove();
+    $.extend( $.colorbox.settings, { current: "{current} / {total}" });
+    $('.viewbox').colorbox( { open: true, photo: true } );
+    return false;
+}
+
 function common_file( isview, icol )
 {
     var out = "<div class='file-control' ng-repeat='fitem in "+isview+"[\"" + icol.alias +"\"]' >";
 
     var href = cfg.appenter+'api/download';
-
     if ( icol.idtype == cnt.FT_IMAGE )
-        out += '<a ng-if="fitem.ispreview" href="' + href + '?id={{fitem.id}}&view=1"><img src="'+href+'?id={{fitem.id}}&view=1&thumb=1" class="thumb" /></a>';
+        out += '<a class="viewbox" title="{{fitem.comment}}" rel="'+( isview == 'view' ? 'viewgal' : 'editgal' ) + icol.id +'" ng-if="fitem.ispreview" onclick="return viewbox()" href="' + href + '?id={{fitem.id}}&view=1"><img src="'+href+'?id={{fitem.id}}&view=1&thumb=1" class="thumb" /></a>';
     out += '<a href="'+href+'?id={{fitem.id}}">{{fitem.filename}}</a><br>'+
         '<a href="'+href+'?id={{fitem.id}}&view=1"><i class="fa fa-fw fa-file"></i></a>'+
         '<a href="'+href+'?id={{fitem.id}}""><i class="fa fa-fw fa-download"></i></a>';

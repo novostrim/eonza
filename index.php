@@ -54,7 +54,7 @@ if ( file_exists( APP_DOCROOT.APP_ENTER."conf.inc.php"))
         $conf = GS::get( 'conf' );
     }
     /**/
-    $lang = $conf['dblang'];
+//    $lang = $conf['dblang']; 
     if ( !GS::login())
         $conf['module'] = 'login';
     else
@@ -65,6 +65,11 @@ if ( file_exists( APP_DOCROOT.APP_ENTER."conf.inc.php"))
 //    REQUEST_URI
 }
 else
+{
+    $conf['module'] = 'install';
+    $conf['title'] = '';
+}
+if ( !$lang )
 {
     $langs = array( 'en', 'ru');
     $ulang = explode( ',', $_SERVER['HTTP_ACCEPT_LANGUAGE'] );
@@ -77,9 +82,8 @@ else
             break;
         }
     }
-    $conf['module'] = 'install';
-    $conf['title'] = '';
 }
+
 $conf['lang'] = $lang ? $lang : 'en';
 $conf['appdir'] = APP_DIR;
 $conf['appenter'] = APP_ENTER;
