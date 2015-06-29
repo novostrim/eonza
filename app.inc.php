@@ -18,8 +18,8 @@ define( 'ENZ_SETS', ENZ_PREFIX.'sets' );
 define( 'ENZ_TABLES', ENZ_PREFIX.'tables' );
 define( 'ENZ_USERS', ENZ_PREFIX.'users' );
 
-define( 'APP_VERSION', '1.11.0' );
-define( 'APP_DATE', '2015/06/26' );
+define( 'APP_VERSION', '1.12.0' );
+define( 'APP_DATE', '2015/06/29' );
 define( 'APP_STORAGE', 'storage' ); // Default name of the storage folder
 define( 'CONF_HOST', $_SERVER['HTTP_HOST'] );
 define( 'APP_DOCROOT', rtrim( $_SERVER['DOCUMENT_ROOT'], '/' ));

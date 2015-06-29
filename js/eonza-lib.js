@@ -795,7 +795,10 @@ function js_listappend( i, list )
 function js_listsort( ind, obj ) 
 {
     Scope.params.p = 1;
-    Scope.params.sort = Scope.collist[ind].id ==  Math.abs( Scope.params.sort ) ? -Scope.params.sort : Scope.collist[ind].id;
+    if ( ind == 0xffff )
+        Scope.params.sort = ind ==  Math.abs( Scope.params.sort ) ? -Scope.params.sort : ind;
+    else    
+        Scope.params.sort = Scope.collist[ind].id ==  Math.abs( Scope.params.sort ) ? -Scope.params.sort : Scope.collist[ind].id;
     Scope.update( false );
     return false;
 }

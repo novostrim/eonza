@@ -61,6 +61,11 @@ if ( $id && ANSWER::is_success() && ANSWER::is_access( A_READ, $id ))
     $filter = get('filter');
     $summary = (int)get( 'sum' );
     $order = 't._uptime desc';
+    $defsort = array( 0xffff => 't.id', 0xfffe => 't._uptime' );
+    if ( isset( $defsort[ abs( $sort )] ))
+        $order = $defsort[ abs( $sort )].( $sort < 0 ? ' desc' : '' );
+
+    $sort = (int)$sort;
     $names = array( '-1' => 't.id' );
     $retfilter = array();
     ANSWER::set( 'filter', array());

@@ -876,13 +876,22 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
     }
     $scope.list = function() {
         var list = $("#mainlist");
+        var thclass = '';
+        var arrow = '';
 
         list.html('');
-        var htmlitem = '<tr><th class="thead" style="width: 50px;"></th><th class="thead" ><input type="checkbox" onchange="js_listallcheck(this)"></th>';
+        if ( Math.abs( $scope.params.sort ) == 0xffff )
+        {
+            thclass = ' sorted';
+            arrow = '&nbsp;<i class="fa fa-fw '+ ( $scope.params.sort > 0 ? 'fa-long-arrow-down' :
+                'fa-long-arrow-up' ) + '"></i>';
+        }
+        var htmlitem = '<tr><th class="thead'+thclass+'" style="width: 50px;"><a href="#" onclick="return js_listsort( 0xffff, this );">ID</a>' + 
+                        arrow+'</th><th class="thead" ><input type="checkbox" onchange="js_listallcheck(this)"></th>';
         for ( var k=0; k< $scope.collist.length; k++ )    
         {
-            var thclass = '';
-            var arrow = '';
+            thclass = '';
+            arrow = '';
             var title = angular.copy( $scope.collist[k].title );
 
             if ( $scope.collist[k].idtype == cnt.FT_PARENT && angular.isDefined( $scope.params.parent ) )
