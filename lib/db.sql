@@ -133,3 +133,52 @@ CREATE TABLE IF NOT EXISTS `xxx_access` (
   KEY `_uptime` (`_uptime`),
   KEY `idgroup` (`idgroup`,`idtable`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+##
+CREATE TABLE IF NOT EXISTS `xxx_share` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `_uptime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `_owner` smallint(5) unsigned NOT NULL,
+  `idtable` smallint(5) unsigned NOT NULL,
+  `idslice` int(10) unsigned NOT NULL,
+  `idfile` int(10) unsigned NOT NULL,
+  `code` int(10) unsigned NOT NULL,
+  `timelimit` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `viewlimit` smallint(6) NOT NULL,
+  `firstonly` tinyint(3) unsigned NOT NULL,
+  `firstip` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `idtable` (`idtable`,`idslice`,`idfile`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+##
+CREATE TABLE IF NOT EXISTS `xxx_slices` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `_uptime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `_owner` smallint(5) unsigned NOT NULL,
+  `idtable` smallint(5) unsigned NOT NULL,
+  `params` varchar(255) NOT NULL,
+  `title` varchar(64) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `_owner` (`_owner`,`idtable`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+##
+CREATE TABLE IF NOT EXISTS `xxx_tags` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `_uptime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `_owner` smallint(5) unsigned NOT NULL,
+  `title` varchar(64) NOT NULL,
+  `color` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `title` (`title`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+##
+CREATE TABLE IF NOT EXISTS `xxx_taglist` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `_uptime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `_owner` smallint(5) unsigned NOT NULL,
+  `idtable` smallint(5) unsigned NOT NULL,
+  `iditem` int(10) unsigned NOT NULL,
+  `idtag` smallint(5) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `idtable` (`idtable`,`iditem`),
+  KEY `idtag` (`idtag`,`idtable`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;

@@ -56,6 +56,8 @@ if ( ANSWER::is_success() && ANSWER::is_access())
             {
                 $db->query("delete from ?n where id=?s", ENZ_TABLES, $idi );
                 $db->query("delete from ?n where idtable=?s", ENZ_COLUMNS, $idi );
+                $db->query("delete from ?n where idtable=?s", ENZ_SHARE, $idi );
+
                 files_deltable( $idi );
             }
         }

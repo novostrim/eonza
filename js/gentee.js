@@ -422,7 +422,7 @@ geapp.factory( 'DbApi', function( $rootScope, $http ) {
                  'dropsetitem', 'droptable', 'dupitem',
                     'duptable', 'editfile',
                  'export2set', 'gettables', 'import', 'movemenu', 'restorebackup', 'savedb', 'savefolder', 'saveitem', 
-                 'savemenu', 'saveset', 'savesetitem', 'savestruct', 'saveusr', 'truncatetable', 'uploadfile' ];
+                 'savemenu', 'saveset', 'savesetitem', 'savestruct', 'saveusr', 'share', 'truncatetable', 'uploadfile' ];
 */
     var get = [ 'columns', 'getbackup', 'getdb', 'getitem', 'getlink', 'getmenu', 'getsets', 'getstruct', 'gettables', 
                 'gettree', 'set', 'sysinfo', 'table' ];

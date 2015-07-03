@@ -125,6 +125,8 @@ function files_delfile( $idi, $toresult )
                 @unlink( $path.'_'.$idi );
         }
         DB::query("delete from ?n where id=?s", ENZ_FILES, $idi );
+        DB::query("delete from ?n where idtable=?s && idslice=0 && idfile=?s", 
+                   ENZ_SHARE, $fitem['idtable'], $idi );
         if ( $toresult )
         {
             $col = DB::getrow("select * from ?n where id=?s", ENZ_COLUMNS, (int)$fitem['idcol'] );

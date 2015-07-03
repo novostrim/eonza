@@ -103,8 +103,8 @@ if ( LOCALHOST )
 else
     $vars['style'] =  '<link rel="stylesheet" type="text/css" href="'.APP_DIR.'css/gentee.css" />';
 
-if ( !empty( $conf['customjs'] ))
-    $vars['customjs'] =  "<script src='$conf[customjs]' type='text/javascript'></script>";
+$vars['customjs'] =  empty( $conf['customjs'] ) ? '' : 
+                            "<script src='$conf[customjs]' type='text/javascript'></script>";
 
 foreach ( $vars as $kvar => $ivar )
 {

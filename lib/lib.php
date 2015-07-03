@@ -273,14 +273,16 @@ function pages( $query, $page, $link )
    return $result;
 }
 
-function pass_generate( $i = 6 )
+function pass_generate( $i = 6, $safechar = false )
 {
    $newpass = '';
-   $rep = '#$%&+-23459fk678';
+   $from = $safechar ? 0x41 : 0x32;
+   $rep = $safechar ? '23459fk678' : '#$%&+-23459fk678';
+   $torep = $safechar ? 'lOoD`_[]^\\' : 'lOoIDJ`:;<>?[]^\\';
    while ( $i-- )
    {
-        $char = chr(mt_rand( 0x32, 0x7A )); 
-        $pos = strrpos( 'lOoIDJ`:;<>?[]^\\', $char );
+        $char = chr(mt_rand( $from, 0x7A )); 
+        $pos = strrpos( $torep, $char );
         $newpass .= $pos === false ? $char : $rep[$pos];
    }
    return $newpass;

@@ -216,6 +216,7 @@ var lng = {
 	users: 'Users',
 	usrgroups: 'User Groups',
 	view: 'View',
+	viewonline: 'View Online',
 	visiblecol: 'Visible column',
 	warning: 'Warning',
 	war_efield: 'Insert at least one field!',

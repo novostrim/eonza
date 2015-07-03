@@ -11,6 +11,7 @@ if ( ANSWER::is_success() && ANSWER::is_access())
     {
         if ( $db->query("truncate table ?n", api_dbname( $idi ) ))
         {
+            $db->query("delete from ?n where idtable=?s", ENZ_SHARE, $idi );
             files_deltable( $idi );
             ANSWER::success( $idi );
             api_log( ANSWER::is_success(), 0, 'truncate' );

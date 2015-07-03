@@ -324,6 +324,30 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
     $scope.fltfields = [];
 //    $scope.cookies= $cookies;
 
+    $scope.viewfile = function( id, filename) {
+         function iconfile( fa, view )
+         {
+            filename = '<i class="fa fa-file-' + fa + '-o fa-3x"></i><br>' + filename;
+            blank = ' target="_blank"';
+            if ( view )
+                href = href + '&view=1';
+            else
+                blank = blank + ' title="' + lng.viewonline + '" onclick="return js_office( ' + id + ')"';
+         }
+         var href = enz.URIApi( 'download' +'?id='+ id );
+         var blank = '';
+
+        var  a = filename.split('.'); 
+        var ext = a[a.length-1].toLowerCase().substr( 0, 3 ); 
+        switch ( ext ) {
+            case 'doc': iconfile('word'); break;
+            case 'xls': iconfile('excel'); break;
+            case 'ppt': iconfile('powerpoint');  break;
+            case 'pdf': iconfile( 'pdf', true ); break;
+        }
+
+        return '<a href="'+href + '" ' + blank + '>' + filename + '</a>';
+    }
     $rootScope.cheditform = function( obj, callback ) {
         for(var k in obj)
         {

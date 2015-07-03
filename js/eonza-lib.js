@@ -555,8 +555,13 @@ function common_file( isview, icol )
 
     var href = cfg.appenter+'api/download';
     if ( icol.idtype == cnt.FT_IMAGE )
-        out += '<a class="viewbox" title="{{fitem.comment}}" rel="'+( isview == 'view' ? 'viewgal' : 'editgal' ) + icol.id +'" ng-if="fitem.ispreview" onclick="return viewbox()" href="' + href + '?id={{fitem.id}}&view=1"><img src="'+href+'?id={{fitem.id}}&view=1&thumb=1" class="thumb" /></a>';
-    out += '<a href="'+href+'?id={{fitem.id}}">{{fitem.filename}}</a><br>'+
+        out += '<a class="viewbox" title="{{fitem.comment}}" rel="'+( isview == 'view' ? 'viewgal' : 'editgal' ) + icol.id +'" ng-if="fitem.ispreview" onclick="return viewbox()" href="' + href + '?id={{fitem.id}}&view=1"><img src="'+href+'?id={{fitem.id}}&view=1&thumb=1" class="thumb" />{{fitem.filename}}</a>';
+    else    
+    {
+        out += '<span ng-bind-html="viewfile( fitem.id, fitem.filename )"></span>';
+//        <a href="'+href+'?id={{fitem.id}}">{{fitem.filename}}</a>';
+    }
+    out += '<br>'+
         '<a href="'+href+'?id={{fitem.id}}&view=1"><i class="fa fa-fw fa-file"></i></a>'+
         '<a href="'+href+'?id={{fitem.id}}""><i class="fa fa-fw fa-download"></i></a>';
     out += '<a href="" ng-click="editfile( fitem.id )"><i class="fa fa-fw fa-pencil"></i></a>';
@@ -966,3 +971,15 @@ function colindex( id )
     return -1;
 }
 
+function js_office( id )
+{
+    enz.DbApi( 'setshare', { idfile: id, during: 60, first: true }, function( data ) {
+        if ( data.success )
+        {
+
+            window.location = 'https://view.officeapps.live.com/op/view.aspx?src=' + 
+                encodeURIComponent( enz.URIApi( 'share?uid=' + data.result.code, true ));
+        }
+    })
+    return false;
+}
