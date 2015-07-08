@@ -14,11 +14,6 @@ Eonza = function() {
     this.hostname = window.location.protocol + '//' + window.location.host;
 }
 
-Eonza.prototype.URIApi = function( apimethod, ishost )
-{
-    return ( ishost ? this.hostname : '' ) + cfg.appenter + 'api/' + apimethod;
-}
-
 Eonza.prototype.DbApi = function( method, params, callback ) {
     var self = this;
     var ajaxmethod = 'post';
@@ -57,6 +52,11 @@ Eonza.prototype.DbApi = function( method, params, callback ) {
 Eonza.prototype.Spinner = function( status ) {
     rootScope.loading = status;
     rootScope.$apply();
+}
+
+Eonza.prototype.URIApi = function( apimethod, ishost )
+{
+    return ( ishost ? this.hostname : '' ) + cfg.appenter + 'api/' + apimethod;
 }
 
 var enz = new Eonza();

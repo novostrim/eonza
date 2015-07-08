@@ -76,17 +76,20 @@ if ( ANSWER::is_success() && ANSWER::is_access())
 			$from = 0;
 			while ( getdata( $itbl, $from, $buf, $cols ))
 			{
+				$from += LIMIT;
 				if ( strlen( $buf ) > BUF_SIZE )
 				{
+					if ( !$db->getrow("select * from ?n limit $from,1", $itbl ) )
+						$buf = substr_replace( $buf, ";\n",  -2, 2 );
 					if ( $mode == MODE_GZ )
 						gzwrite( $fsql, $buf );
 					else
 						fwrite( $fsql, $buf );
 					$buf = '';
 				}
-				$from += LIMIT;
 			}
-			$buf = substr_replace( $buf, ";\n",  -2, 2 );
+			if ( $buf )
+				$buf = substr_replace( $buf, ";\n",  -2, 2 );
 
 			$buf .= "\n\n/*!40000 ALTER TABLE `$itbl` ENABLE KEYS */;\n\n";
 		}
