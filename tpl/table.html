@@ -64,6 +64,7 @@
     <center>
     <table><tr><td align="left">
         <a href="" ng-class="{switchoff:total.result==undefined, switchon:total.result!=undefined }" ng-if="total.is" ng-click="summary( 1 )" title="{{::lng.calcamount}}"><i class="fa fa-fw fa-calculator"></i></a> 
+        <a href="" ng-class="{switchoff:!enztable.uptime, switchon:enztable.uptime }" ng-click="uptime()" title="{{::lng.viewuptime}}"><i class="fa fa-fw fa-clock-o"></i></a> 
     <select onchange="return js_listselect( this )" class="form-control">
         <option value="0">{{lng.withsel}}</option>
         <option value="delete">{{lng.del}}</option>

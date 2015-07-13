@@ -322,8 +322,16 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
     $scope.logic = logic;
     $scope.filter = [];
     $scope.fltfields = [];
-//    $scope.cookies= $cookies;
+    $scope.enztable = enz.Table( $scope.params.id );
 
+//    $scope.cookies= $cookies;
+    $scope.uptime = function() {
+        $scope.enztable.uptime = !$scope.enztable.uptime;
+        if ( $scope.enztable.uptime )
+            $(".uptime").removeClass('hidden');
+        else
+            $(".uptime").addClass('hidden');
+    }
     $scope.viewfile = function( id, filename) {
          function iconfile( fa, view )
          {
@@ -647,6 +655,7 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
             switch ( parseInt( icol.idtype ))
             {
                 case cnt.FT_TEXT:
+                    $scope.form[ alias ] = $scope.form[ alias ].toString();
                     switch ( parseInt( icol.extend.weditor ))
                     {
                         case 1:// Simple Text
@@ -902,6 +911,8 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
         var list = $("#mainlist");
         var thclass = '';
         var arrow = '';
+        var thclasst = '';
+        var arrowt = '';
 
         list.html('');
         if ( Math.abs( $scope.params.sort ) == 0xffff )
@@ -910,8 +921,14 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
             arrow = '&nbsp;<i class="fa fa-fw '+ ( $scope.params.sort > 0 ? 'fa-long-arrow-down' :
                 'fa-long-arrow-up' ) + '"></i>';
         }
+        if ( Math.abs( $scope.params.sort ) == 0xfffe )
+        {
+            thclasst = ' sorted';
+            arrowt = '&nbsp;<i class="fa fa-fw '+ ( $scope.params.sort > 0 ? 'fa-long-arrow-down' :
+                'fa-long-arrow-up' ) + '"></i>';
+        }
         var htmlitem = '<tr><th class="thead'+thclass+'" style="width: 50px;"><a href="#" onclick="return js_listsort( 0xffff, this );">ID</a>' + 
-                        arrow+'</th><th class="thead" ><input type="checkbox" onchange="js_listallcheck(this)"></th>';
+                        arrow+'</th><th class="thead'+thclasst+' uptime'+ (enz.table.uptime ? '' : ' hidden') +'"><a href="#" onclick="return js_listsort( 0xfffe, this );">' +lng.time+'</a>' + arrowt+'</th><th class="thead" ><input type="checkbox" onchange="js_listallcheck(this)"></th>';
         for ( var k=0; k< $scope.collist.length; k++ )    
         {
             thclass = '';
@@ -1021,6 +1038,8 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
         DbApi( 'table', $scope.params, function( data ) {
             if ( data.success )
             {
+                if ( !$scope.params.sort )
+                    $scope.params.sort = -0xfffe;
                 if ( data.db.title[0] == ':' )
                     data.db.title = lng[ data.db.title.substr( 1 ) ];
                 $scope.db = data.db;
@@ -1095,6 +1114,7 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
         jQuery(".currow").removeClass('currow');
         td.eq(0).addClass('currow');
         td.eq(1).addClass('currow');
+        td.eq(2).addClass('currow');
     });
     $scope.columns();
 /*    $scope.$watch('allselect', function(){

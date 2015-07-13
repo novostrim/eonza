@@ -10,8 +10,10 @@ Eonza = function() {
 	this.resetPass = this.website + 'how-to-reset-password.html';
     // The custom text of the footer
     this.footer = '';
+    this.uptimefmt = 'DD.MM.YY HH:MM';
 
     this.hostname = window.location.protocol + '//' + window.location.host;
+    this.tables = {};
 }
 
 Eonza.prototype.DbApi = function( method, params, callback ) {
@@ -54,9 +56,20 @@ Eonza.prototype.Spinner = function( status ) {
     rootScope.$apply();
 }
 
+Eonza.prototype.Table = function( id ) {
+    if ( !this.tables[id] )
+        this.tables[id] = new Table();
+    return this.table = this.tables[id];
+}
+
 Eonza.prototype.URIApi = function( apimethod, ishost )
 {
     return ( ishost ? this.hostname : '' ) + cfg.appenter + 'api/' + apimethod;
+}
+
+Table = function() {
+    // display _uptime parameter
+    this.uptime = false;
 }
 
 var enz = new Eonza();

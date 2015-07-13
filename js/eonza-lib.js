@@ -789,7 +789,7 @@ function js_listappend( i, list )
         '<a href=""  onclick="return Scope.listdel('+i+');"><i class="fa fa-trash-o fa-fw"></i>' + lng.del + '</a>'+
     '</div>'+
 '</div></nobr>'+
-'</div><span class="idtext">'+item.id+'</span></td><td><input type="checkbox" class="listcheck" name="ch[]" value="'+i+'"></td>';
+'</div><span class="idtext">'+item.id+'</span></td><td class="uptime'+ (enz.table.uptime ? '' : ' hidden') +'"><span class="idtext">'+moment( item._uptime ).format( enz.uptimefmt )+'</span></td><td><input type="checkbox" class="listcheck" name="ch[]" value="'+i+'"></td>';
     for ( var k=0; k< Scope.collist.length; k++ )   
     {
         htmlitem += '<td class="'+Scope.collist[k].class+'">'+ item[Scope.collist[k].alias]+'</td>';
@@ -800,7 +800,7 @@ function js_listappend( i, list )
 function js_listsort( ind, obj ) 
 {
     Scope.params.p = 1;
-    if ( ind == 0xffff )
+    if ( ind == 0xffff || ind == 0xfffe)
         Scope.params.sort = ind ==  Math.abs( Scope.params.sort ) ? -Scope.params.sort : ind;
     else    
         Scope.params.sort = Scope.collist[ind].id ==  Math.abs( Scope.params.sort ) ? -Scope.params.sort : Scope.collist[ind].id;
