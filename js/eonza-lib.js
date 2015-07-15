@@ -741,7 +741,7 @@ function js_formtolist( i )
     var colnames = Scope.colnames;
     var fitem = Scope.form;
 
-    var item = i ? Scope.items[i-1] : { id: fitem.id };
+    var item = i ? Scope.items[i-1] : { id: fitem.id, _uptime: fitem._uptime };
 
     for ( var key in colnames )
     {
@@ -764,7 +764,7 @@ function js_formtolist( i )
     if ( i )
     {
         i--;
-        var td = jQuery('#' + i).children().eq(2);
+        var td = jQuery('#' + i).children().eq(3);
         for ( var k=0; k< Scope.collist.length; k++ )    
         {
             td.html( item[Scope.collist[k].alias] );
