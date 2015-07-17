@@ -7,8 +7,8 @@
 
 require_once 'ajax_common.php';
 
-$form = post( 'form' );
-
+//$form = post( 'form' );
+$form = postall( true );
 $settings = GS::dbsettings();
 $ext = empty( $settings['loginshort'] ) ? $db->parse( " && login=?s", $form['login'] ): '';
 $usr = $db->getrow( "select id, login,lang from ?n where pass=X?s ?p", 

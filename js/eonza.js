@@ -37,7 +37,7 @@ Eonza.prototype.DbApi = function( method, params, callback ) {
         method: ajaxmethod,
         success: function( data, status, xhr ) {
             self.Spinner( false );
-            rootScope.cfg.temp = data.temp;
+            cfg.temp = data.temp;
             if ( data.success )
             {
                 json2num( data );
@@ -52,8 +52,7 @@ Eonza.prototype.DbApi = function( method, params, callback ) {
 }
 
 Eonza.prototype.Spinner = function( status ) {
-    rootScope.loading = status;
-    rootScope.$apply();
+    $("#spinner").css('display', status ? 'block' : 'none' );
 }
 
 Eonza.prototype.Table = function( id ) {

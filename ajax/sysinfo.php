@@ -56,7 +56,8 @@ if ( ANSWER::is_success())
     		array( 'name' => 'phpver', 'value' => phpversion()),
     		array( 'name' => 'dbver', 'value' => $db->getone("select version()")),
             array( 'name' => 'dbsize', 'value' => fmtsize( $dbsize )),
-            array( 'name' => 'storagesize', 'value' => fmtsize( dirsize( STORAGE )))
+            array( 'name' => 'storagesize', 'value' => fmtsize( dirsize( STORAGE ))),
+            array( 'name' => 'storagepath', 'value' => STORAGEURL ),
             
             ));
 //    print $eonzaver;

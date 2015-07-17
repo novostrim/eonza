@@ -191,6 +191,7 @@ var lng = {
 	sourcetbl: 'Source table',
 	spreadsheet: 'Spreadsheet',
 	startswith: 'Starts with',
+	storagepath: 'Storage Path',
 	storagesize: 'Storage Size',
 	storedb: 'Store in the database',
 	sure: 'Are you sure you want to do the following action: #temp#?',

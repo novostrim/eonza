@@ -7,5 +7,6 @@
             <tr><td class="formtxt">{{lng.password}}: </td><td class="formval"><input type="password" class="form-control" ng-model="form.psw" required></td></tr>
             <tr><td></td><td class="formval"><input type="submit" class="btn btn-primary" value="{{lng.loginjs}}"></td></tr>
         </table>
+        <a ng-if="enz.resetPass" href="{{::enz.resetPass}}" target="_blank">{{::lng.forgotpass}}</a>
     </form>
 </div>
