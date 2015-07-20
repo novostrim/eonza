@@ -81,6 +81,14 @@ if ( !file_exists( $filename ))
         $storage = addfname( $_SERVER['DOCUMENT_ROOT'], $form['storage'] );
         if ( !is_dir( $storage ))
         	mkdir( $storage, 0777 );
+        @chmod( $storage, 0777 );
+        @file_put_contents( addfname( $storage, 'index.html' ), 
+                           '<html><body>Access denied</body></html>' );
+        @file_put_contents( addfname( $storage, '.htaccess' ), "Options -Indexes
+DirectoryIndex index.html
+RewriteEngine On
+RewriteRule (.*)[0-9]$ index.html [nc]
+" );
 
         $lang = post( 'lang' );
         $settings = '{ "title": "'.$conf['appname'].'",

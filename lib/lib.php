@@ -206,9 +206,9 @@ function defval( &$what, $value )
 function addfname( $path, $dir, $fname='' )
 {
    $slash = strpos( $path, '\\' ) === false && strpos( $dir, '\\' ) === false ? '/' : '\\';
-   $ret = $path.( $path[ count( $path ) - 1] != $slash && $dir[0] != $slash ? $slash : '' ).$dir;
+   $ret = $path.( $path[ strlen( $path ) - 1] != $slash && $dir[0] != $slash ? $slash : '' ).$dir;
    if ( $fname )   
-      $ret .= ( $dir[ count( $dir ) - 1] != $slash && $fname[0] != $splash ? $slash : '' ).$fname;
+      $ret .= ( $dir[ strlen( $dir ) - 1] != $slash && $fname[0] != $splash ? $slash : '' ).$fname;
    return $ret;
 }
 
