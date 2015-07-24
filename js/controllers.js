@@ -293,10 +293,10 @@ function TablesCtrl($scope, $rootScope, $routeSegment, DbApi ) {
     }
     if ( $scope.isroot )
     DbApi( 'gettables', { parent: $scope.parent }, function( data ) {
-        $scope.items = data.result;
+        $scope.items = data.result.list;
         if ( angular.isDefined( data.crumbs ))
         {
-            $scope.crumbs = [{ id:0, title: $rootScope.lng.rootfolder }].concat( data.crumbs );
+            $scope.crumbs = [{ id:0, title: lng.rootfolder }].concat( data.crumbs );
         }
         else
             $scope.crumbs = [];
@@ -410,6 +410,10 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
                 $scope.fltfields = [ {title: '', id: 0, mask: 0 }, {title: 'ID', id: -1, mask: 0x07 } ];
                 $scope.mask = {};
                 $scope.colnames = {};
+                if ( data.crumbs )
+                    $scope.crumbs = [{ id:0, title: lng.rootfolder }].concat( data.crumbs );
+                else
+                    $scope.crumbs = [];
                 var listitems = '';
                 var viewitems = '';
                 while ( i <  $scope.columns.length )
@@ -1603,7 +1607,7 @@ function EdittableCtrl( $rootScope, $scope, $routeSegment, DbApi ) {
         $scope.index = data.result.index;
     });
     DbApi( 'gettables', { parent: -1 }, function( data ) {
-        $rootScope.tables = data.result;
+        $rootScope.tables = data.result.list;
     });
     DbApi( 'getsets', {}, function( data ) {
         $rootScope.sets = data.result;

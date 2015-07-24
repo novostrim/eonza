@@ -5,9 +5,10 @@ require_once 'ajax_common.php';
 $id = get( 'id' );
 if ( $id && ANSWER::is_success())
 {
-    ANSWER::set( 'db', $db->getrow("select * from ?n where id=?s", ENZ_TABLES, $id ));
+    $table = $db->getrow("select * from ?n where id=?s", ENZ_TABLES, $id );
+    ANSWER::set( 'db', $table );
 
-    if ( ANSWER::get( 'db' ))
+    if ( $table )
     {
         $columns = $db->getall("select * from ?n where idtable=?s order by `sort`", ENZ_COLUMNS, $id );
         $i = 0;
@@ -46,6 +47,8 @@ if ( $id && ANSWER::is_success())
             $icol['alias'] =  alias( $icol );//$alias;
         }
         ANSWER::set( 'columns', $columns );
+        getcrumbs( $table['idparent'] );
+
 /*        if ( $xresult['db']['istree'] )
         {
             array_unshift( $xresult['columns'], array( 'id' => 0xffffff, 'title' => '', 

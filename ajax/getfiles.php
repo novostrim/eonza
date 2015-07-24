@@ -16,8 +16,8 @@ if ( ANSWER::is_success() && ANSWER::is_access())
 	if ( isset( $pars['onlyf'] ))
 		$where .= $db->parse(' && folder>0' );
 
-    ANSWER::result( $db->getall( "select id, _uptime, folder, filename, size, ispreview, comment 
-    	                          from ?n ?p order by id limit 0,?p", 
+    ANSWER::result( $db->getall( "select id, _uptime, idtable, folder, filename, size, ispreview,
+                                  comment from ?n ?p order by id limit 0,?p", 
                                   ENZ_FILES, $where, $onpage ));
 }
 

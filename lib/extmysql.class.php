@@ -14,9 +14,9 @@ class ExtMySQL extends SafeMySQL
         parent::__construct( $opt );
     }
     
-    public function getset( $idset )
+    public function getset( $idset, $sort = 'title' )
     {
-        $set = $this->getall( "select iditem as id, title from ?n where idset=?s order by title", ENZ_SETS, $idset );
+        $set = $this->getall( "select iditem as id, title from ?n where idset=?s order by $sort", ENZ_SETS, $idset );
         $ret = array();
         foreach ( $set as $iset )
             $ret[ $iset['id']] = $iset;
@@ -62,8 +62,8 @@ class DB {
     public static function getInstance( $opt = '' ) { 
         if ( self::$instance === null) 
         { 
-            if ( !isset( $opt['errmode'] ))
-                $opt['errmode'] = 'error';
+//            if ( !isset( $opt['errmode'] ))
+//                $opt['errmode'] = 'error';
             self::$instance = new DB( $opt );
         } 
         return self::$db;

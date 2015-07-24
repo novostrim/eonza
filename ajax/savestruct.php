@@ -100,6 +100,7 @@ if ( ANSWER::is_success() && ANSWER::is_access())
                   $query .= "  `_parent` int(10) unsigned NOT NULL,\r\n";
                   $treeindex = ",\r\n   KEY `_parent` (`_parent`,`_uptime`)";
               }
+
             foreach ( $pars['items'] as $ifield )
             {
                 $idfield = $db->insert( ENZ_COLUMNS, pars_list( 'title,extend,comment,idtype,alias,visible,align', $ifield ), 
@@ -112,8 +113,16 @@ if ( ANSWER::is_success() && ANSWER::is_access())
             $query .= "  PRIMARY KEY (`id`),
     KEY `_uptime` (`_uptime`) $treeindex
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
-            if ( $db->query( $query ))
+            try {
+                $db->query( $query );       
                 api_log( $idi, 0, 'create' );
+            }
+            catch ( Exception $e )
+            {
+                $db->query("delete from ?n where id=?s", ENZ_TABLES, $idi );
+                $db->query("delete from ?n where idtable=?s", ENZ_COLUMNS, $idi );
+                api_error( "The structure of the table is wrong.\r\n".$e->getMessage());       
+            }
         }
     }
     else
@@ -168,44 +177,50 @@ if ( ANSWER::is_success() && ANSWER::is_access())
                 if ( ANSWER::is_success())
                 {
                     api_log( $idi, 0, 'edit' );
-                    $coldb = ENZ_COLUMNS;
-                    $db->query( "update $coldb set `sort`=30000 where idtable=?s && idtype != ?s", $idi, FT_PARENT );
-                    //$allcol = $db->getall("select * from $coldb where idtable=?s", $idi );
-    //                $columns = columns_list( $dbname );
+                    $db->query( "update ?n set `sort`=30000 where idtable=?s && idtype != ?s", 
+                                 ENZ_COLUMNS, $idi, FT_PARENT );
                     foreach ( $pars['items'] as $ipar )
                     {
                         $ipar['sort'] = $sort++;
                         $gsfield = GS::field( $ipar['idtype'] );
-                        if ( $ipar['id'] )
-                        {
-                            $db->update( $coldb, 
-                                pars_list( 'comment,title,sort,visible,align', $ipar ), '', $ipar['id'] ); 
-                            $curcol = $db->getrow("select * from ?n where id=?s", $coldb, $ipar['id'] );
-                            if ( $curcol['alias'] != $ipar['alias'] || 
-                                 $curcol['idtype'] != $ipar['idtype'] ||
-                                 $curcol['extend'] != $ipar['extend'] )
+                        try {
+                            if ( $ipar['id'] )
                             {
-                                $colname = alias( $curcol );
-                                if ( !isset( $gsfield['sql'] ) || $db->query( "alter table ?n change ?n ?p", 
-                                              $dbname, $colname, column_query( $ipar['id'], $ipar )))
-                                    $db->update( $coldb, 
-                                        pars_list( 'alias,idtype,extend', $ipar ), '', $ipar['id'] ); 
+                                $db->update( ENZ_COLUMNS, 
+                                    pars_list( 'comment,title,sort,visible,align', $ipar ), '', $ipar['id'] ); 
+                                $curcol = $db->getrow("select * from ?n where id=?s", 
+                                                       ENZ_COLUMNS, $ipar['id'] );
+                                if ( $curcol['alias'] != $ipar['alias'] || 
+                                     $curcol['idtype'] != $ipar['idtype'] ||
+                                     $curcol['extend'] != $ipar['extend'] )
+                                {
+                                    $colname = alias( $curcol );
+                                    if ( !isset( $gsfield['sql'] ) || $db->query( "alter table ?n change ?n ?p", 
+                                                  $dbname, $colname, column_query( $ipar['id'], $ipar )))
+                                        $db->update( ENZ_COLUMNS, 
+                                            pars_list( 'alias,idtype,extend', $ipar ), '', $ipar['id'] ); 
+                                }
+                            }
+                            else
+                            {
+                                $idcol = $db->insert( ENZ_COLUMNS, 
+                                    pars_list( 'title,comment,idtype,extend,alias,sort,visible,align', $ipar ), 
+                                             array( "idtable = $idi" ), true );
+                                if ( $idcol && isset( $gsfield['sql'] ))
+                                    $db->query( "alter table ?n add ?p", $dbname, column_query( $idcol, $ipar ));
                             }
                         }
-                        else
+                        catch ( Exception $e )
                         {
-                            $idcol = $db->insert( ENZ_COLUMNS, 
-                                pars_list( 'title,comment,idtype,extend,alias,sort,visible,align', $ipar ), 
-                                         array( "idtable = $idi" ), true );
-                            if ( $idcol && isset( $gsfield['sql'] ))
-                                $db->query( "alter table ?n add ?p", $dbname, column_query( $idcol, $ipar ));
+                            if ( !empty( $idcol ))
+                                $db->query("delete from ?n where id=?s", ENZ_COLUMNS, $idcol );
+                            api_error( "The structure of the table is wrong.\r\n".$e->getMessage());
                         }
-    //                    print_r( $ipar );
                     }
                     if ( ANSWER::is_success())
                     {
-                        $fordel = $db->getall("select * from $coldb where idtable=?s && `sort`=30000", 
-                                            $idi );
+                        $fordel = $db->getall("select * from ?n where idtable=?s && `sort`=30000", 
+                                               ENZ_COLUMNS, $idi );
                         foreach ( $fordel as $idel )
                         {
                             $gsfield = GS::field( $idel['idtype'] );
@@ -215,7 +230,8 @@ if ( ANSWER::is_success() && ANSWER::is_access())
                             elseif ( $idel['idtype'] == FT_FILE || $idel['idtype'] == FT_IMAGE )
                                 files_delcolumn( $idel );
                         }
-                        $db->query( "delete from $coldb where idtable=?s && `sort`=30000", $idi );
+                        $db->query( "delete from ?n where idtable=?s && `sort`=30000", 
+                                     ENZ_COLUMNS, $idi );
                     }
                 }
             }

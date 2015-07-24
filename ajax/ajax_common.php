@@ -43,6 +43,27 @@ function api_log( $idtable, $idrow, $action )
                 'iduser'=> GS::userid(), 'action'=> $action ), array( "uptime=NOW()" ));
 }
 
+function getcrumbs( $idparent )
+{
+    if ( $idparent > 0 && $idparent < SYS_ID )
+    {    
+        while ( $idparent )
+        {
+            $owner = DB::getrow("select id,idparent,title from ?n where id=?s",
+                   CONF_PREFIX."_tables", $idparent );
+            if ( $owner )
+            {
+                $crumbs[] = $owner;
+                $idparent = $owner['idparent'];
+            }
+            else
+                break;
+        }
+        if ( isset( $crumbs ))
+            ANSWER::set( 'crumbs', array_reverse( $crumbs ));
+    }
+}
+
 function getitem( $idtable, $id, $dbname, $columns )
 {
     $db = DB::getInstance();
