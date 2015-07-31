@@ -418,7 +418,7 @@ geapp.factory( 'DbApi', function( $rootScope, $http ) {
             .error( ajaxerror );
     }
 /*   POST methods
-    var post = [ 'addindex','changefld', 'createbackup', 'delbackup', 'delfile', 'delmenu', 'dropindex', 'dropitem', 'dropset',
+    var post = [ 'addindex','changefld', 'createbackup', '*delbackup', 'delfile', 'delmenu', 'dropindex', 'dropitem', 'dropset',
                  'dropsetitem', 'droptable', 'dupitem',
                     'duptable', 'editfile',
                  'export2set', 'gettables', 'import', 'movemenu', 'restorebackup', 'savedb', 'savefolder', 'saveitem', 

@@ -40,8 +40,8 @@ if ( ANSWER::is_success() && ANSWER::is_access())
 
 	$par = MODE_GZ;
 	$mode = $par == MODE_GZ && function_exists( 'gzopen' ) ? MODE_GZ : MODE_SQL; 
-
-	$backfile = BACKUP.'/'.CONF_DB.strftime("-%Y%m%d-%H%M%S").'.sql';
+	$filename = CONF_DB.strftime("-%Y%m%d-%H%M%S").'.sql';	
+	$backfile = BACKUP.'/'.$filename;
 
 	$fsql = $mode == MODE_GZ ? gzopen( $backfile.'.gz', 'wb') : fopen( $backfile, 'wb');
 
@@ -117,5 +117,7 @@ if ( ANSWER::is_success() && ANSWER::is_access())
 		fclose( $fsql );
 
     backup_list();
+    ANSWER::set( 'filename', $filename.( $mode == MODE_GZ ? '.gz' : '' ));
+    ANSWER::set( 'backupurl', BACKUPURL );
 }
 ANSWER::answer();

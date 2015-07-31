@@ -1260,15 +1260,16 @@ function BackupCtrl($scope, $routeSegment, DbApi, $rootScope ) {
     $scope.delbackup = function( index ) {
         cfg.temp = $scope.items[index].title;
         $rootScope.msg_quest( 'deltemp', function(){ 
-            DbApi( 'delbackup', { 'filename': cfg.temp }, function( data ) {
-                    $scope.items = data.result;
-                })
-            });
+            enz.DbApi('delbackup', { 'filename': cfg.temp }, function( data ) {
+                $scope.items = data.result;
+                $scope.$apply();
+            })
+        });
         return false;
     }
     DbApi( 'getbackup', {}, function( data ) {
-            if ( data.success )
-                $scope.items = data.result;
+        if ( data.success )
+            $scope.items = data.result;
     });
 }
 

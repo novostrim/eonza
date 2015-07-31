@@ -17,7 +17,7 @@
             <table class="fields" style="width: 600px;"><tbody id="fields">
                 <tr class="nosort"><th>{{lng.name}}</th><th></th><th>{{lng.type}}</th><th ng-show="isalias">{{lng.alias}}</th><th></th></tr>
                 <tr  ng-repeat="item in items" ind="{{item.id}}" ord="{{$index}}"><td>{{item.title}}</td><td><i class="fa fa-eye" ng-if="item.visible"></i></td><td>{{lng[types[item.idtype].name]}}</td>
-                    <td ng-show="isalias">{{item.alias}}</td>
+                    <td ng-show="isalias">{{item.alias}} <span class="idtext">{{item.id}}</span></td>
                     <td><div class="fabtn-group"><a class="fabtn" ng-click='editfield( $index )'><i class="fa fa-pencil fa-fw"></i></a>
                         <a class="fabtn" style="cursor: move;" ng-mousedown='sortfield( false )'><i class="fa fa-arrows-v fa-fw"></i></a>
                         <a class="fabtn" ng-click='removefield( $index )'><i class="fa fa-times fa-fw"></i></a></div></td></tr>

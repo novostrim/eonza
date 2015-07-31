@@ -132,7 +132,8 @@ var types = {
             { name: 'extbyte', type: cnt.ET_HIDDEN, def: 0 },
             { name: 'aslink', title: lng.showaslink, type: cnt.ET_CHECK, def: 0 }, 
             { name: 'showid', title: lng.showid, type: cnt.ET_CHECK, def: 0 }, 
-            { name: 'filter', title: lng.filter, type: cnt.ET_TABLE, def: 0 }
+            { name: 'filter', title: lng.filter, type: cnt.ET_TABLE, def: 0 },
+//            { name: 'options', title: lng.moreoptions, type: cnt.ET_TEXT, def: '' }
         ] 
     },
     6 : { id: cnt.FT_CHECK, name: 'fcheck', verify: number_verify, number: 1,

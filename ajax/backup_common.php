@@ -8,6 +8,7 @@
 require_once APP_EONZA.'lib/files.php';
 
 define( 'BACKUP', STORAGE.'backup' );
+define( 'BACKUPURL', STORAGEURL.'backup' );
 define( 'MODE_SQL', 0 );
 define( 'MODE_GZ', 1 );
 

@@ -11,8 +11,7 @@ if ( ANSWER::is_success() && ANSWER::is_access())
 {
     require_once 'backup_common.php';
 
-    $pars = post( 'params' );
-    @unlink( BACKUP.'/'.$pars['filename'] );
+    @unlink( BACKUP.'/'.basename( post( 'filename' )) );
     backup_list();
 }
 ANSWER::answer();
