@@ -102,20 +102,44 @@ if ( $id && ANSWER::is_success() && ANSWER::is_access( A_READ, $id ))
             {
                 $dblink = api_dbname( $extend['table'] );
                 $link = $icol['id'];
-                $collink = api_colname( (int)$extend['column'] );
+
+//                $collink = api_colname( (int)$extend['column'] );
                 $alias = alias( $icol );
                 $leftjoin .= $db->parse( " left join ?n as t$link on t$link.id=t.?p", $dblink, $alias );
-                if ( empty( $extend['aslink'] ))
+/*                $collist = explode( ',', $extend['column'] );
+                $collink = array();
+                foreach ( $collist as $cl )
                 {
-                    $linktitle = empty( $extend['showid'] ) ? "t$link.$collink" : "concat( t$link.$collink, '<span class=\"idcode\">', t.$alias, '</span>' )";
-                    $ext = "ifnull( $linktitle, '' ) as `$icol[alias]`";
+                    $colname = api_colname( (int)$cl );
+                    if ( $colname )
+                        $collink[] = $colname;  
                 }
-                else
-                {   $href = "concat('<a href=\"\" onclick=\"return js_card($extend[table], ', t$link.id, ' )\">', t$link.$collink, '</a>'";
-                    $linktitle = empty( $extend['showid'] ) ? $href.")" :
-                        $href.", '<span class=\"idcode\">', t.$alias, '</span>' )";
-                    $ext = "if( t$link.$collink is NULL, '', $linktitle ) as `$icol[alias]`";
-                }
+                if ( $collink )
+                {
+                    $linkout = array();
+                    if ( !empty( $extend['aslink'] )) 
+                        $linkout[] = "'<a href=\"\" onclick=\"return js_card($extend[table], ', t$link.id, ' )\">'";
+                    $linkout[] = "t$link.$collink[0]";
+                    if ( !empty( $extend['aslink'] )) 
+                        $linkout[] = "'</a>'";
+                    for ( $ilink = 1; $ilink<count( $collink ); $ilink++ )
+                    {
+                        $linkout[] = "' &bull; '";
+                        $linkout[] = "t$link.".$collink[$ilink];
+                    }
+                    if ( !empty( $extend['showid'] )) 
+                    {
+                        $linkout[] = "'<span class=\"idcode\">'";
+                        $linkout[] = "t.$alias";
+                        $linkout[] = "'</span>'";
+                    }
+                    if ( count( $linkout ) == 1 )
+                        $linktitle = $linkout;
+                    else
+                        $linktitle = 'concat( '.implode(',', $linkout ).')';
+                    $ext = "if( t$link.$collink[0] is NULL, '', $linktitle ) as `$icol[alias]`";
+                }*/
+                $ext = getmultilink( $extend, $link, $alias, $icol['alias'] );
                 $fields[] = (  $icol['idtype'] == FT_PARENT ? " t.`_parent` as `_parent_`," : '' ).$ext;
                        // $collink$link";
                }

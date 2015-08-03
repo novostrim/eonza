@@ -5,9 +5,9 @@ require_once APP_EONZA.'lib/files.php';
 
 function column_query( $idfield, &$ifield )
 {
-    $fname = defval( $ifield['alias'], $idfield );
+    $fname = $ifield['alias'];
+    defval( $fname, $idfield );
     $fid = $ifield['idtype'];
-//    print_r( $ifield );
     $field = GS::field( $fid );
     $ftype = $field['sql']( $ifield );
     return "`$fname` $ftype";
@@ -197,8 +197,10 @@ if ( ANSWER::is_success() && ANSWER::is_access())
                                     $colname = alias( $curcol );
                                     if ( !isset( $gsfield['sql'] ) || $db->query( "alter table ?n change ?n ?p", 
                                                   $dbname, $colname, column_query( $ipar['id'], $ipar )))
+                                    {
                                         $db->update( ENZ_COLUMNS, 
                                             pars_list( 'alias,idtype,extend', $ipar ), '', $ipar['id'] ); 
+                                    }
                                 }
                             }
                             else

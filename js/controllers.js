@@ -1511,8 +1511,10 @@ function EdittableCtrl( $rootScope, $scope, $routeSegment, DbApi ) {
         $rootScope.msg_quest('delfield', function(){ $scope.items.splice( ind, 1 ) });
     }
     $scope.savefield = function() {
-
         types[  $rootScope.form.idtype ].verify( $rootScope.form );
+        var extend = $rootScope.form.extend;
+        if ( extend.acolumn )
+            extend.column = extend.acolumn.join(',');
         if ( $scope.indf < 0 )
             $scope.items.push( angular.copy( $rootScope.form ));
         else
@@ -1536,7 +1538,27 @@ function EdittableCtrl( $rootScope, $scope, $routeSegment, DbApi ) {
     $rootScope.getcols = function() {
         DbApi( 'getstruct', { id: $rootScope.form.extend.table }, function( data ) {
                 $rootScope.linkcols = data.result.items;
+                var acolumn = $rootScope.form.extend.acolumn;
+                var found = false
+                if ( acolumn.length > 0 )              
+                    for ( i=0; i<$rootScope.linkcols.length; i++ )
+                        if ( parseInt( $rootScope.linkcols[i].id ) == acolumn[0] )
+                            found = true;
+                if ( acolumn.length==0 || !found )
+                    $rootScope.form.extend.acolumn = [js_firstlink()];
             });
+    }
+    $rootScope.delcolumn = function( ind ) {
+        var extend = $rootScope.form.extend;
+        extend.acolumn.splice( ind, 1 );
+        return false;
+    }
+    $rootScope.newcolumn = function() {
+        var acolumn = $rootScope.form.extend.acolumn;
+        var idnew = js_firstlink();
+        if ( idnew )
+            acolumn.push( idnew );
+        return false;
     }
     $scope.editfield = function( ind ) {
         
@@ -1568,7 +1590,17 @@ function EdittableCtrl( $rootScope, $scope, $routeSegment, DbApi ) {
                     par.title = lng[par.name];
             }
         }
+        extend.acolumn = [];
         $rootScope.getcols();
+        if ( extend.column )
+        {
+            extend.column = String( extend.column )
+            extend.acolumn = extend.column.split(',');
+            for ( k = 0; k < extend.acolumn.length; k++ )
+                extend.acolumn[k] = parseInt(extend.acolumn[k]);
+        }
+//        else if ( !extend.column )
+//            extend.acolumn = [];
         $rootScope.msg( { title: add ? lng.newitem : lng.edititem, template: tpl('dlgfield.html'),
               btns: [ {text: add ? lng.add : lng.savejs, func: $scope.savefield, class: 'btn-primary btn-near' },
                      {text: lng.cancel, class: 'btn-default btn-near' }

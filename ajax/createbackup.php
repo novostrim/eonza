@@ -68,7 +68,7 @@ if ( ANSWER::is_success() && ANSWER::is_access())
 		foreach ( $cols as &$icol )
 			$icol[ 'isnum' ] = preg_match("/^(tinyint|smallint|mediumint|bigint|int|float|double|real|decimal|numeric|year)/", $icol['Type']) ? 1 : 0; 
 
-		if ( $db->getone("select count(?n) from $itbl", $cols[0]['Field'] ))
+		if ( $db->getone("select count(?n) from ?n", $cols[0]['Field'], $itbl ))
 		{
 			$buf .= "/*!40000 ALTER TABLE `$itbl` DISABLE KEYS */;\n\n";
 			$buf .= "INSERT INTO `$itbl` VALUES \n";

@@ -32,8 +32,10 @@ function api_dbname( $idtable )
 
 function api_colname( $idcol )
 {
-    $alias = DB::getone("select alias from ?n where id=?s", ENZ_COLUMNS, $idcol );
-    return ( $alias ? $alias : $idcol );
+    $col = DB::getrow("select id, alias from ?n where id=?s", ENZ_COLUMNS, $idcol );
+    if ( !$col )
+        return 0;
+    return ( $col['alias'] ? $col['alias'] : $idcol );
 }
 
 function api_log( $idtable, $idrow, $action )
@@ -64,6 +66,53 @@ function getcrumbs( $idparent )
     }
 }
 
+function getmultilink( $extend, $link, $alias, $falias )
+{
+    $collist = explode( ',', $extend['column'] );
+    $collink = array();
+    foreach ( $collist as $cl )
+    {
+        $colname = api_colname( (int)$cl );
+        if ( $colname )
+            $collink[] = $colname;  
+    }
+    if ( $collink )
+    {
+        $linkout = array();
+        if ( !empty( $extend['aslink'] )) 
+            $linkout[] = "'<a href=\"\" onclick=\"return js_card($extend[table], ', t$link.id, ' )\">'";
+        $linkout[] = "t$link.$collink[0]";
+        if ( !empty( $extend['aslink'] )) 
+            $linkout[] = "'</a>'";
+        for ( $ilink = 1; $ilink<count( $collink ); $ilink++ )
+        {
+            $linkout[] = "' &bull; '";
+            $linkout[] = "t$link.".$collink[$ilink];
+        }
+        if ( !empty( $extend['showid'] )) 
+        {
+            $linkout[] = "'<span class=\"idcode\">'";
+            $linkout[] = "t.$alias";
+            $linkout[] = "'</span>'";
+        }
+/*                    if ( empty( $extend['aslink'] ))
+        {
+            $linktitle = empty( $extend['showid'] ) ? "t$link.$collink[0]" : "concat( t$link.$collink[0], '<span class=\"idcode\">', t.$alias, '</span>' )";
+        }
+        else
+        {   $href = "concat('<a href=\"\" onclick=\"return js_card($extend[table], ', t$link.id, ' )\">', t$link.$collink[0], '</a>'";
+            $linktitle = empty( $extend['showid'] ) ? $href.")" :
+                $href.", '<span class=\"idcode\">', t.$alias, '</span>' )";
+        }*/
+        if ( count( $linkout ) == 1 )
+            $linktitle = $linkout[0];
+        else
+            $linktitle = 'concat( '.implode(',', $linkout ).')';
+        $ext = "if( t$link.$collink[0] is NULL, '', $linktitle ) as `$falias`";
+    }
+    return $ext;
+}
+
 function getitem( $idtable, $id, $dbname, $columns )
 {
     $db = DB::getInstance();
@@ -76,12 +125,15 @@ function getitem( $idtable, $id, $dbname, $columns )
             $extend = json_decode( $icol['extend'], true );
             $dblink = api_dbname( $extend['table'] );
             $link = $icol['id'];
-            $collink = api_colname( (int)$extend['column'] );
+
+//            $collink = api_colname( (int)$extend['column'] );
             $leftjoin .= $db->parse( " left join ?n as t$link on t$link.id=t.?p", $dblink, $icol['idalias']);
-            if ( empty( $extend['aslink'] ))
+
+            $fields[] = getmultilink( $extend, $link, alias( $icol ), "__$icol[idalias]");
+/*            if ( empty( $extend['aslink'] ))
                 $fields[] = "ifnull( t$link.$collink, '' ) as `__$icol[idalias]`";
             else
-                $fields[] = "if( t$link.$collink is NULL, '', concat('<a href=\"\" onclick=\"return js_card($extend[table], ', t$link.id, ' )\" >', t$link.$collink, '</a>')) as `__$icol[alias]`";
+                $fields[] = "if( t$link.$collink is NULL, '', concat('<a href=\"\" onclick=\"return js_card($extend[table], ', t$link.id, ' )\" >', t$link.$collink, '</a>')) as `__$icol[alias]`";*/
             //                $icol['alias'] = $collink.$link;
         }
     }
@@ -141,7 +193,22 @@ function get_linklist( $icol, $offset, $search = '', $parent = 0, $filter=0 )
 {
     $db = DB::getInstance();
     $dblink = api_dbname( $icol['extend']['table'] );
+
     $collink = api_colname( (int)$icol['extend']['column'] );
+    $alinks = explode( ',', $icol['extend']['column'] );
+    $linkout = array( $collink );
+    if ( count( $alinks ) > 1 )
+    {
+        for ( $ilink=1; $ilink < count( $alinks ); $ilink++ )
+        {
+            $colname = api_colname( (int)$alinks[$ilink] );
+            if ( $colname )
+            {
+                $linkout[] = "' * '";
+                $linkout[] = "t.$colname";
+            }
+        }
+    }
     $istree = $db->getone("select istree from ?n where id=?s", ENZ_TABLES, $icol['extend']['table'] );
     $onpage = 15;
 
@@ -162,13 +229,18 @@ function get_linklist( $icol, $offset, $search = '', $parent = 0, $filter=0 )
         $tree = $db->parse(", (select count(id) from ?n where _parent=t.id) as count", $dblink );
     else
         $tree = ', 0 as count';
-    $clist = $db->getall("select id, ?n as title ?p from ?n as t ?p order by title limit $offset,$onpage", 
-                          $collink, $tree, $dblink, $wsearch );
+/*    if ( $linkout )
+        $tree .= $db->parse(", concat( ?p ) as exttitle", implode( ',', $linkout ));
+    else
+        $tree .= ", '' as exttitle";*/
+    $clist = $db->getall("select id, concat( ?p ) as title ?p from ?n as t ?p order by title limit $offset,$onpage", 
+                          implode( ',', $linkout ), $tree, $dblink, $wsearch );
     $ret = array( 'offset' => $offset, 'next' => ( $offset + $onpage < $count ? 1 : 0 ),
                 'search' => $search, 'parent' => $parent, 'istree' => $istree,
                   'list' => array(), 'crumbs' => array());
        foreach ( $clist as $cil )
-           $ret['list'][] = array( 'id'=> $cil['id'], 'title' => $cil['title'], 'count' => $cil['count']  );
+           $ret['list'][] = array( 'id'=> $cil['id'], 'title' => $cil['title'],
+                                   'count' => $cil['count']  );
        if ( $istree && $parent )
        {
         $crumbs = array();

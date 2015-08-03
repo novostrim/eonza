@@ -984,3 +984,27 @@ function js_office( id )
     })
     return false;
 }
+
+function js_firstlink() {
+    var acolumn = rootScope.form.extend.acolumn;
+    var links = rootScope.linkcols;
+    for ( i=0; i< links.length; i++ )
+        if ( acolumn.indexOf( links[i].id ) == -1 )
+            return links[i].id;
+    return 0;
+}
+
+function js_changecolumn( obj ) {
+    var acolumn = rootScope.form.extend.acolumn;
+    var links = rootScope.linkcols;
+    var val = parseInt( $(obj).val());
+    var ind = $(obj).attr('rel');
+    for ( i=0; i< acolumn.length; i++ )
+        if ( val == acolumn[i] && i != ind )
+        {
+            $(obj).val( 0 );
+            val = 0;
+        }
+    acolumn[ ind ] = val ? val : js_firstlink();
+    $(obj).val( acolumn[ ind ] );
+}

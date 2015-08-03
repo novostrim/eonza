@@ -17,8 +17,13 @@
                     <input ng-if="ext.type==cnt.ET_EDIT" type="text" ng-model="form.extend[ext.name]" class="form-control wbig">
                     <select ng-if="ext.type==cnt.ET_TABLE"  ng-model="form.extend[ext.name]" ng-change="getcols()" class="form-control">
                     <option ng-repeat="itables in tables" value="{{itables.id}}" ng-selected="form.extend[ext.name]==itables.id">{{itables.title}}</option></select>
-                    <select ng-if="ext.type==cnt.ET_COLUMN" ng-model="form.extend[ext.name]" class="form-control">
-                    <option ng-repeat="icols in linkcols" value="{{icols.id}}" ng-selected="form.extend[ext.name]==icols.id">{{icols.title}}</option></select>
+                    <div ng-if="ext.type==cnt.ET_COLUMN">
+                        <div ng-repeat="iacol in form.extend.acolumn" style="margin: 3px 0px;">
+                    <select ng-if="ext.type==cnt.ET_COLUMN" ngxx-model="form.extend[ext.name]" class="form-control" rel="{{$index}}" onchange="js_changecolumn(this)">
+                    <option ng-repeat="icols in linkcols" value="{{icols.id}}" ngxxx-selected="form.extend[ext.name]==icols.id" ng-selected="iacol==icols.id">{{icols.title}}</option></select>
+                    &nbsp;<a style="cursor: pointer" ng-click='delcolumn( $index )' ng-if="$index > 0"><i class="fa fa-times"></i></a><a style="cursor: pointer"  ng-click='newcolumn()' ng-if="$index == 0"><i class="fa fa-plus"></i></a>
+                        </div>
+                    </div>
                     <select ng-if="ext.type==cnt.ET_SET" ng-model="form.extend[ext.name]" class="form-control">
                     <option ng-repeat="iset in sets" value="{{iset.id}}" ng-selected="form.extend[ext.name]==iset.id">{{iset.title}}</option></select>
                     <textarea ng-if="ext.type==cnt.ET_TEXT" ng-model="form.extend[ext.name]" class="form-control wbig" style="height: 50px;"></textarea>
