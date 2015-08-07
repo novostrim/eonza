@@ -671,7 +671,7 @@ function js_editpatternbottom()
     ret += '</div><div class="btn-group" ng-if="mode==cnt.M_EDIT">';  
     for ( i = 0; i<pstedit.length; i++ )
         ret += '<a href="" class="btn" ng-class="{btnpush:postedit==cnt.'+ pstedit[i][0]+'}" title="" ng-click="pstedit( cnt.'+ pstedit[i][0]+' )" ><i class="fa '+ pstedit[i][1]+'"></i></a>';
-     return ret + '</div></td></tr>';;
+     return ret + '</div><a href="" ng-click="undo()" style="float:right;" class="btn btn-primary btn-lg" title="{{::lng.cancel}}"><i class="fa fa-rotate-left fa-lg" style="margin:0;vertical-align: 0%"></i></a></td></tr>';;
 }
 
 function js_viewpatternbottom()

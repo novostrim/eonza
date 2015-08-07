@@ -50,7 +50,8 @@ function json2num( obj )
                 objkey.forEach( json2num );
             else if ( objkey.constructor === Object )    
                 json2num( objkey );
-            else if ( typeof objkey == 'string' && objkey == Number( objkey ))
+            else if ( typeof objkey == 'string' && ( objkey[objkey.length - 1]!='0' || 
+                       objkey.indexOf('.') < 0 ) && objkey == Number( objkey ))
                 obj[key] = Number( objkey );
         }
     }

@@ -751,6 +751,11 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
                 types[icol.idtype].form( $scope.form, icol );
         }
     }
+    $scope.undo = function() {
+        angular.copy( $scope.original, $scope.form );
+        angular.copy( $scope.orglink, $scope.formlink );
+        htmleditor( $scope.form );
+    }
     $scope.loaditem = function() {
         if ( $scope.mode != cnt.M_NEW )
             $rootScope.curitem = $scope.items[ $scope.currow - 1 ].id;
@@ -770,6 +775,8 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
             }
             $rootScope.curitem = 0;
             $scope.action = lng.add;            
+            $scope.original = angular.copy( $scope.form );
+            $scope.orglink = angular.copy( $scope.formlink );
             htmleditor( $scope.form );
 //            if ( $scope.mode == cnt.M_VIEW )
 //                $scope.formtoview();
@@ -783,6 +790,8 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
             if ( data.success )
             {
                 $scope.proceedform( data.result );
+                $scope.original = angular.copy( $scope.form );
+                $scope.orglink = angular.copy( data.link );
                 $scope.action = $scope.form.id != 0 ? lng.savejs : lng.add;
                 $scope.formlink = data.link;
 
