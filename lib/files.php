@@ -26,13 +26,13 @@ function files_download( $id, $browser = false, $thumb = false, $public = '' )
     header('Content-Type: '.$file['mime']);
     if ( $browser )
     {
-        header('Content-Disposition: inline; filename='.$file['filename']);
+        header('Content-Disposition: inline; filename="'.$file['filename'].'"');
     }
     else
     {
         header('Content-Description: File Transfer');
 //        header('Content-Type: application/octet-stream');
-        header('Content-Disposition: attachment; filename='.$file['filename']);
+        header('Content-Disposition: attachment; filename="'.$file['filename'].'"');
     }
     header('Content-Transfer-Encoding: binary');
 //    header('Expires: 0');
