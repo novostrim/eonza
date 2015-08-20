@@ -1,4 +1,4 @@
-<h1>{{lng.tblimport}}</h1>
+<div ng-if="!idtable"><h1>{{lng.tblimport}}</h1>
  
 <form class="form" ng-submit="submit()">
 <table class="formtbl">
@@ -11,3 +11,50 @@
         <tr><td></td><td class="formval"><input type="submit" value="{{lng.ok}}" class="btn btn-primary"></td></tr>
 </table>
 </form>
+</div>
+
+<div ng-if="idtable"><h1>{{lng.import}}</h1>
+<form class="form" >
+<table class="formtbl">
+        <tr><td class="formtxt">{{::lng.desttable}}: </td><td class="formval">
+            <b>{{destname}}</b></td></tr>
+        <tr><td class="formtxt">{{::lng.srcfile}}: </td><td class="formval">
+                    <b>{{srcfile}}</b></td></tr>
+        <tr><td class="formtxt">{{::lng.supformats}}: </td><td class="formval">
+            CSV</td></tr>
+        <tr><td class="formtxt">{{::lng.encoding}}: </td><td class="formval">
+        <select ng-model="import.encode"><option value="UTF-8">UTF-8</option>
+        <option value="Windows-1250">Windows-1250 (Eastern European)</option>
+        <option value="Windows-1251">Windows-1251 (Cyrillic)</option>
+        <option value="Windows-1252">Windows-1252 (Western European)</option>
+        <option value="Windows-1253">Windows-1253 (Greek)</option>
+        <option value="Windows-1254">Windows-1254 (Turkish)</option>
+        <option value="Windows-1255">Windows-1255 (Hebrew)</option>
+        <option value="Windows-1256">Windows-1256 (Arabic)</option>
+        <option value="Windows-1257">Windows-1257 (Baltic)</option></select>
+            </td></tr>            
+        <tr><td class="formtxt" colspan="2">
+       	<div class='uploadcont'>
+	        <p>
+	            <input type='file' accept=".csv" id='uploadfile' class="btn btn-default"> <a id='_submit'  class="btn btn-primary btn-lg" ng-click="uploadimport()"><i class="fa fa-upload"></i>&nbsp;{{::lng.upload}}!</a>
+	        </p>
+	        <div class='uploadout' id="upout">
+	            <div id='progress' class='uploadprog'></div>
+	        </div>
+		</div>
+        </td></tr>
+</table>
+</form><br>
+<form class="form" ng-submit="importfile()" ng-if="fields.length">
+<table class="formtbl">
+	<tr><td class="formtxt" style="text-align:center">№</td><td class="formtxt" style="text-align:center">{{::lng.fieldjs}}</td><td class="formtxt" style="text-align:center">{{::lng.examplejs}}</td></tr>
+        <tr ng-repeat="ifield in fields"><td><b>#{{$index + 1}}</b></td><td>
+        <select ng-model="ifield.id"><option ng-repeat="icol in columns"  
+                   value="{{icol.id}}">{{icol.title}}</option></select>
+</td><td align="left"><i>{{ifield.example}}</i>
+          </td></tr>
+        <tr><td></td><td align="center"><input type="submit" value="{{lng.import}}" class="btn btn-primary"></td><td></td></tr>
+</table>
+
+</form>
+</div>

@@ -23,17 +23,26 @@ if ( ANSWER::is_success( true ) && ANSWER::is_access())
     {
         $pars = postall( true );
         $path = empty( $pars['path'] ) ? '' : $pars['path'].'/';
+        $ext = pathinfo( $_FILES[ 'file' ]['name'], PATHINFO_EXTENSION);
         if ( !file_exists( STORAGE.$path ))
             mkdir( STORAGE.$path );
-        if ( !move_uploaded_file( $_FILES['file']['tmp_name'], 
-                                  STORAGE.$path.$_FILES[ 'file' ]['name'] ))
+        $destfile = STORAGE.$path.( empty( $pars['newname']) ? $_FILES[ 'file' ]['name'] :
+                                   $pars['newname'] );
+        if ( !move_uploaded_file( $_FILES['file']['tmp_name'], $destfile ))
             api_error( 'err_writefile', STORAGE );
-        else
-            if ( $path == 'backup/' )
+        elseif ( $path == 'backup/' )
+        {
+            require_once 'backup_common.php';
+            backup_list();
+        }
+        elseif ( $path == 'tmp/' && !empty( $pars['import'] ))
+        {
+            if ( $ext == 'csv' )
             {
-                require_once 'backup_common.php';
-                backup_list();
+                require_once 'import_csv.php';
+                csv_list( $pars['newname'], $pars );
             }
+        }
     }
 }
 ANSWER::answer();

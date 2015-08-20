@@ -66,7 +66,8 @@ geapp
             templateUrl: tpl('login.html') })
           .segment('import', {
             templateUrl: tpl('import.html'),
-            controller: ImportCtrl })
+            controller: ImportCtrl,
+            dependencies: ['id'] })
         .segment('admin', {
             templateUrl: tpl('admin.html'),
             controller: AdminCtrl

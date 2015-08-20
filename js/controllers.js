@@ -1658,9 +1658,66 @@ function EdittableCtrl( $rootScope, $scope, $routeSegment, DbApi ) {
 //    alert( $stateParams.idi );
 }
 
-function ImportCtrl($scope, $routeSegment, DbApi ) {
+function ImportCtrl($scope, $rootScope, $routeSegment, DbApi ) {
     $scope.$routeSegment = $routeSegment;
+    $scope.params = $routeSegment.$routeParams;
+    $scope.idtable = $scope.params.id;
     $scope.form = { importdata: 1 };
+    $scope.import = { encode: 'UTF-8', idfile: 0 };
+    $scope.fields = [];
+    if ( $scope.idtable > 0 )
+    {
+        DbApi( 'columns', {id: $scope.idtable}, function( data ) {
+            if ( data.success )
+            {
+                $scope.destname = data.db.title;
+                if ( $scope.destname[0] == ':' )
+                    $scope.destname = lng[ $scope.destname.substr( 1 ) ];
+                $scope.columns = [ { id: 0, title: '' } ];
+                var i = 0;
+                while ( i < data.columns.length )
+                {
+                    var column = data.columns[i];
+                    if ( column.idtype == cnt.FT_PARENT )
+                        continue;
+                    if ( column.title[0] == ':' )
+                        column.title = lng[ column.title.substr( 1 ) ];
+                    $scope.columns.push( {id: column.id, title: column.title } );
+                    i++;
+                }
+                $scope.columns.push( { id: 0xFFF0, title: 'ID' } );
+            }
+        });
+    }
+    $scope.importfile = function( newval, callback ) {
+        var len = $scope.fields.length;
+        var selected = false;
+        var out = [];
+
+        for ( var i=0; i < len; i++ )
+        {
+            out.push( $scope.fields[i].id );
+            if ( $scope.fields[i].id != 0 )
+                selected = true;
+        }
+        if ( !selected )
+            $rootScope.msg_warning( 'war_nofield' );
+        else
+        {
+           enz.DbApi( 'importfile', { idtable: $scope.idtable, idfile: $scope.import.idfile, 
+                                  encode: $scope.import.encode, fields: out }, function( data ) {
+                if ( data.success )
+                {
+                    cfg.temp = data.result;
+                    $rootScope.msg_info( 'imported', { funcok: function(){
+                        document.location = '#/table?id=' + $scope.idtable;
+                    }, funcfail: function(){
+                        document.location = '#/table?id=' + $scope.idtable;
+                    }} );
+                }
+            }); 
+        }
+    }
     $scope.importdata = function( newval, callback ) {
         $scope.form.importdata = newval;
         callback();
@@ -1673,29 +1730,51 @@ function ImportCtrl($scope, $routeSegment, DbApi ) {
             }
         }); 
     }
-/*    DbApi[ 'edititem' ]( $routeSegment.$routeParams, function( data ) {
-        if ( data.success )
-        {
-            $scope.db = data.db;
-            $scope.columns = data.columns;
-            $scope.listitems = data.listitems;
-            $scope.form = data.result;
-            if ( $scope.form.id != 0 )
-            {
-                $scope.action = lng.savejs;
-            }
-            else
-                $scope.action = lng.add;
-        }
-    });
-    $scope.saveitem = function(){
-       DbApi[ 'saveitem' ]( $scope.form, function( data ) {
-            if ( data.success )
-            {
-                document.location = '#/edititem?table='+$scope.form.table+'&id=' + data.success;
-            }
-        }); 
+/*    $scope.utfencoding = function( newval, callback ) {
+        $scope.import.utf8 = newval;
+        callback();
     }*/
+    $scope.uploadimport = function() 
+    {
+        var _file = document.getElementById('uploadfile');
+        var _progress = document.getElementById('progress');
+
+        if(_file.files.length === 0){
+            return;
+        }
+        $("#upout").show();
+        var data = new FormData();
+        $scope.srcfile = _file.files[0].name;
+        nd = new Date();
+        $scope.import.idfile = nd.getTime();
+        data.append('file', _file.files[0]);        
+        data.append('newname', $scope.import.idfile );
+        data.append('encode', $scope.import.encode );
+        data.append('import', 1 );
+        data.append('path', 'tmp');
+
+        var request = new XMLHttpRequest();
+        request.onreadystatechange = function(){
+            if(request.readyState == 4){
+                $("#upout").hide();
+                var data = JSON.parse(request.response);
+                if ( data.success )
+                {
+                    $scope.fields = data.result;
+                    $scope.$apply();
+                }
+                else
+                   $rootScope.msg_error( data.err );
+            }
+        };
+
+        request.upload.addEventListener('progress', function(e){
+            _progress.style.width = Math.ceil(e.loaded/e.total) * 100 + '%';
+        }, false);
+
+        request.open('POST', ajax( 'uploadfile' ));
+        request.send(data);
+    }
 }
 
 function SetsCtrl($scope, $rootScope, $routeSegment, DbApi ) {

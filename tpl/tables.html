@@ -17,6 +17,7 @@
         <nobr><a href='' ng-click="changefld( $index )">{{lng.changefld}}</a></nobr>
         <a href='' ng-click="droptable( $index )">{{lng.del}}</a>
       <a ng-if="item.isfolder != 1" href="" ng-click="truncate( $index )">{{lng.truncate}}</a>
+      <a ng-if="item.isfolder != 1" href="#/import?id={{item.id}}" >{{lng.import}}</a>
       <a ng-if="item.isfolder != 1" href="" ng-click="export2set( $index )">{{lng.export2set}}</a>
       <a ng-if="item.isfolder != 1" href="" ng-click="duplicate( $index )">{{lng.duplicate}}</a>
       </div>
