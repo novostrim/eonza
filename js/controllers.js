@@ -1662,6 +1662,7 @@ function ImportCtrl($scope, $rootScope, $routeSegment, DbApi ) {
     $scope.$routeSegment = $routeSegment;
     $scope.params = $routeSegment.$routeParams;
     $scope.idtable = $scope.params.id;
+    $scope.type = 0;
     $scope.form = { importdata: 1 };
     $scope.import = { encode: 'UTF-8', idfile: 0 };
     $scope.fields = [];
@@ -1705,7 +1706,8 @@ function ImportCtrl($scope, $rootScope, $routeSegment, DbApi ) {
         else
         {
            enz.DbApi( 'importfile', { idtable: $scope.idtable, idfile: $scope.import.idfile, 
-                                  encode: $scope.import.encode, fields: out }, function( data ) {
+                                type: $scope.type, encode: $scope.import.encode, fields: out }, 
+                                function( data ) {
                 if ( data.success )
                 {
                     cfg.temp = data.result;
@@ -1761,6 +1763,7 @@ function ImportCtrl($scope, $rootScope, $routeSegment, DbApi ) {
                 if ( data.success )
                 {
                     $scope.fields = data.result;
+                    $scope.type = data.type;
                     $scope.$apply();
                 }
                 else

@@ -120,6 +120,6 @@ function csv_list( $filename, $pars )
         }
         fclose($handle);
     }
-
+    ANSWER::set( 'type', 0 );
     ANSWER::result( $ret );
 }

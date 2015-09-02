@@ -42,6 +42,11 @@ if ( ANSWER::is_success( true ) && ANSWER::is_access())
                 require_once 'import_csv.php';
                 csv_list( $pars['newname'], $pars );
             }
+            if ( $ext == 'xlsx' )
+            {
+                require_once 'import_xlsx.php';
+                xlsx_list( $pars['newname'], $pars );
+            }
         }
     }
 }

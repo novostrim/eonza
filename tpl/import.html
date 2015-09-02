@@ -21,7 +21,7 @@
         <tr><td class="formtxt">{{::lng.srcfile}}: </td><td class="formval">
                     <b>{{srcfile}}</b></td></tr>
         <tr><td class="formtxt">{{::lng.supformats}}: </td><td class="formval">
-            CSV</td></tr>
+            CSV, XLSX</td></tr>
         <tr><td class="formtxt">{{::lng.encoding}}: </td><td class="formval">
         <select ng-model="import.encode"><option value="UTF-8">UTF-8</option>
         <option value="Windows-1250">Windows-1250 (Eastern European)</option>
@@ -36,7 +36,7 @@
         <tr><td class="formtxt" colspan="2">
        	<div class='uploadcont'>
 	        <p>
-	            <input type='file' accept=".csv" id='uploadfile' class="btn btn-default"> <a id='_submit'  class="btn btn-primary btn-lg" ng-click="uploadimport()"><i class="fa fa-upload"></i>&nbsp;{{::lng.upload}}!</a>
+	            <input type='file' accept=".csv,.xlsx" id='uploadfile' class="btn btn-default"> <a id='_submit'  class="btn btn-primary btn-lg" ng-click="uploadimport()"><i class="fa fa-upload"></i>&nbsp;{{::lng.upload}}!</a>
 	        </p>
 	        <div class='uploadout' id="upout">
 	            <div id='progress' class='uploadprog'></div>
