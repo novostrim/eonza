@@ -45,7 +45,7 @@
     </table> 
     <center><table><tr><td align="left" style="padding-right: 2em;">
         {{::lng.numrec}}: <strong>{{allcount}}</strong>
-    </td><td><a class="btn btnpush" ng-href="#/import?id={{::params.id}}">{{::lng.import}}</a></td>
+    </td><td><a class="btn btnpush" ng-href="#/import?id={{::params.id}}">{{::lng.import}}</a>&nbsp;<a class="btn btnpush" ng-click="toexport()">{{::lng.export}}</a></td>
     <td align="center"><div class="pages">
     </div>
     </td><td style="padding-left: 2em;">{{::lng.perpage}}:&nbsp; 
@@ -54,7 +54,21 @@
                    value="{{iper}}">{{iper}}</option>
         </select>
     </td>   
-    </tr></table></center>
+    </tr></table>
+    <form ng-if="export" class="form" style="margin-top: 10px" ><table class="formtbl" >
+    <tbody id="fields">
+    <tr class="nosort"><td class="formtxt">Format:</td><td><label><input type="radio" ng-model="$parent.exportfmt"  value="1"> XLSX</label>&nbsp;&nbsp;&nbsp;<label><input type="radio" ng-model="$parent.exportfmt" value="0"> CSV</label></td><td></td></tr>        
+    <tr ng-repeat="expitem in exportlist" ord="{{$index}}"><td class="formtxt">#{{$index + 1}}</td><td>{{expitem.title}}</td><td><div class="fabtn-group">
+                        <a class="fabtn" style="cursor: move;" ng-mousedown='sortfield( false )'><i class="fa fa-arrows-v fa-fw"></i></a>
+                        <a class="fabtn" ng-click='removefield( $index )'><i class="fa fa-times fa-fw"></i></a></div></td></tr>
+    <tr class="nosort"><td></td><td align="right" style="padding-right: 10px;">
+        <select name="expcol" ng-model="$parent.expcol" ><option ng-repeat="excol in exportfields"  
+                   value="{{excol.id}}">{{excol.title}}</option></select>
+    </td><td><a class="btn btn-primary" ng-click="exportadd()"><i class="fa fa-plus"></i>{{::lng.add}}</a></td></tr>
+    <tr class="nosort"><td></td><td colspan="2"><a style="margin-top: 10px;" href="" ng-click="exporttable()" class="btn btn-primary btn-lg">{{::lng.export}}</a> <a style="margin-top: 10px;" href="" ng-click="toexport()" class="btn btn-lg">{{::lng.cancel}}</a></td></tr></tbody>
+    </table>
+    </form>
+    </center>
     <div ng-if="db.istree == 1" class="linkcrumbs">
         <a href="" ng-class="{switchoff:params.parent==undefined, switchon:params.parent!=undefined }" ng-click="treemode()"><i class="fa fa-fw fa-sitemap"></i></a>    
         <a href='' ng-if="params.parent!=undefined" onclick="return js_treechange(0)" ><i class="fa fa-home fa-fw"></i></a>    

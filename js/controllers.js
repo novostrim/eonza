@@ -321,6 +321,11 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
     $scope.viewitems = '';
     $scope.carditems = '';
     $scope.onpage = 0;
+    $scope.export = false;
+    $scope.exportfmt = 1;
+    $scope.expcol = 0;
+    $scope.exportfields = [];
+    $scope.exportlist = [];
     $scope.perpage = [];
     $scope.compare = compare;
     $scope.logic = logic;
@@ -328,6 +333,82 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
     $scope.fltfields = [];
     $scope.enztable = enz.Table( $scope.params.id );
 
+    $scope.exporttable = function() {
+        $scope.params.exportfmt = $scope.exportfmt;
+        explist = [];
+        for ( i=0; i<$scope.exportlist.length; i++ )
+            explist.push( $scope.exportlist[i].id );
+        $scope.params.exportlist = explist.join(',');
+
+        window.location = enz.URIApi('export') + '?' + Object.keys($scope.params).map(function(key){ 
+            return encodeURIComponent(key) + '=' + encodeURIComponent($scope.params[key]); 
+        }).join('&');
+/*        enz.DbApi( '_export', $scope.params, function( data ){
+            console.log( data );
+        });*/
+    }
+    $scope.toexport = function() {
+        $scope.export = !$scope.export;
+        if ( $scope.export )
+        {
+            setTimeout( function(){
+                jQuery( "#fields" ).sortable( { axis: "y", helper: function( event, ui ){ 
+                     return $('<tr class="helper"><td colspan="3"></td></tr>'); },
+                forceHelperSize: true,
+                disabled: true,
+    //            forcePlaceholderSize: true,
+    //            placeholder: "placeholder",
+                cursor: "move",
+                update: function( event, ui ) { 
+                    var flength = $scope.exportlist.length;
+                    $("#fields").children().each(function(index) {
+                        var item = $(this);
+                        if ( angular.isUndefined( item.attr("ord")) )
+                            return true;
+                        var old = parseInt( item.attr("ord"));
+                        $scope.exportlist.push($scope.exportlist[ old ]);
+                    });
+                    $scope.exportlist.splice( 0, flength );
+                    $scope.$apply();
+                },
+                stop: function( event, ui ) { 
+                    $scope.sortfield( true );
+                },
+                /*cancel: ".nosort"*/
+                items: "tr:not(.nosort)" } );
+            }, 1000 );
+        }
+    }
+    $scope.exportadd = function() {
+        if ( $scope.expcol > 0  )
+        {
+            i = 0;
+            if ( $scope.expcol == 0xFFF0 )
+                title = 'ID';
+            else
+            {
+                title = '';
+                while ( i <  $scope.columns.length )
+                {
+                    var column = $scope.columns[i];
+                    if ( column.id == $scope.expcol )
+                    {
+                        title = column.title;
+                        break;
+                    }
+                    i++;
+                }
+            }
+            $scope.exportlist.push( { id: $scope.expcol, title: title } );
+        }
+    }
+    $scope.removefield = function( ind ) {
+        $scope.exportlist.splice( ind, 1 );
+    }
+
+    $scope.sortfield = function( val ) {
+        jQuery( "#fields" ).sortable( { disabled: val } );
+    }
 //    $scope.cookies= $cookies;
     $scope.uptime = function() {
         $scope.enztable.uptime = !$scope.enztable.uptime;
@@ -407,6 +488,7 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
                 $scope.columns = data.columns;
                 var i = 0;
                 $scope.collist = [];
+                $scope.exportfields = [ { id: 0xFFF0, title: 'ID' } ];
                 $scope.fltfields = [ {title: '', id: 0, mask: 0 }, {title: 'ID', id: -1, mask: 0x07 } ];
                 $scope.mask = {};
                 $scope.colnames = {};
@@ -434,6 +516,11 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
                     if ( parseInt( column.visible ) > 0 )
                         $scope.collist.push( column );
                     $scope.colnames[ column.alias ] = column;
+                    
+                    if ( column.idtype != cnt.FT_PARENT && column.idtype != cnt.FT_FILE && 
+                         column.idtype != cnt.FT_IMAGE )
+                        $scope.exportfields.push( {id: column.id, title: column.title } );
+
                     listitems += js_editpattern( i, $scope.columns );
                     viewitems += js_viewpattern( i, $scope.columns );
                     if ( angular.isDefined( types[column.idtype].filter ))
@@ -1134,11 +1221,6 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
         td.eq(2).addClass('currow');
     });
     $scope.columns();
-/*    $scope.$watch('allselect', function(){
-       var i = $scope.items.length;
-       while ( i-- )
-          $scope.items[i].selected = $scope.allselect;
-    });*/
 }
 
 /*geapp.module('compile', [], function($compileProvider) {
@@ -1168,43 +1250,6 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
     })
  });*/
  
-/*
-function EdititemCtrl($scope, $routeSegment, DbApi, $rootScope ) {
-    $scope.$routeSegment = $routeSegment;
-    DbApi[ 'edititem' ]( $routeSegment.$routeParams, function( data ) {
-        if ( data.success )
-        {
-            $scope.db = data.db;
-            $scope.columns = data.columns;
-            $scope.listitems = data.listitems;
-            $scope.form = data.result;
-            if ( $scope.form.id != 0 )
-            {
-                $scope.action = lng.savejs;
-            }
-            else
-                $scope.action = lng.add;
-        }
-    });
-    $rootScope.cheditform = function( obj, callback ) {
-        for(var k in obj)
-        {
-            $scope.form[k] = obj[k];
-            break;
-        }
-        callback();
-    }
-    $scope.saveitem = function(){
-//        alert( angular.toJson( $scope.form ));
-       DbApi[ 'saveitem' ]( $scope.form, function( data ) {
-            if ( data.success )
-            {
-                document.location = '#/edititem?table='+$scope.form.table+'&id=' + data.success;
-            }
-        });
-    }
-}
-*/
 
 function reload()
 {
@@ -1679,7 +1724,8 @@ function ImportCtrl($scope, $rootScope, $routeSegment, DbApi ) {
                 while ( i < data.columns.length )
                 {
                     var column = data.columns[i];
-                    if ( column.idtype == cnt.FT_PARENT )
+                    if ( column.idtype == cnt.FT_PARENT || column.idtype == cnt.FT_FILE || 
+                         column.idtype == cnt.FT_IMAGE  )
                         continue;
                     if ( column.title[0] == ':' )
                         column.title = lng[ column.title.substr( 1 ) ];

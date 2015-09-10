@@ -53,12 +53,70 @@ function fltcompare( $field, $not, $compare, $value, $names )
                         $cmp[$not] );
 }
 
+function treefilter( $retdb, $columns, $names, &$retfilter )
+{
+    $db = DB::getInstance();
+    $filter = get('filter');
+
+    $qwhere = '';//$db->parse("where idtask=?s && status>0", $task['id'] );
+    if ( $retdb['istree'] && isset( $_GET['parent'] ))
+    {
+        $parent = (int)get( 'parent' );
+        $qwhere = $db->parse( 'where t.`_parent`=?s', $parent );
+        $crumbs = array();
+        while ( $parent )
+        {
+            $par = $db->getrow("select id, _parent, ?n as title from ?n where id=?s", 
+                 $columns[1]['alias'], $dbname, $parent );
+            $parent = $par['_parent'];
+            $crumbs[] = array( $par['title'], $par['id'] );
+        }
+        ANSWER::set( 'crumbs', array_reverse( $crumbs ));
+    }
+    if ( $filter )
+    {
+        $flt = explode( '!', $filter );
+        if ( !$qwhere )
+            $qwhere .= $db->parse("where 1");                
+        foreach ( $flt as $ifilter )
+        {
+            $logic = hexdec( $ifilter[0] );
+            $not = (int)$ifilter[1];
+            $compare = hexdec( substr( $ifilter, 2, 2 ));
+            $fld = substr( $ifilter, 4, 4 );
+            $field = $fld[0] == 'f' ? -hexdec( substr( $fld, 1 )) : hexdec( $fld );
+            $value = strlen( $ifilter ) > 8 ? substr( $ifilter, 8 ) : '';
+            if ( !$compare || !$field )
+                continue;
+            $fltvalue = $value;
+            if ( isset( $field2ind[ $field ] )) 
+            {
+                if ( $columns[$field2ind[ $field ]]['idtype'] == FT_LINKTABLE )
+                    $fltvalue = (int)$value;
+            }
+            $fout = fltcompare( $field, $not, $compare, $fltvalue, $names );
+            if ( $fout )
+            {
+                $qwhere .= $db->parse(" ?p ?p", $logic == 1 ? '||' : '&&', $fout );
+                $retfilter[] = array( 'logic' => $logic, 'field' => $field, 'not' => $not ? true : false,
+                               'compare' => $compare, 'value' => $value );
+            }
+        }
+    }
+    if ( ANSWER::is_own())
+       $qwhere .=  $db->parse( (!$qwhere ? "where 1":'')." && _owner =?s", GS::userid());
+    
+    return $qwhere;    
+}
+
+if ( defined( 'FUNCONLY' ))
+    return;
+
 $id = get( 'id' );
 if ( $id && ANSWER::is_success() && ANSWER::is_access( A_READ, $id ))
 {
     GS::set( 'urlparam', url_params( 'p' ));
     $sort = (int)get( 'sort' );
-    $filter = get('filter');
     $summary = (int)get( 'sum' );
     $order = 't._uptime desc';
     $defsort = array( 0xffff => 't.id', 0xfffe => 't._uptime' );
@@ -106,39 +164,7 @@ if ( $id && ANSWER::is_success() && ANSWER::is_access( A_READ, $id ))
 //                $collink = api_colname( (int)$extend['column'] );
                 $alias = alias( $icol );
                 $leftjoin .= $db->parse( " left join ?n as t$link on t$link.id=t.?p", $dblink, $alias );
-/*                $collist = explode( ',', $extend['column'] );
-                $collink = array();
-                foreach ( $collist as $cl )
-                {
-                    $colname = api_colname( (int)$cl );
-                    if ( $colname )
-                        $collink[] = $colname;  
-                }
-                if ( $collink )
-                {
-                    $linkout = array();
-                    if ( !empty( $extend['aslink'] )) 
-                        $linkout[] = "'<a href=\"\" onclick=\"return js_card($extend[table], ', t$link.id, ' )\">'";
-                    $linkout[] = "t$link.$collink[0]";
-                    if ( !empty( $extend['aslink'] )) 
-                        $linkout[] = "'</a>'";
-                    for ( $ilink = 1; $ilink<count( $collink ); $ilink++ )
-                    {
-                        $linkout[] = "' &bull; '";
-                        $linkout[] = "t$link.".$collink[$ilink];
-                    }
-                    if ( !empty( $extend['showid'] )) 
-                    {
-                        $linkout[] = "'<span class=\"idcode\">'";
-                        $linkout[] = "t.$alias";
-                        $linkout[] = "'</span>'";
-                    }
-                    if ( count( $linkout ) == 1 )
-                        $linktitle = $linkout;
-                    else
-                        $linktitle = 'concat( '.implode(',', $linkout ).')';
-                    $ext = "if( t$link.$collink[0] is NULL, '', $linktitle ) as `$icol[alias]`";
-                }*/
+
                 $ext = getmultilink( $extend, $link, $alias, $icol['alias'] );
                 $fields[] = (  $icol['idtype'] == FT_PARENT ? " t.`_parent` as `_parent_`," : '' ).$ext;
                        // $collink$link";
@@ -168,53 +194,7 @@ if ( $id && ANSWER::is_success() && ANSWER::is_access( A_READ, $id ))
                     $order .= ' desc';
             }
         }
-        $qwhere = '';//$db->parse("where idtask=?s && status>0", $task['id'] );
-        if ( $retdb['istree'] && isset( $_GET['parent'] ))
-        {
-            $parent = (int)get( 'parent' );
-            $qwhere = $db->parse( 'where t.`_parent`=?s', $parent );
-            $crumbs = array();
-            while ( $parent )
-            {
-                $par = $db->getrow("select id, _parent, ?n as title from ?n where id=?s", 
-                     $columns[1]['alias'], $dbname, $parent );
-                $parent = $par['_parent'];
-                $crumbs[] = array( $par['title'], $par['id'] );
-            }
-            ANSWER::set( 'crumbs', array_reverse( $crumbs ));
-        }
-        if ( $filter )
-        {
-            $flt = explode( '!', $filter );
-            if ( !$qwhere )
-                $qwhere .= $db->parse("where 1");                
-            foreach ( $flt as $ifilter )
-            {
-                $logic = hexdec( $ifilter[0] );
-                $not = (int)$ifilter[1];
-                $compare = hexdec( substr( $ifilter, 2, 2 ));
-                $fld = substr( $ifilter, 4, 4 );
-                $field = $fld[0] == 'f' ? -hexdec( substr( $fld, 1 )) : hexdec( $fld );
-                $value = strlen( $ifilter ) > 8 ? substr( $ifilter, 8 ) : '';
-                if ( !$compare || !$field )
-                    continue;
-                $fltvalue = $value;
-                if ( isset( $field2ind[ $field ] )) 
-                {
-                    if ( $columns[$field2ind[ $field ]]['idtype'] == FT_LINKTABLE )
-                        $fltvalue = (int)$value;
-                }
-                $fout = fltcompare( $field, $not, $compare, $fltvalue, $names );
-                if ( $fout )
-                {
-                    $qwhere .= $db->parse(" ?p ?p", $logic == 1 ? '||' : '&&', $fout );
-                    $retfilter[] = array( 'logic' => $logic, 'field' => $field, 'not' => $not ? true : false,
-                                   'compare' => $compare, 'value' => $value );
-                }
-            }
-        }
-        if ( ANSWER::is_own())
-           $qwhere .=  $db->parse( (!$qwhere ? "where 1":'')." && _owner =?s", GS::userid());
+        $qwhere = treefilter( $retdb, $columns, $names, $retfilter );
 
         $query = $db->parse( "select count(`id`) from ?n as t ?p", $dbname, $qwhere );
         $onpage = (int)get( 'op' );

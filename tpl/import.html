@@ -14,6 +14,9 @@
 </div>
 
 <div ng-if="idtable"><h1>{{lng.import}}</h1>
+<div><a class="flatbtn" ng-if="cfg.showhelp" target="_blank" href="http://{{::cfg.website}}/data-import.html" title="{{::lng.help}}"><i class="fa fa-question fa-lg"></i></a>
+</div>
+
 <form class="form" >
 <table class="formtbl">
         <tr><td class="formtxt">{{::lng.desttable}}: </td><td class="formval">
