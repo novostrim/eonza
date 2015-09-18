@@ -65,7 +65,10 @@
         <select name="expcol" ng-model="$parent.expcol" ><option ng-repeat="excol in exportfields"  
                    value="{{excol.id}}">{{excol.title}}</option></select>
     </td><td><a class="btn btn-primary" ng-click="exportadd()"><i class="fa fa-plus"></i>{{::lng.add}}</a></td></tr>
-    <tr class="nosort"><td></td><td colspan="2"><a style="margin-top: 10px;" href="" ng-click="exporttable()" class="btn btn-primary btn-lg">{{::lng.export}}</a> <a style="margin-top: 10px;" href="" ng-click="toexport()" class="btn btn-lg">{{::lng.cancel}}</a></td></tr></tbody>
+    <tr class="nosort"><td></td><td colspan="2">
+    <a class="btn btn-primary topright" ng-if="cfg.showhelp" target="_blank"  title="{{::lng.help}}" href="http://{{::cfg.website}}/data-export.html"><i class="fa fa-question"></i></a>
+
+    <a style="margin-top: 10px;" href="" ng-click="exporttable()" class="btn btn-primary btn-lg">{{::lng.export}}</a> <a style="margin-top: 10px;" href="" ng-click="toexport()" class="btn btn-lg">{{::lng.cancel}}</a></td></tr></tbody>
     </table>
     </form>
     </center>

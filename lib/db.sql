@@ -182,3 +182,13 @@ CREATE TABLE IF NOT EXISTS `xxx_taglist` (
   KEY `idtable` (`idtable`,`iditem`),
   KEY `idtag` (`idtag`,`idtable`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+##
+CREATE TABLE IF NOT EXISTS `xxx_onemany` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `idcolumn` smallint(5) unsigned NOT NULL,
+  `iditem` int(10) unsigned NOT NULL,
+  `idmulti` int(10) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `idcolumn` (`idcolumn`,`iditem`),
+  KEY `idcolumn_2` (`idcolumn`,`idmulti`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
