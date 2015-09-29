@@ -141,6 +141,7 @@ if ( $id && ANSWER::is_success() && ANSWER::is_access( A_READ, $id ))
         $columns = $db->getall("select * from ?n where idtable=?s  
                                           order by `sort`", ENZ_COLUMNS, $id );
         $cind = 0;
+        $many = array();
         foreach ( $columns as &$icol )
         {
             $field2ind[ $icol['id'] ] = $cind++;
@@ -156,6 +157,7 @@ if ( $id && ANSWER::is_success() && ANSWER::is_access( A_READ, $id ))
                {
                 $fields[] = "(select count(id) from $dbname where `_parent` = t.id ) as `_children`";
                }
+            
             if ( $icol['idtype'] == FT_LINKTABLE || ( $icol['idtype'] == FT_PARENT && !isset( $_GET['parent'] )))
             {
                 $dblink = api_dbname( $extend['table'] );
@@ -166,6 +168,9 @@ if ( $id && ANSWER::is_success() && ANSWER::is_access( A_READ, $id ))
                 $leftjoin .= $db->parse( " left join ?n as t$link on t$link.id=t.?p", $dblink, $alias );
 
                 $ext = getmultilink( $extend, $link, $alias, $icol['alias'] );
+                if ( $icol['idtype'] == FT_LINKTABLE &&  !empty( $extend['multi'] ))
+                    $many[ $cind ]  = $ext;
+
                 $fields[] = (  $icol['idtype'] == FT_PARENT ? " t.`_parent` as `_parent_`," : '' ).$ext;
                        // $collink$link";
                }
@@ -204,8 +209,38 @@ if ( $id && ANSWER::is_success() && ANSWER::is_access( A_READ, $id ))
             $onpage = 50;
         $pages = pages( $query, array( 'onpage' => $onpage, 'page' => (int)get('p') ), 'pagelink' );
         $order = 'order by '.$order;
-        ANSWER::result( $db->getall("select ?p from ?n as t ?p ?p ?p ?p", implode( ',', $fields ), $dbname,
-                $leftjoin, $qwhere, $order, $pages['limit'] ));
+        $tmpres = $db->getall("select ?p from ?n as t ?p ?p ?p ?p", implode( ',', $fields ), $dbname,
+                $leftjoin, $qwhere, $order, $pages['limit'] );
+        if ( $many )
+        {
+            foreach ( $many as $mkey => $mval )
+            {
+                $icol = $columns[$mkey-1];
+                $extend = json_decode( $icol['extend'], true );
+                $dblink = api_dbname( $extend['table'] );
+                $ilink = $icol['id'];
+                $alias = alias( $icol );
+                $mval = str_replace( "t.$alias", 't.idmulti', $mval );
+                foreach ( $tmpres as &$im )
+                {
+                    if ( $im[$alias] )
+                    {
+                        $mout = array( $im[$alias] );
+                        $mlist = $db->getall("select $mval from ?n as t 
+                            left join ?n as t$ilink on t$ilink.id = t.idmulti
+                            where t.idcolumn=?s && t.iditem=?s", 
+                               ENZ_ONEMANY, $dblink, $ilink, $im['id'] );
+                        if ( $mlist )
+                        {
+                            foreach ( $mlist as $imlist )
+                                $mout[] = $imlist[ $alias ];
+                            $im[$alias] = implode( '<br>', $mout );
+                        }
+                    }
+                }
+            }
+        }
+        ANSWER::result( $tmpres );
         ANSWER::set( 'pages', $pages );
         $total['is'] = count( $totallist );
         if ( $summary & 0x1 )

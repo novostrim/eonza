@@ -11,6 +11,15 @@ if ( ANSWER::is_success() && ANSWER::is_access())
     {
         if ( $db->query("truncate table ?n", api_dbname( $idi ) ))
         {
+            $collist = $db->getall("select col.id, col.extend from ?n as col
+                             where col.idtable=?s && col.idtype=?s", ENZ_COLUMNS, $idi, FT_LINKTABLE  );
+            foreach ( $collist as $cil )
+            {
+                $extend = json_decode( $cil['extend'], true );
+                if ( !empty( $extend['multi'] ))
+                    $db->query("delete from ?n where idcolumn = ?s", ENZ_ONEMANY, (int)$cil['id'] );
+            }
+
             $db->query("delete from ?n where idtable=?s", ENZ_SHARE, $idi );
             files_deltable( $idi );
             ANSWER::success( $idi );

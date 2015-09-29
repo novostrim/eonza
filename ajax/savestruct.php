@@ -194,6 +194,9 @@ if ( ANSWER::is_success() && ANSWER::is_access())
                                      $curcol['idtype'] != $ipar['idtype'] ||
                                      $curcol['extend'] != $ipar['extend'] )
                                 {
+                                    // Should be realized deleting unused records from ENZ_ONEMANY if we 
+                                    // have switched off Multiple Select but it is easy to check ENZ_ONEMANY 
+                                    // sometime with a special utility.
                                     $colname = alias( $curcol );
                                     if ( !isset( $gsfield['sql'] ) || $db->query( "alter table ?n change ?n ?p", 
                                                   $dbname, $colname, column_query( $ipar['id'], $ipar )))
@@ -228,7 +231,11 @@ if ( ANSWER::is_success() && ANSWER::is_access())
                             $gsfield = GS::field( $idel['idtype'] );
 //                            if ( isset( $FXXTYPES[ $idel['idtype']]['sql'] )) 
                             if ( isset( $gsfield['sql'] )) 
+                            {
                                 $db->query( "alter table ?n drop ?n", $dbname, alias( $idel ));
+                                if ( $idel['idtype'] == FT_LINKTABLE )
+                                    $db->query( "delete from ?n where idcolumn=?s", ENZ_ONEMANY, $idel['id']);
+                            }
                             elseif ( $idel['idtype'] == FT_FILE || $idel['idtype'] == FT_IMAGE )
                                 files_delcolumn( $idel );
                         }

@@ -4,6 +4,20 @@ define( 'FUNCONLY', 1 );
 
 require_once 'table.php';
 
+function exportmulti( $idcolumn, $iditem )
+{
+    $mlist = DB::GetInstance()->getall("select idmulti from ?n where idcolumn=?s && iditem=?s",
+                            ENZ_ONEMANY, $idcolumn, $iditem );
+    if ( $mlist )
+    {
+        $mbuf = array();
+        foreach ( $mlist as $iml )
+            $mbuf[] = $iml['idmulti'];
+        return ','.implode( ',', $mbuf );
+    }
+    return '';
+}
+
 $id = get( 'id' );
 if ( $id && ANSWER::is_success() && ANSWER::is_access( A_READ, $id ))
 {
@@ -31,6 +45,7 @@ if ( $id && ANSWER::is_success() && ANSWER::is_access( A_READ, $id ))
         $columns = $db->getall("select * from ?n where idtable=?s  
                                           order by `sort`", ENZ_COLUMNS, $id );
         $cind = 0;
+        $multi = array();
         foreach ( $columns as &$icol )
         {
             $field2ind[ $icol['id'] ] = $cind++;
@@ -43,6 +58,8 @@ if ( $id && ANSWER::is_success() && ANSWER::is_access( A_READ, $id ))
             if ( $vis && !in_array( $icol['id'], $vis  ))
                 continue;
             $extend = json_decode( $icol['extend'], true );
+            if ( $icol['idtype'] == FT_LINKTABLE && !empty( $extend['multi']))
+                $multi[ $icol['alias']] = $icol['id'];
             /*if ( $icol['idtype'] == FT_PARENT )
             {
                 $fields[] = "(select count(id) from $dbname where `_parent` = t.id ) as `_children`";
@@ -107,19 +124,29 @@ if ( $id && ANSWER::is_success() && ANSWER::is_access( A_READ, $id ))
         }
 
 // output the column headings
-
-        while ( $ret = $db->getall("select ?p from ?n as t ?p ?p ?p limit ?p, ?p", 
+        while ( $ret = $db->getall("select t.id as `_id`, ?p from ?n as t ?p ?p ?p limit ?p, ?p", 
                  implode( ',', $fields ), $dbname, $leftjoin, $qwhere, $order, $off, $num ))
         {
             foreach ( $ret as $iret )
             {
                 $out = array();
+                $idret = $iret['_id'];
+                unset( $iret['_id'] );
                 if ( $vis )
                     foreach ( $vis as $iv )
-                        $out[] = $iret[ $iv == SYS_ID ? 'id' : $columns[$field2ind[ $iv ]]['alias']];
+                    {
+                        $name = $iv == SYS_ID ? 'id' : $columns[$field2ind[ $iv ]]['alias'];
+                        if ( $multi && isset( $multi[$name] ) && !empty( $iret[ $name ] ))
+                            $iret[ $name ] .= exportmulti( $multi[ $name ], $idret );
+                        $out[] = $iret[ $name ];
+                    }
                 else
-                    foreach ( $iret as $iv )
+                    foreach ( $iret as $ikey => $iv )
+                    {
+                        if ( $multi && isset( $multi[$ikey] ) && !empty( $iv ))
+                            $iv .= exportmulti( $multi[$ikey], $idret );
                         $out[] = $iv;
+                    }
                 if ( $exportfmt == 1 )
                      $writer->writeSheetRow('Sheet1', $out );
                 else

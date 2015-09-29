@@ -699,6 +699,22 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
         return false;
     }
     $scope.saveitem = function(){
+        var i = $scope.columns.length;
+        while ( i-- )
+        {
+            var icol = $scope.columns[i];
+            if ( icol.extend.multi )
+            {
+                var val = '0';
+                var ids = $scope.multiform[icol.alias].ids;
+                if ( ids.length > 1 )
+                    val = ids.join(',');
+                else if ( ids.length == 1 )
+                    val = ids[0];
+                $scope.form[icol.alias] = val;
+            }
+
+        }
         htmleditor( $scope.form, true );
         DbApi( 'saveitem', $scope.form, function( data ) {
             if ( data.success )
@@ -777,12 +793,19 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
                     $scope.view[ alias ] = js_moment( $scope.form[alias], icol.extend.date );   
                     break;
                 case cnt.FT_LINKTABLE:
+                    if ( $scope.formlink[ alias ].length > 0 )
+                    {
+                        $scope.view[ alias ]  = ( '<div class="multidiv">' + $scope.formlink[alias] + 
+                                  '</div>' ).replace( /<a.*?>.*?<\/a>/ig, '');
+                    }
+                    break;
                 case cnt.FT_PARENT:
                     if ( $scope.formlink[ alias ].length > 0 )
                         $scope.view[ alias ]  = '<span class="setitem">' + $scope.formlink[alias] + '</span>';
                     break;
                 case cnt.FT_SETSET:
-                    $scope.view[ alias ]  = '<span class="setitem">' + js_getset( $scope.form[alias], alias ).join('</span><span class="setitem">') + '</span>';
+                    if ( $scope.form[alias] )
+                        $scope.view[ alias ]  = '<span class="setitem">' + js_getset( $scope.form[alias], alias ).join('</span><span class="setitem">') + '</span>';
                     break;                        
                 case cnt.FT_FILE:
                 case cnt.FT_IMAGE:
@@ -843,6 +866,34 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
         angular.copy( $scope.orglink, $scope.formlink );
         htmleditor( $scope.form );
     }
+    $scope.multilink = function( data ) {
+        var i = $scope.columns.length;
+        $scope.multiform = {};
+        while ( i-- )
+        {
+            var icol = $scope.columns[i];
+            if ( icol.extend.multi )
+               $scope.multiform[icol.alias] = { ids: [], txt: []}
+        }
+        if ( data.multi )
+            for (var key in data.multi ) {
+                $scope.multiform[key].txt = data.link[key].split('&sect;');
+                var stemp = String(data.multi[key]).split(',');
+                for ( i=0; i< stemp.length; i++ )
+                    $scope.multiform[key].ids.push( parseInt(stemp[i]) );
+                data.link[key] = '';
+                for ( i=0; i< $scope.multiform[key].txt.length; i++ )
+                    data.link[key] += '<div class="multi">' + $scope.multiform[key].txt[i] + 
+                        '<a href="#" onclick="return js_multidel(this)" alias="' + key + '" ids="' +
+                        $scope.multiform[key].ids[i] + '" class="fa fa-times"></a></div>';
+            }
+        else if ( data.link )
+        {
+            for ( var lkey in data.link )
+                data.link[lkey] = '<div class="multi">' + data.link[lkey] + '</div>';
+        }
+
+    }
     $scope.loaditem = function() {
         if ( $scope.mode != cnt.M_NEW )
             $rootScope.curitem = $scope.items[ $scope.currow - 1 ].id;
@@ -850,13 +901,19 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
         {
             $scope.form = { id: 0, table: $scope.db.id };
             $scope.formlink = {};
+            $scope.multiform = {};
+
             var i = $scope.columns.length;
             while ( i-- )
             {
                 var icol = $scope.columns[i];
                 $scope.form[ icol.alias ] = icol.number ? 0 : '';
                 if ( icol.idtype == cnt.FT_LINKTABLE )
+                {
                     $scope.formlink[ icol.alias ] = '';
+                    if ( icol.extend.multi )
+                      $scope.multiform[icol.alias] = { ids: [], txt: []}
+                }
                 if ( icol.idtype == cnt.FT_PARENT )
                     $scope.formlink[ icol.alias ] = '';
             }
@@ -876,6 +933,7 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
                  table: $routeSegment.$routeParams.id }, function( data ) {
             if ( data.success )
             {
+                $scope.multilink( data );
                 $scope.proceedform( data.result );
                 $scope.original = angular.copy( $scope.form );
                 $scope.orglink = angular.copy( data.link );
@@ -957,6 +1015,7 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
                 DbApi( 'getitem', {id: iditem, table: idtable }, function( data ) {
                     if ( data.success )
                     {
+                        $scope.multilink( data );
                         $scope.proceedform( data.result );
                         $scope.formlink = data.link;
                         $scope.formtoview( columns );

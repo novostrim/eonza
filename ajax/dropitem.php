@@ -12,6 +12,8 @@ function deleteitem( $id )
 {
     $idtable = GS::get('idtable');
     $dbname = GS::get('dbname');
+    $many = GS::get('many');
+
     $db = DB::getInstance();
 
     if ( GS::get( 'istree' ))
@@ -24,6 +26,9 @@ function deleteitem( $id )
     $ret = $db->query("delete from ?n where id=?s", $dbname, $id );
     if ( $ret )
     {
+        if ( $many )
+            $db->query("delete from ?n where idcolumn in (?a) && iditem=?s", ENZ_ONEMANY, $many, $id );
+
         if ( GS::get( 'files_is' ))
             files_delitem( $idtable, $id );
         api_log( $idtable, (int)$id, 'delete' );
@@ -53,6 +58,17 @@ if ( ANSWER::is_success())
             GS::set('dbname', alias( $curtbl, ENZ_PREFIX ));
             GS::set('istree', $curtbl['istree'] );
             GS::set('idtable', $idtable );
+            $many = array();
+            $collist = $db->getall("select col.id, col.extend from ?n as col
+                             where col.idtable=?s && col.idtype=?s", ENZ_COLUMNS, $idtable, FT_LINKTABLE  );
+            foreach ( $collist as $cil )
+            {
+                $extend = json_decode( $cil['extend'], true );
+                if ( !empty( $extend['multi'] ))
+                    $many[] = (int)$cil['id'];
+            }
+            GS::set('many', $many );
+
             foreach ( $what as $id )
                 if ( ANSWER::is_access( A_DEL, $idtable, $id ))
                     ANSWER::success( deleteitem( (int)$id ));

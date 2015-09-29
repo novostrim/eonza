@@ -154,6 +154,7 @@ function getitem( $idtable, $id, $dbname, $columns )
         }
     }
     $link = array();
+    $multi = array();
     foreach ( $columns as &$icol )
     {
         if ( $icol['idtype'] == FT_LINKTABLE || $icol['idtype'] == FT_PARENT )
@@ -161,6 +162,37 @@ function getitem( $idtable, $id, $dbname, $columns )
             $alias = '__'.$icol['idalias'];
             if ( ANSWER::isresult( $alias ))
             {
+                if ( $icol['idtype'] == FT_LINKTABLE )
+                {
+                    $extend = json_decode( $icol['extend'], true );
+                    if ( !empty( $extend['multi'] ))
+                    {
+                        $mid = ANSWER::resultget( alias( $icol ));
+                        $multiid = $mid ? array( $mid ) : array();
+                        if ( $multiid )
+                        {
+                            $dblink = api_dbname( $extend['table'] );
+                            $ilink = $icol['id'];
+                            $multiquery = getmultilink( $extend, $ilink, 'idmulti'/*alias( $icol )*/, "tmp" );
+                            $mout = array( ANSWER::resultget( $alias ) );
+                            $mlist = $db->getall("select $multiquery, t.idmulti from ?n as t 
+                                left join ?n as t$ilink on t$ilink.id = t.idmulti
+                                where t.idcolumn=?s && t.iditem=?s", 
+                                   ENZ_ONEMANY, $dblink, $ilink, $id );
+                            if ( $mlist )
+                            {
+                                foreach ( $mlist as $imlist )
+                                {
+                                    $mout[] = $imlist['tmp'];
+                                    $multiid[] = $imlist['idmulti'];
+                                }
+                                ANSWER::resultset( $alias, implode( ' &sect; ', $mout )); 
+                            }
+                        }
+                        if ( $multiid )
+                            $multi[ $icol['idalias'] ] = implode( ',', $multiid );
+                    }
+                }
                 $link[ $icol['idalias'] ] = ANSWER::resultget( $alias );
                 ANSWER::unsetresult( $alias );
             }
@@ -186,6 +218,8 @@ function getitem( $idtable, $id, $dbname, $columns )
         }
     }
     ANSWER::set( 'link', $link );
+    if ( $multi )
+        ANSWER::set( 'multi', $multi );
     ANSWER::resultset( 'table', $idtable );
 }            
 

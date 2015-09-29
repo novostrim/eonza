@@ -28,7 +28,21 @@ if ( ANSWER::is_success())
                 $columns = $db->getall("select * from ?n where idtable=?s", 
                                           ENZ_COLUMNS, $idtable );
                 foreach ( $columns as &$icol )
+                {
                     $icol['idalias'] = alias( $icol );
+                    if ( $icol['idtype'] == FT_LINKTABLE )
+                    {
+                        $extend = json_decode( $icol['extend'], true );
+                        if ( !empty( $extend['multi'] ))
+                        {
+                            $list = $db->getall( "select * from ?n where idcolumn=?s && iditem=?s", 
+                                                 ENZ_ONEMANY, $icol['id'], $idi );
+                            foreach ( $list as $il )
+                                $db->insert( ENZ_ONEMANY, array( 'idcolumn' => $il['idcolumn'],
+                                'iditem' => ANSWER::is_success(), 'idmulti' => $il['idmulti'] ), '' );
+                        }
+                    }
+                }
 
                 getitem( $dbt['id'], ANSWER::is_success(), $dbname, $columns );
             }

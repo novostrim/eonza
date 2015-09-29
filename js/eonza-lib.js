@@ -130,6 +130,7 @@ var types = {
          extend: [  { name: 'table', type: cnt.ET_TABLE, def: 0 },  
             { name: 'column', type: cnt.ET_COLUMN, def: 0 },
             { name: 'extbyte', type: cnt.ET_HIDDEN, def: 0 },
+            { name: 'multi', title: lng.multiselect, type: cnt.ET_CHECK, def: 0 }, 
             { name: 'aslink', title: lng.showaslink, type: cnt.ET_CHECK, def: 0 }, 
             { name: 'showid', title: lng.showid, type: cnt.ET_CHECK, def: 0 }, 
             { name: 'filter', title: lng.filter, type: cnt.ET_TABLE, def: 0 },
@@ -448,7 +449,7 @@ function edit_setset( i, icol )
 
 function edit_linktable( i, icol )
 {
-    return "<div class='setitem' ng-if='formlink[columns["+i+"].alias]' ng-bind-html='formlink[columns["+i+"].alias]'></div>" +
+    return "<div class='multidiv' ng-if='formlink[columns["+i+"].alias]' ng-bind-html='formlink[columns["+i+"].alias]'></div>" +
      '<a href="" class="formbtn" ng-click="editlink('+i+')"><i class="fa fa-fw fa-th-list"></i></a>';
 }
 
@@ -1007,4 +1008,19 @@ function js_changecolumn( obj ) {
         }
     acolumn[ ind ] = val ? val : js_firstlink();
     $(obj).val( acolumn[ ind ] );
+}
+
+function js_multidel( obj )
+{
+    var alias = $(obj).attr('alias');
+    var idi = $(obj).attr('ids');
+    for ( i=0; i<Scope.multiform[alias].ids.length; i++ )
+        if ( Scope.multiform[alias].ids[i] == idi )
+        {
+            Scope.multiform[alias].ids.splice( i, 1 );
+            Scope.multiform[alias].txt.splice( i, 1 );
+            $(obj).parent().remove();
+            break;
+        }
+    return false;
 }

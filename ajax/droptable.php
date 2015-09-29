@@ -31,7 +31,7 @@ if ( ANSWER::is_success() && ANSWER::is_access())
             {
                 $dbname = alias( $curtable, ENZ_PREFIX );
                 $islink = 0;
-                $links = $db->getall("select col.extend, col.title as icol, t.title as itable from ?n as col
+                $links = $db->getall("select col.id, col.extend, col.title as icol, t.title as itable from ?n as col
                     left join ?n as t on t.id = col.idtable
                     where col.idtype=?s", ENZ_COLUMNS, ENZ_TABLES, FT_LINKTABLE  );
                 foreach ( $links as $il )
@@ -47,8 +47,17 @@ if ( ANSWER::is_success() && ANSWER::is_access())
                     api_error( 'err_dellink', $islink );
                 elseif ( in_array( $dbname, $db->tables()))
                 {
-                     ANSWER::success( $db->query( "drop table ?n", $dbname ));
-                     if ( ANSWER::is_success())
+                    $collist = $db->getall("select col.id, col.extend from ?n as col
+                             where col.idtable=?s && col.idtype=?s", ENZ_COLUMNS, $idi, FT_LINKTABLE  );
+                    foreach ( $collist as $cil )
+                    {
+                        $extend = json_decode( $cil['extend'], true );
+                        if ( !empty( $extend['multi'] ))
+                            $db->query("delete from ?n where idcolumn = ?s", ENZ_ONEMANY, (int)$cil['id'] );
+                    }
+
+                    ANSWER::success( $db->query( "drop table ?n", $dbname ));
+                    if ( ANSWER::is_success())
                         api_log( $idi, 0, 'delete' );
                 }
             }
@@ -57,7 +66,6 @@ if ( ANSWER::is_success() && ANSWER::is_access())
                 $db->query("delete from ?n where id=?s", ENZ_TABLES, $idi );
                 $db->query("delete from ?n where idtable=?s", ENZ_COLUMNS, $idi );
                 $db->query("delete from ?n where idtable=?s", ENZ_SHARE, $idi );
-
                 files_deltable( $idi );
             }
         }

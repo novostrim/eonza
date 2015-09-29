@@ -151,6 +151,7 @@ var lng = {
 	month: 'Month',
 	more: 'More details',
 	moreoptions: 'Additional Options',
+	multiselect: 'Multiple select',
 	name: 'Name',
 	newfld: 'New folder',
 	newitem: 'New item',

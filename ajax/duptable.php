@@ -31,7 +31,7 @@ if ( ANSWER::is_success() && ANSWER::is_access())
 
                 $cols = $db->getall( "select * from ?n where idtable=?s", ENZ_COLUMNS, $idi );
                 $after = array();
-                foreach ( $cols as $icol )
+                foreach ( $cols as &$icol )
                 {
                     $column = $icol;
                     $icol['idtable'] = ANSWER::is_success();
@@ -44,12 +44,28 @@ if ( ANSWER::is_success() && ANSWER::is_access())
                         $after[] = $db->parse("alter table ?n change ?n ?n ?p", 
                                     $newname, $column['id'], $newid, $decl );
                     }
+                    $icol['newid'] = $newid;
+                    $icol['id'] = $column['id'];
                 }
                 $ret = $db->query("create table ?n like ?n", $newname, $dbname );
                 if ( $pars['importdata'])
                     $ret = $db->query("insert into ?n select * from ?n", $newname, $dbname );
                 foreach ( $after as $iafter )
                     $db->query( $iafter );
+
+                foreach ( $cols as $cil ) 
+                    if ( $cil['idtype'] == FT_LINKTABLE )
+                    {
+                        $extend = json_decode( $cil['extend'], true );
+                        if ( !empty( $extend['multi'] ))
+                        {
+                            $list = $db->getall( "select iditem, idmulti from ?n where idcolumn=?s", 
+                                                  ENZ_ONEMANY, $cil['id'] );
+                            foreach ( $list as $il )
+                                $db->insert( ENZ_ONEMANY, array( 'idcolumn' => $cil['newid'],
+                                    'iditem' => $il['iditem'], 'idmulti' => $il['idmulti'] ) );
+                        }
+                    }
             }
         }
     }

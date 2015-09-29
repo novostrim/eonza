@@ -350,8 +350,25 @@ var ModalInstanceCtrl = function( $scope, $modalInstance, dlg_opt ) {
             Scope.filter[Scope.fltindex].value = id+':' + title;
         else
         {
-            Scope.form[alias] = id;
-            Scope.formlink[alias] = title
+            if ( column.extend.multi )
+            {
+                if ( !Scope.multiform[alias] )
+                    Scope.multiform[alias] = {ids:[], txt:[]};
+                if ( Scope.multiform[alias].ids.indexOf( id  ) == -1 )
+                {
+                    Scope.multiform[alias].ids.push( id );
+                    Scope.multiform[alias].txt.push( title );
+                    Scope.formlink[alias] = '';
+                    for ( i=0; i< Scope.multiform[alias].txt.length; i++ )
+                        Scope.formlink[alias] += '<div class="multi">' + Scope.multiform[alias].txt[i] + 
+                            '<a href="#" onclick="return js_multidel(this)" alias="' + alias + '" ids="' +
+                            Scope.multiform[alias].ids[i] + '" class="fa fa-times"></a></div>';
+                }
+            }
+            else {
+                Scope.form[alias] = id;
+                Scope.formlink[alias] = '<div class="multi">' + title + '</div>';
+            }
 /*            for ( var i = 0; i< column.link.list.length; i++ )
             {
                 if ( column.link.list[i].id == id )
