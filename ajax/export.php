@@ -97,7 +97,7 @@ if ( $id && ANSWER::is_success() && ANSWER::is_access( A_READ, $id ))
                     $order .= ' desc';
             }
         }
-        $qwhere = treefilter( $retdb, $columns, $names, $retfilter );
+        $qwhere = treefilter( $retdb, $columns, $names, $retfilter, $field2ind );
 
         $order = 'order by '.$order;
         $off = 0;

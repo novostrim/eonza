@@ -53,7 +53,7 @@ function fltcompare( $field, $not, $compare, $value, $names )
                         $cmp[$not] );
 }
 
-function treefilter( $retdb, $columns, $names, &$retfilter )
+function treefilter( $retdb, $columns, $names, &$retfilter, $field2ind = array() )
 {
     $db = DB::getInstance();
     $filter = get('filter');
@@ -89,14 +89,26 @@ function treefilter( $retdb, $columns, $names, &$retfilter )
             if ( !$compare || !$field )
                 continue;
             $fltvalue = $value;
+            $append = '';
             if ( isset( $field2ind[ $field ] )) 
             {
-                if ( $columns[$field2ind[ $field ]]['idtype'] == FT_LINKTABLE )
+                $column = $columns[$field2ind[ $field ]];
+                if ( $column['idtype'] == FT_LINKTABLE )
+                {
                     $fltvalue = (int)$value;
+                    $extend = json_decode( $column['extend'], true );
+                    if ( !empty( $extend['multi'] )) 
+                    {
+                        $append = $db->parse( " ?p (select count(id) from ?n where idcolumn=?s && iditem=t.id && idmulti=?s ) ?p 0",  
+                            $not ? '&&' : '||', ENZ_ONEMANY, $column['id'], $fltvalue, $not ? '=' : '>' );
+                    }
+                }
             }
             $fout = fltcompare( $field, $not, $compare, $fltvalue, $names );
             if ( $fout )
             {
+                if ( $append )
+                    $fout = "($fout $append)";
                 $qwhere .= $db->parse(" ?p ?p", $logic == 1 ? '||' : '&&', $fout );
                 $retfilter[] = array( 'logic' => $logic, 'field' => $field, 'not' => $not ? true : false,
                                'compare' => $compare, 'value' => $value );
@@ -199,7 +211,7 @@ if ( $id && ANSWER::is_success() && ANSWER::is_access( A_READ, $id ))
                     $order .= ' desc';
             }
         }
-        $qwhere = treefilter( $retdb, $columns, $names, $retfilter );
+        $qwhere = treefilter( $retdb, $columns, $names, $retfilter, $field2ind );
 
         $query = $db->parse( "select count(`id`) from ?n as t ?p", $dbname, $qwhere );
         $onpage = (int)get( 'op' );
