@@ -29,6 +29,7 @@ define('FT_PARENT', 10 );
 define('FT_FILE', 11 );
 define('FT_IMAGE', 12 );
 define('FT_SPECIAL', 13 );
+define('FT_CALC', 14 );
 define('FT_SQL', 99 );
 
 define('FTM_WEBSITE', 1 );
@@ -68,6 +69,7 @@ GS::set( 'fields', array(
    FT_IMAGE => array( 'pars' => 'storedb,max,min,ratio,side,thumb,thumb_ratio,thumb_side,options' ),
    FT_SPECIAL => array( 'pars' => 'type,options', 'sql' => 'special_sql', 
                               'save' => 'special_save' ),
+   FT_CALC => array( 'pars' => 'formula,round' ),
    FT_SQL => array( 'pars' => 'sqlcmd', 'sql' => 'sql_sql' ),
 ));
 

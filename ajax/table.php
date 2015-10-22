@@ -191,6 +191,10 @@ if ( $id && ANSWER::is_success() && ANSWER::is_access( A_READ, $id ))
                 $fields[] = $db->parse( "( select count(id) from ?n where idtable=?s && idcol = ?s && iditem=t.id ) as `$icol[alias]`", 
                         ENZ_FILES, $id, $icol['id'] );
                }
+               elseif ( $icol['idtype'] == FT_CALC )
+               {
+                    $fields[] = getformula( $icol, $extend );
+               }               
                else
                {
                 if ( $icol['idtype'] == FT_TEXT || 

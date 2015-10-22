@@ -25,6 +25,7 @@ var cnt = {
     FT_FILE: 11,
     FT_IMAGE: 12,
     FT_SPECIAL: 13,
+    FT_CALC: 14,
     FT_SQL: 99,
 
 // Subtypes
@@ -196,6 +197,11 @@ var types = {
             { name: 'options', title: lng.moreoptions, type: cnt.ET_TEXT, def: '' } 
         ] 
     },    
+    14 : { id: cnt.FT_CALC, name: 'fcalc', verify: number_verify,
+         view: view_default, edit: edit_default, 
+         extend: [ { name: 'formula', type: cnt.ET_EDIT, def: '' },
+                   { name: 'round', type: cnt.ET_NUMBER, def: '' } ] 
+    },
     99 : { id: cnt.FT_SQL, name: 'fsql', verify: sql_verify,
          extend: [ { name: 'sqlcmd', title: lng.fsql, type: cnt.ET_EDIT, def: '' } ] 
     },
@@ -422,6 +428,10 @@ function edit_default( i, icol )
                     if ( length >=40)
                         iclass = 'wbig'; 
         } 
+        else if ( icol.idtype == cnt.FT_CALC ) 
+        {
+            return "<div class='view-control' ng-bind-html='form[columns["+i+"].alias]'></div>";
+        }
     return "<input type='text' name='"+icol.alias+"' ng-model='form[columns["+i+"].alias]' class='form-control " + iclass + "'>" +
            ( icol.idtype == cnt.FT_VAR ? "<span class='length'>{{form[columns["+i+"].alias].length}}</span>" : '' );
 }

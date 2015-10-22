@@ -113,6 +113,24 @@ function getmultilink( $extend, $link, $alias, $falias )
     return $ext;
 }
 
+function getformula( $icol, $extend )
+{
+    $db = DB::getInstance();
+    $formula = $extend['formula'];
+    if ( !$formula )
+        return $db->parse( "'?' as `$icol[alias]`" );    
+    else
+    {
+        $formula = str_replace( array('[', ']', "'", '`'), 
+                   array('t.`', '`', '', '`' ), $formula );
+        if ( isset( $extend['round'] ) && strlen( $extend['round'] ) > 0 )
+            $formula = "ROUND( $formula, ".(int)$extend['round'].')';
+        else
+            $formula = "($formula)";
+        return $db->parse( "$formula as `$icol[alias]`" );
+    }
+}
+
 function getitem( $idtable, $id, $dbname, $columns )
 {
     $db = DB::getInstance();
@@ -136,6 +154,12 @@ function getitem( $idtable, $id, $dbname, $columns )
                 $fields[] = "if( t$link.$collink is NULL, '', concat('<a href=\"\" onclick=\"return js_card($extend[table], ', t$link.id, ' )\" >', t$link.$collink, '</a>')) as `__$icol[alias]`";*/
             //                $icol['alias'] = $collink.$link;
         }
+        elseif  ( $icol['idtype'] == FT_CALC )
+        {
+            $extend = json_decode( $icol['extend'], true );
+            $icol['alias'] = alias( $icol );
+            $fields[] = getformula( $icol, $extend );
+        }     
     }
     if ( $id )
     {
