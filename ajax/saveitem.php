@@ -87,6 +87,9 @@ if ( ANSWER::is_success() && ANSWER::is_access( A_EDIT, $form['table'], $form['i
                         $db->insert( ENZ_ONEMANY, $one, '' );
                     }
                 }
+            $func = "update_$dbname";
+            if ( function_exists( $func ))
+                $func( ANSWER::is_success());
             getitem( $dbt['id'], ANSWER::is_success(), $dbname, $columns );
         }
     }
