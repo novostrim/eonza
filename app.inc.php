@@ -23,7 +23,7 @@ define( 'ENZ_TAGS', ENZ_PREFIX.'tags' );
 define( 'ENZ_TAGLIST', ENZ_PREFIX.'taglist' );
 define( 'ENZ_USERS', ENZ_PREFIX.'users' );
 
-define( 'APP_VERSION', '3.2.1' );
+define( 'APP_VERSION', '3.2.2' );
 define( 'APP_DATE', '2015/10/28' );
 define( 'APP_STORAGE', 'storage' ); // Default name of the storage folder
 define( 'CONF_HOST', $_SERVER['HTTP_HOST'] );

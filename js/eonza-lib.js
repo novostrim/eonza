@@ -565,17 +565,20 @@ function common_file( isview, icol )
 {
     var out = "<div class='file-control' ng-repeat='fitem in "+isview+"[\"" + icol.alias +"\"]' >";
 
-    var href = cfg.appenter+'api/download';
+    var href = enz.URIApi('download') + '&id={{fitem.id}}';//cfg.appenter+'api/download';
     if ( icol.idtype == cnt.FT_IMAGE )
-        out += '<a class="viewbox" title="{{fitem.comment}}" rel="'+( isview == 'view' ? 'viewgal' : 'editgal' ) + icol.id +'" ng-if="fitem.ispreview" onclick="return viewbox()" href="' + href + '?id={{fitem.id}}&view=1"><img src="'+href+'?id={{fitem.id}}&view=1&thumb=1" class="thumb" />{{fitem.filename}}</a>';
+        out += '<a class="viewbox" title="{{fitem.comment}}" rel="'+( isview == 'view' ? 'viewgal' : 'editgal' ) + 
+               icol.id +'" ng-if="fitem.ispreview" onclick="return viewbox()" href="' + href + 
+               '&view=1"><img src="'+href+
+               '&view=1&thumb=1" class="thumb" />{{fitem.filename}}</a>';
     else    
     {
         out += '<span ng-bind-html="viewfile( fitem.id, fitem.filename )"></span>';
 //        <a href="'+href+'?id={{fitem.id}}">{{fitem.filename}}</a>';
     }
     out += '<br>'+
-        '<a href="'+href+'?id={{fitem.id}}&view=1"><i class="fa fa-fw fa-file"></i></a>'+
-        '<a href="'+href+'?id={{fitem.id}}""><i class="fa fa-fw fa-download"></i></a>';
+        '<a href="'+href+'&view=1"><i class="fa fa-fw fa-file"></i></a>'+
+        '<a href="'+href+'"><i class="fa fa-fw fa-download"></i></a>';
     out += '<a href="" ng-click="editfile( fitem.id )"><i class="fa fa-fw fa-pencil"></i></a>';
     if ( isview == 'form' )
     {        
@@ -942,7 +945,7 @@ function htmleditor( form, get )
 
 function ajax( phpfile )
 {
-   return cfg.appenter + 'api/' + phpfile; //ajax.php';//'ajax/' + phpfile + '.php';
+   return cfg.appenter + 'ajax.php?request=' + phpfile;  // 'api/' + phpfile; 
 //   return cfg.appdir + 'ajax/' + phpfile + '.php';
 }
 
@@ -987,11 +990,8 @@ function js_office( id )
 {
     enz.DbApi( 'setshare', { idfile: id, during: 60, first: true }, function( data ) {
         if ( data.success )
-        {
-
             window.location = 'https://view.officeapps.live.com/op/view.aspx?src=' + 
-                encodeURIComponent( enz.URIApi( 'share?uid=' + data.result.code, true ));
-        }
+                encodeURIComponent( enz.URIApi( 'share', true ) +'&uid=' + data.result.code );
     })
     return false;
 }

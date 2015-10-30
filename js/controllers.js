@@ -340,7 +340,7 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
             explist.push( $scope.exportlist[i].id );
         $scope.params.exportlist = explist.join(',');
 
-        window.location = enz.URIApi('export') + '?' + Object.keys($scope.params).map(function(key){ 
+        window.location = enz.URIApi('export') + '&' + Object.keys($scope.params).map(function(key){ 
             return encodeURIComponent(key) + '=' + encodeURIComponent($scope.params[key]); 
         }).join('&');
 /*        enz.DbApi( '_export', $scope.params, function( data ){
@@ -427,7 +427,7 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
             else
                 blank = blank + ' title="' + lng.viewonline + '" onclick="return js_office( ' + id + ')"';
          }
-         var href = enz.URIApi( 'download' +'?id='+ id );
+         var href = enz.URIApi( 'download' ) + '&id='+ id;
          var blank = '';
 
         var  a = filename.split('.'); 

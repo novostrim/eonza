@@ -63,7 +63,8 @@ Eonza.prototype.Table = function( id ) {
 
 Eonza.prototype.URIApi = function( apimethod, ishost )
 {
-    return ( ishost ? this.hostname : '' ) + cfg.appenter + 'api/' + apimethod;
+    return ( ishost ? this.hostname : '' ) + cfg.appenter + 'ajax.php?request=' + apimethod;
+                  // 'api/' + apimethod;
 }
 
 Table = function() {

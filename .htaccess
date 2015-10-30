@@ -4,8 +4,8 @@ DirectoryIndex index.php
 AddDefaultCharset utf-8
 AddType application/octet-stream .sql
 
-RewriteEngine On
-RewriteRule ^api/(.*)$ /eonza/ajax.php?request=$1 [L,QSA]
+#RewriteEngine On
+#RewriteRule ^api/(.*)$ /eonza/ajax.php?request=$1 [L,QSA]
 
 #RewriteCond %{HTTP_HOST} !^www\.(.*)$ [NC]
 #RewriteRule ^(.*)$ http://www.%{HTTP_HOST}/$1 [R=301,L]

@@ -19,7 +19,7 @@ $form = post( 'form' );
 
 $wspath = $_SERVER['DOCUMENT_ROOT'].APP_ENTER;
 $filename = $wspath.'conf.inc.php';
-$htaccess = $wspath.'.htaccess';
+//$htaccess = $wspath.'.htaccess';
 
 $result = array( 'success'=> false, 'err' => 1, 'result' => 0 );
 if ( !file_exists( $filename ))
@@ -121,9 +121,9 @@ RewriteRule (.*)[0-9]$ index.html [nc]
                             ENZ_USERS );
         $result['success'] = isset( $lines ) && file_put_contents( $filename, 
             "<?php \r\n".implode( "\r\n", $lines )."\r\n" ) ? 1 : 0;
-        @unlink( $htaccess );
-        file_put_contents( $htaccess, str_replace( '/eonza/', APP_ENTER, 
-        	       file_get_contents( $htaccess.'-i' )));
+//        @unlink( $htaccess );
+//        file_put_contents( $htaccess, str_replace( '/eonza/', APP_ENTER, 
+//        	       file_get_contents( $htaccess.'-i' )));
         $confupd = json_decode( $settings, true );
         GS::set( 'conf', $confupd );
         GS::set( 'confupd', $confupd );
