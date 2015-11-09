@@ -10,7 +10,9 @@ require_once APP_EONZA.'lib/files.php';
 
 //print_r( $_POST );
 //print_r( $_FILES );
-if ( ANSWER::is_success( true ) && ANSWER::is_access())
+$pars = postall( true );
+if ( ANSWER::is_success( true ) && ( ( !empty( $pars['import']) && 
+                         isset( $pars['path']) && $pars['path'] == 'tmp' ) || ANSWER::is_access()))
 {
     if ( empty( $_FILES ) || !isset( $_FILES[ 'file' ] ))
         api_error( 'Wrong parameters', 1 );
@@ -21,7 +23,6 @@ if ( ANSWER::is_success( true ) && ANSWER::is_access())
     }
     else
     {
-        $pars = postall( true );
         $path = empty( $pars['path'] ) ? '' : $pars['path'].'/';
         $ext = pathinfo( $_FILES[ 'file' ]['name'], PATHINFO_EXTENSION);
         if ( !file_exists( STORAGE.$path ))

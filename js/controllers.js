@@ -1782,14 +1782,13 @@ function ImportCtrl($scope, $rootScope, $routeSegment, DbApi ) {
                 var i = 0;
                 while ( i < data.columns.length )
                 {
-                    var column = data.columns[i];
+                    var column = data.columns[i++];
                     if ( column.idtype == cnt.FT_PARENT || column.idtype == cnt.FT_FILE || 
                          column.idtype == cnt.FT_IMAGE  )
                         continue;
                     if ( column.title[0] == ':' )
                         column.title = lng[ column.title.substr( 1 ) ];
                     $scope.columns.push( {id: column.id, title: column.title } );
-                    i++;
                 }
                 $scope.columns.push( { id: 0xFFF0, title: 'ID' } );
             }
