@@ -58,7 +58,7 @@ class GS {
     public static function login() 
     {
         // id=1 &&  TIMESTAMPDIFF( HOUR, uptime, NOW()) as lastdif
-        self::$user = DB::getrow( "select id, login, email, idgroup,
+        self::$user = DB::getrow( "select id, login, email, idgroup, name,
             ( DATE_ADD( uptime, INTERVAL 1 HOUR ) < NOW()) as lastdif, lang from ?n 
             where pass=X?s && id=?s", 
                         ENZ_USERS, pass_md5( cookie('pass')), cookie('iduser'));

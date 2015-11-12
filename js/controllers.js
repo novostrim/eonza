@@ -172,7 +172,7 @@ geapp.controller( 'LoginCtrl', function LoginCtrl($scope, $http ) {
 
 geapp.controller( 'SettingsCtrl', function SettingsCtrl( $scope, DbApi, $rootScope ) {
     $scope.langlist = langlist;
-    $scope.form = { title: cfg.title, login: cfg.user.login, email: cfg.user.email, apitoken: cfg.apitoken };    
+    $scope.form = { title: cfg.title, name: cfg.user.name, login: cfg.user.login, email: cfg.user.email, apitoken: cfg.apitoken };    
     $scope.language = function()
     {
         DbApi( 'saveusr', { lang: $scope.form.lang }, function( data ) {
