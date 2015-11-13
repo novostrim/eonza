@@ -416,22 +416,25 @@ function edit_default( i, icol )
     var length = angular.isDefined( icol.extend.length ) ? parseInt( icol.extend.length ) : 16;
     if ( icol.number || length < 12 )
         iclass = 'wshort'; 
-    else
-        if ( icol.idtype == cnt.FT_VAR ) 
-        {
-            if ( length >128 )
-                return "<textarea name='"+icol.alias+"' ng-model='form[columns["+i+"].alias]' class='form-control whuge' style='height: 5em;'></textarea><span class='length'>{{form[columns["+i+"].alias].length}}</span>";
+    else if ( icol.idtype == cnt.FT_VAR ) 
+    {
+        if ( length >128 )
+            return "<textarea name='"+icol.alias+"' ng-model='form[columns["+i+"].alias]' class='form-control whuge' style='height: 5em;'></textarea><span class='length'>{{form[columns["+i+"].alias].length}}</span>";
+        else
+            if ( length >= 80 )
+                iclass = 'whuge'; 
             else
-                if ( length >= 80 )
-                    iclass = 'whuge'; 
-                else
-                    if ( length >=40)
-                        iclass = 'wbig'; 
-        } 
-        else if ( icol.idtype == cnt.FT_CALC ) 
-        {
-            return "<div class='view-control' ng-bind-html='form[columns["+i+"].alias]'></div>";
-        }
+                if ( length >=40)
+                    iclass = 'wbig'; 
+    } 
+    else if ( icol.idtype == cnt.FT_SPECIAL && icol.extend.type == 1 )
+    {
+        iclass = 'whuge'; 
+    }
+    else if ( icol.idtype == cnt.FT_CALC ) 
+    {
+        return "<div class='view-control' ng-bind-html='form[columns["+i+"].alias]'></div>";
+    }
     return "<input type='text' name='"+icol.alias+"' ng-model='form[columns["+i+"].alias]' class='form-control " + iclass + "'>" +
            ( icol.idtype == cnt.FT_VAR ? "<span class='length'>{{form[columns["+i+"].alias].length}}</span>" : '' );
 }
