@@ -60,6 +60,10 @@ if ( $id && ANSWER::is_success() && ANSWER::is_access( A_READ, $id ))
             $extend = json_decode( $icol['extend'], true );
             if ( $icol['idtype'] == FT_LINKTABLE && !empty( $extend['multi']))
                 $multi[ $icol['alias']] = $icol['id'];
+            elseif ( $icol['idtype'] == FT_CALC )
+            {
+                    $fields[] = getformula( $icol, $extend );
+            }   
             /*if ( $icol['idtype'] == FT_PARENT )
             {
                 $fields[] = "(select count(id) from $dbname where `_parent` = t.id ) as `_children`";
@@ -84,7 +88,8 @@ if ( $id && ANSWER::is_success() && ANSWER::is_access( A_READ, $id ))
                 {
                     $fields[] = "LEFT( t.$icol[alias], 128 ) as `$icol[alias]`";
                 }
-                else*/if ($icol['idtype'] == FT_SPECIAL && $extend['type'] == FTM_HASH )
+                else*/
+            else if ($icol['idtype'] == FT_SPECIAL && $extend['type'] == FTM_HASH )
                     $fields[] = "HEX( t.$icol[alias] ) as `$icol[alias]`";
                 else
                     $fields[] = "t.$icol[alias]";
