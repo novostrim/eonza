@@ -66,7 +66,7 @@ function getcrumbs( $idparent )
     }
 }
 
-function getmultilink( $extend, $link, $alias, $falias )
+function getmultilink( $extend, $link, $alias, $falias, $text = false )
 {
     $collist = explode( ',', $extend['column'] );
     $collink = array();
@@ -86,14 +86,14 @@ function getmultilink( $extend, $link, $alias, $falias )
             $linkout[] = "'</a>'";
         for ( $ilink = 1; $ilink<count( $collink ); $ilink++ )
         {
-            $linkout[] = "' &bull; '";
+            $linkout[] = $text ? "' * '" : "' &bull; '";
             $linkout[] = "t$link.".$collink[$ilink];
         }
         if ( !empty( $extend['showid'] )) 
         {
-            $linkout[] = "'<span class=\"idcode\">'";
+            $linkout[] = $text ? " '['" : "'<span class=\"idcode\">'";
             $linkout[] = "t.$alias";
-            $linkout[] = "'</span>'";
+            $linkout[] = $text ? " ']'" : "'</span>'";
         }
 /*                    if ( empty( $extend['aslink'] ))
         {

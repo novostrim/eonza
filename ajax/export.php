@@ -46,6 +46,8 @@ if ( $id && ANSWER::is_success() && ANSWER::is_access( A_READ, $id ))
                                           order by `sort`", ENZ_COLUMNS, $id );
         $cind = 0;
         $multi = array();
+        $many = array();
+        $sets = array();
         foreach ( $columns as &$icol )
         {
             $field2ind[ $icol['id'] ] = $cind++;
@@ -60,15 +62,11 @@ if ( $id && ANSWER::is_success() && ANSWER::is_access( A_READ, $id ))
             $extend = json_decode( $icol['extend'], true );
             if ( $icol['idtype'] == FT_LINKTABLE && !empty( $extend['multi']))
                 $multi[ $icol['alias']] = $icol['id'];
-            elseif ( $icol['idtype'] == FT_CALC )
-            {
-                    $fields[] = getformula( $icol, $extend );
-            }   
-            /*if ( $icol['idtype'] == FT_PARENT )
+            if ( $icol['idtype'] == FT_PARENT )
             {
                 $fields[] = "(select count(id) from $dbname where `_parent` = t.id ) as `_children`";
-            }*/
-/*            if ( $icol['idtype'] == FT_LINKTABLE || ( $icol['idtype'] == FT_PARENT && !isset( $_GET['parent'] )))
+            }
+            if ( $icol['idtype'] == FT_LINKTABLE || ( $icol['idtype'] == FT_PARENT && !isset( $_GET['parent'] )))
             {
                 $dblink = api_dbname( $extend['table'] );
                 $link = $icol['id'];
@@ -77,11 +75,13 @@ if ( $id && ANSWER::is_success() && ANSWER::is_access( A_READ, $id ))
                 $alias = alias( $icol );
                 $leftjoin .= $db->parse( " left join ?n as t$link on t$link.id=t.?p", $dblink, $alias );
 
-                $ext = getmultilink( $extend, $link, $alias, $icol['alias'] );
-                $fields[] = (  $icol['idtype'] == FT_PARENT ? " t.`_parent` as `_parent_`," : '' ).$ext;
-                       // $collink$link";
+                $ext = getmultilink( $extend, $link, $alias, $icol['alias'], true );
+                if ( $icol['idtype'] == FT_LINKTABLE &&  !empty( $extend['multi'] ))
+                    $many[ $cind ]  = $ext;
+
+                $fields[] = ($icol['idtype'] == FT_PARENT ? " t.`_parent` as `_parent_`," : '').$ext;
             }
-            else
+/*            else
             {
                 if ( $icol['idtype'] == FT_TEXT || 
                     ( $icol['idtype'] == FT_VAR && (int)$extend['length'] > 128 ) )
@@ -89,11 +89,24 @@ if ( $id && ANSWER::is_success() && ANSWER::is_access( A_READ, $id ))
                     $fields[] = "LEFT( t.$icol[alias], 128 ) as `$icol[alias]`";
                 }
                 else*/
-            else if ($icol['idtype'] == FT_SPECIAL && $extend['type'] == FTM_HASH )
+            elseif ($icol['idtype'] == FT_SPECIAL && $extend['type'] == FTM_HASH )
                     $fields[] = "HEX( t.$icol[alias] ) as `$icol[alias]`";
-                else
+            elseif ( $icol['idtype'] == FT_CALC )
+                    $fields[] = getformula( $icol, $extend );
+            elseif ( $icol['idtype'] == FT_ENUMSET || $icol['idtype'] == FT_SETSET )
+            {
+                $list = $db->getall('select iditem, title from ?n where idset=?s', 
+                                     ENZ_SETS, $extend['set'] );
+                $sets[$icol['alias']] = $icol['id'];
+                foreach ( $list as $il )
+                {
+                    $icol['list'][$il['iditem']] = $il['title'];
+                }
+                $fields[] = "t.$icol[alias]";                
+            }
+            else
                     $fields[] = "t.$icol[alias]";
-//            }
+//          }
             if ( abs( $sort ) == $icol['id'] )
             {
                 $order = $fields[ count($fields) - 1][0] == 't' ? "t.$icol[alias]" :
@@ -106,7 +119,7 @@ if ( $id && ANSWER::is_success() && ANSWER::is_access( A_READ, $id ))
 
         $order = 'order by '.$order;
         $off = 0;
-        $num = 2;
+        $num = 100;
         header('Content-Description: File Transfer');
         header("Cache-Control: public");
         if ( $exportfmt == 1 )
@@ -132,6 +145,61 @@ if ( $id && ANSWER::is_success() && ANSWER::is_access( A_READ, $id ))
         while ( $ret = $db->getall("select t.id as `_id`, ?p from ?n as t ?p ?p ?p limit ?p, ?p", 
                  implode( ',', $fields ), $dbname, $leftjoin, $qwhere, $order, $off, $num ))
         {
+            //if ( $icol['idtype'] == FT_ENUMSET || $icol['idtype'] == FT_SETSET )
+            if ( $sets )
+            {
+                foreach ( $ret as &$im )
+                {
+                    foreach ( $sets as $sk => $sv )
+                    {
+                        if ( !empty( $im[$sk] )) {
+                            $listtmp = $columns[ $field2ind[$sv] ]['list'];
+                            if ( $columns[ $field2ind[$sv] ]['idtype'] == FT_ENUMSET ) 
+                                $im[$sk] = $listtmp[ $im[$sk]];
+                            if ( $columns[ $field2ind[$sv] ]['idtype'] == FT_SETSET ) 
+                            {
+                                $out = array();        
+                                for ( $is =0; $is<32; $is++ )
+                                {
+                                    if ( $im[$sk] & ( 1 << $is ))
+                                        $out[] = $listtmp[ $is + 1 ];
+                                }
+                                $im[$sk] = implode( ';', $out );
+                            }
+                        }
+                    }
+                }
+            }
+            if ( $many )
+            {
+                foreach ( $many as $mkey => $mval )
+                {
+                    $icol = $columns[$mkey-1];
+                    $extend = json_decode( $icol['extend'], true );
+                    $dblink = api_dbname( $extend['table'] );
+                    $ilink = $icol['id'];
+                    $alias = alias( $icol );
+                    $mval = str_replace( "t.$alias", 't.idmulti', $mval );
+                    foreach ( $ret as &$im )
+                    {
+                        if ( $im[$alias] )
+                        {
+                            $mout = array( $im[$alias] );
+                            $mlist = $db->getall("select $mval from ?n as t 
+                                left join ?n as t$ilink on t$ilink.id = t.idmulti
+                                where t.idcolumn=?s && t.iditem=?s", 
+                                   ENZ_ONEMANY, $dblink, $ilink, $im['id'] );
+                            if ( $mlist )
+                            {
+                                foreach ( $mlist as $imlist )
+                                    $mout[] = $imlist[ $alias ];
+                                $im[$alias] = implode( ";", $mout );
+                            }
+                        }
+                    }
+                }
+            }
+
             foreach ( $ret as $iret )
             {
                 $out = array();
@@ -141,15 +209,15 @@ if ( $id && ANSWER::is_success() && ANSWER::is_access( A_READ, $id ))
                     foreach ( $vis as $iv )
                     {
                         $name = $iv == SYS_ID ? 'id' : $columns[$field2ind[ $iv ]]['alias'];
-                        if ( $multi && isset( $multi[$name] ) && !empty( $iret[ $name ] ))
-                            $iret[ $name ] .= exportmulti( $multi[ $name ], $idret );
+//                        if ( $multi && isset( $multi[$name] ) && !empty( $iret[ $name ] ))
+//                            $iret[ $name ] .= exportmulti( $multi[ $name ], $idret );
                         $out[] = $iret[ $name ];
                     }
                 else
                     foreach ( $iret as $ikey => $iv )
                     {
-                        if ( $multi && isset( $multi[$ikey] ) && !empty( $iv ))
-                            $iv .= exportmulti( $multi[$ikey], $idret );
+//                        if ( $multi && isset( $multi[$ikey] ) && !empty( $iv ))
+//                            $iv .= exportmulti( $multi[$ikey], $idret );
                         $out[] = $iv;
                     }
                 if ( $exportfmt == 1 )
