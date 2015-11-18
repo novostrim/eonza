@@ -9,6 +9,7 @@ var lng = {
 	accsettings: 'Account settings',
 	active: 'Active',
 	add: 'Add',
+	addall: 'Add All',
 	admin: 'Administrator',
 	alias: 'Alias',
 	alignment: 'Alignment',

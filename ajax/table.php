@@ -17,7 +17,7 @@ GS::set( 'compare', array(
     11 => array( "f_ LIKE v_", "f_ NOT LIKE v_", '%v_' ),
     12 => array( "f_ & v_", "!( f_ & v_ )" ),
     13 => array( "(f_ & v_) = v_", "(f_ & v_) != v_" ),
-    14 => array( "((1<<(f_ - 1 )) & v_)", "!((1<<(f_ - 1 )) & v_)" ),
+    14 => array( "IF( f_, (1<<(f_ - 1 )) & v_, 0)", "!IF( f_, (1<<(f_ - 1 )) & v_, 0)" ),
     15 => array( "f_ != 0", "f_ = 0" ),
     16 => array( "f_ = 0", "f_ != 0" ),
     17 => array( "YEARWEEK(f_) = YEARWEEK(NOW())", "YEARWEEK(f_) != YEARWEEK(NOW())" ),
@@ -272,6 +272,7 @@ if ( $id && ANSWER::is_success() && ANSWER::is_access( A_READ, $id ))
                         'compare' => 0, 'value' => '' ));
         ANSWER::set( 'filter', $retfilter );
         ANSWER::set( 'op', $onpage );
+        ANSWER::set( 'access', GS::accessflag( $id ));
     }
     else
         ANSWER::success( false );

@@ -324,6 +324,7 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
     $scope.export = false;
     $scope.exportfmt = 1;
     $scope.expcol = 0;
+    $scope.access = 0;
     $scope.exportfields = [];
     $scope.exportlist = [];
     $scope.perpage = [];
@@ -332,7 +333,9 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
     $scope.filter = [];
     $scope.fltfields = [];
     $scope.enztable = enz.Table( $scope.params.id );
-
+    $scope.isaccess = function( flag ) {
+        return $scope.access & flag ? true : false;
+    }
     $scope.exporttable = function() {
         $scope.params.exportfmt = $scope.exportfmt;
         explist = [];
@@ -377,6 +380,16 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
                 /*cancel: ".nosort"*/
                 items: "tr:not(.nosort)" } );
             }, 1000 );
+        }
+    }
+    $scope.exportall = function() {
+        i = 0;
+        $scope.exportlist = [ { id: 0xFFF0, title: 'ID' } ];
+        while ( i <  $scope.columns.length )
+        {
+            var column = $scope.columns[i];
+            $scope.exportlist.push( { id: column.id, title: column.title } );
+            i++;
         }
     }
     $scope.exportadd = function() {
@@ -1220,6 +1233,7 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
                 $scope.pages = data.pages;
                 $scope.total = data.total;
                 $scope.onpage = data.op;
+                $scope.access = data.access;
                 $scope.perpage = [10, 20, 30, 40, 50, 75, 100];
                 if ( $scope.perpage.indexOf( $scope.onpage ) < 0 )
                 {

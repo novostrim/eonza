@@ -79,10 +79,10 @@ function getmultilink( $extend, $link, $alias, $falias, $text = false )
     if ( $collink )
     {
         $linkout = array();
-        if ( !empty( $extend['aslink'] )) 
+        if ( !empty( $extend['aslink'] ) && !$text) 
             $linkout[] = "'<a href=\"\" onclick=\"return js_card($extend[table], ', t$link.id, ' )\">'";
         $linkout[] = "t$link.$collink[0]";
-        if ( !empty( $extend['aslink'] )) 
+        if ( !empty( $extend['aslink'] ) && !$text) 
             $linkout[] = "'</a>'";
         for ( $ilink = 1; $ilink<count( $collink ); $ilink++ )
         {

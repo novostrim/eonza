@@ -55,6 +55,19 @@ class GS {
         }
         return $ret;
     }
+    public static function accessflag( $idtable )
+    {
+        if ( self::isroot())
+            return 0xff;
+        $ret = 0;
+        $access = self::getaccess( $idtable );
+        foreach ( $access as $ak => $av )
+          if ( $av == 1 )
+            $ret |= (1<<( $ak-1 ));
+          elseif ( $av == 2 )
+            $ret |= (1<<( 8 + $ak-1 ));
+        return $ret;
+    }
     public static function login() 
     {
         // id=1 &&  TIMESTAMPDIFF( HOUR, uptime, NOW()) as lastdif

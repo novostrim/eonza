@@ -9,7 +9,7 @@ require_once 'ajax_common.php';
 
 $form = post( 'params' );
 //print_r( $form );
-if ( ANSWER::is_success() && ANSWER::is_access( A_EDIT, $form['table'], $form['id'] ))
+if ( ANSWER::is_success() && ANSWER::is_access( $form['id'] ? A_EDIT : A_CREATE, $form['table'], $form['id'] ))
 {
     $dbt = $db->getrow("select * from ?n where id=?s", ENZ_TABLES, $form['table'] );
     if ( !$dbt )

@@ -1,4 +1,10 @@
 var cnt = {
+// Access
+    A_READ: 1,
+    A_CREATE: 2,
+    A_EDIT: 4,
+    A_DEL: 8,
+
 // Table mode    
     M_LIST: 0,
     M_VIEW: 1,
@@ -85,7 +91,7 @@ var compare = [
     { title: lng.endswith, id: 11, mask: 0x400 },
     { title: '<=', id: 12, mask: 0x800 },
     { title: '>=', id: 13, mask: 0x1000 },
-    { title: '<=', id: 14, mask: 0x2000 },
+    { title: '=', id: 14, mask: 0x2000 },
     { title: lng.yes, id: 15, mask: 0x4000 },
     { title: lng.no, id: 16, mask: 0x8000 },
     { title: lng.thisweek, id: 17, mask: 0x10000 },
