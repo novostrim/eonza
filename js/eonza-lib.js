@@ -766,18 +766,19 @@ function js_formtolist( i )
     var fitem = Scope.form;
 
     var item = i ? Scope.items[i-1] : { id: fitem.id, _uptime: fitem._uptime };
-
     for ( var key in colnames )
     {
         if ( !parseInt( colnames[key].visible ))
             continue;
         if ( colnames[key].idtype == cnt.FT_IMAGE || colnames[key].idtype == cnt.FT_FILE )
             item[key] = fitem[key].length;
+        else if ( colnames[key].idtype == cnt.FT_LINKTABLE && Scope.resultlink && 
+                    angular.isDefined( Scope.resultlink[key] )) {
+            item[key] = Scope.resultlink[key].replace( /&sect;/g, '<br>');  
+        } else if ( fitem[key].length > 128 )
+          item[key] = fitem[key].substr( 0, 128 );
         else
-            if ( fitem[key].length > 128 )
-                item[key] = fitem[key].substr( 0, 128 );
-            else
-                item[key] = fitem[key];
+          item[key] = fitem[key];
     }
     if ( !i )
     {

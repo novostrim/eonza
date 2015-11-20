@@ -734,6 +734,7 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
             {
                 $rootScope.curitem = data.success;
                 $scope.proceedform( data.result );
+                $scope.resultlink = data.link;
                 $scope.action = lng.savejs;
                 for ( i = 0; i < $rootScope.uploads.length; i++ )
                 {
@@ -1275,6 +1276,7 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
                 nfy_info( lng.itemadded );
                 $rootScope.curitem = data.success;
                 $scope.form = data.result;
+                $scope.resultlink = data.link;
 //                $scope.formtoview();
                 js_formtolist( 0 );
                 $scope.setmode( cnt.M_EDIT );
