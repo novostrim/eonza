@@ -204,7 +204,7 @@ var types = {
         ] 
     },    
     14 : { id: cnt.FT_CALC, name: 'fcalc', verify: number_verify,
-         view: view_default, edit: edit_default, 
+         view: view_default, edit: edit_default, filter: { mask: 0x07 }, 
          extend: [ { name: 'formula', type: cnt.ET_EDIT, def: '' },
                    { name: 'round', type: cnt.ET_NUMBER, def: '' } ] 
     },

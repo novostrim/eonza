@@ -57,9 +57,15 @@ if ( $id && ANSWER::is_success() && ANSWER::is_access( A_READ, $id ))
             
             if ( $icol['idtype'] == FT_PARENT || $icol['idtype'] == FT_FILE || $icol['idtype'] == FT_IMAGE )
                 continue;
+            
+            $extend = json_decode( $icol['extend'], true );
+            if ( $icol['idtype'] == FT_CALC )
+            {
+                $formula = getformula( $icol, $extend );
+                $names[ $icol['id']] = substr( $formula, 0, strpos( $formula, 'as'));
+            }
             if ( $vis && !in_array( $icol['id'], $vis  ))
                 continue;
-            $extend = json_decode( $icol['extend'], true );
             if ( $icol['idtype'] == FT_LINKTABLE && !empty( $extend['multi']))
                 $multi[ $icol['alias']] = $icol['id'];
             if ( $icol['idtype'] == FT_PARENT )
@@ -90,9 +96,13 @@ if ( $id && ANSWER::is_success() && ANSWER::is_access( A_READ, $id ))
                 }
                 else*/
             elseif ($icol['idtype'] == FT_SPECIAL && $extend['type'] == FTM_HASH )
-                    $fields[] = "HEX( t.$icol[alias] ) as `$icol[alias]`";
+                $fields[] = "HEX( t.$icol[alias] ) as `$icol[alias]`";
             elseif ( $icol['idtype'] == FT_CALC )
-                    $fields[] = getformula( $icol, $extend );
+            {
+                $formula = getformula( $icol, $extend );
+                $fields[] = $formula;
+//                $names[ $icol['id']] = substr( $formula, 0, strpos( $formula, 'as'));
+            }
             elseif ( $icol['idtype'] == FT_ENUMSET || $icol['idtype'] == FT_SETSET )
             {
                 $list = $db->getall('select iditem, title from ?n where idset=?s', 
@@ -105,8 +115,8 @@ if ( $id && ANSWER::is_success() && ANSWER::is_access( A_READ, $id ))
                 $fields[] = "t.$icol[alias]";                
             }
             else
-                    $fields[] = "t.$icol[alias]";
-//          }
+                $fields[] = "t.$icol[alias]";
+
             if ( abs( $sort ) == $icol['id'] )
             {
                 $order = $fields[ count($fields) - 1][0] == 't' ? "t.$icol[alias]" :
@@ -116,7 +126,6 @@ if ( $id && ANSWER::is_success() && ANSWER::is_access( A_READ, $id ))
             }
         }
         $qwhere = treefilter( $retdb, $columns, $names, $retfilter, $field2ind );
-
         $order = 'order by '.$order;
         $off = 0;
         $num = 100;
@@ -148,23 +157,23 @@ if ( $id && ANSWER::is_success() && ANSWER::is_access( A_READ, $id ))
             //if ( $icol['idtype'] == FT_ENUMSET || $icol['idtype'] == FT_SETSET )
             if ( $sets )
             {
-                foreach ( $ret as &$im )
+                foreach ( $ret as &$sim )
                 {
                     foreach ( $sets as $sk => $sv )
                     {
-                        if ( !empty( $im[$sk] )) {
+                        if ( !empty( $sim[$sk] )) {
                             $listtmp = $columns[ $field2ind[$sv] ]['list'];
                             if ( $columns[ $field2ind[$sv] ]['idtype'] == FT_ENUMSET ) 
-                                $im[$sk] = $listtmp[ $im[$sk]];
+                                $sim[$sk] = $listtmp[ $sim[$sk]];
                             if ( $columns[ $field2ind[$sv] ]['idtype'] == FT_SETSET ) 
                             {
                                 $out = array();        
                                 for ( $is =0; $is<32; $is++ )
                                 {
-                                    if ( $im[$sk] & ( 1 << $is ))
+                                    if ( $sim[$sk] & ( 1 << $is ))
                                         $out[] = $listtmp[ $is + 1 ];
                                 }
-                                $im[$sk] = implode( ';', $out );
+                                $sim[$sk] = implode( ';', $out );
                             }
                         }
                     }
@@ -214,7 +223,7 @@ if ( $id && ANSWER::is_success() && ANSWER::is_access( A_READ, $id ))
                         $out[] = $iret[ $name ];
                     }
                 else
-                    foreach ( $iret as $ikey => $iv )
+                    foreach ( $iret as /*$ikey =>*/ $iv )
                     {
 //                        if ( $multi && isset( $multi[$ikey] ) && !empty( $iv ))
 //                            $iv .= exportmulti( $multi[$ikey], $idret );

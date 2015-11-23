@@ -193,7 +193,9 @@ if ( $id && ANSWER::is_success() && ANSWER::is_access( A_READ, $id ))
                }
                elseif ( $icol['idtype'] == FT_CALC )
                {
-                    $fields[] = getformula( $icol, $extend );
+                    $formula = getformula( $icol, $extend );
+                    $fields[] = $formula;
+                    $names[ $icol['id']] = substr( $formula, 0, strpos( $formula, 'as'));
                }               
                else
                {
