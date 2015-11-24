@@ -59,7 +59,7 @@ class DB {
     protected static $instance;
     protected static $db;
 
-    public static function getInstance( $opt = '' ) { 
+    public static function getInstance( $opt = array()) { 
         if ( self::$instance === null) 
         { 
 //            if ( !isset( $opt['errmode'] ))

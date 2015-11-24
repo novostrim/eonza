@@ -148,6 +148,7 @@ if ( $id && ANSWER::is_success() && ANSWER::is_access( A_READ, $id ))
             header('Content-Disposition: attachement;filename="'.$dbname.strftime("-%Y%m%d-%H%M%S").'.csv";');
             header('Content-Type: application/csv; charset=UTF-8');
             $output = fopen('php://output', 'w');
+            fwrite( $output, "\xef\xbb\xbf" );
         }
 
 // output the column headings
@@ -183,11 +184,11 @@ if ( $id && ANSWER::is_success() && ANSWER::is_access( A_READ, $id ))
             {
                 foreach ( $many as $mkey => $mval )
                 {
-                    $icol = $columns[$mkey-1];
-                    $extend = json_decode( $icol['extend'], true );
+                    $mcol = $columns[$mkey-1];
+                    $extend = json_decode( $mcol['extend'], true );
                     $dblink = api_dbname( $extend['table'] );
-                    $ilink = $icol['id'];
-                    $alias = alias( $icol );
+                    $ilink = $mcol['id'];
+                    $alias = alias( $mcol );
                     $mval = str_replace( "t.$alias", 't.idmulti', $mval );
                     foreach ( $ret as &$im )
                     {
@@ -208,7 +209,6 @@ if ( $id && ANSWER::is_success() && ANSWER::is_access( A_READ, $id ))
                     }
                 }
             }
-
             foreach ( $ret as $iret )
             {
                 $out = array();
