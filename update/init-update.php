@@ -6,6 +6,7 @@
 */
 
 require_once "upd0to1.php";
+require_once "upd3to4.php";
 
 function extuptime( $dbname )
 {
