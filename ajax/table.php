@@ -61,6 +61,7 @@ function treefilter( $retdb, $columns, $names, &$retfilter, $field2ind = array()
     $qwhere = '';//$db->parse("where idtask=?s && status>0", $task['id'] );
     if ( $retdb['istree'] && isset( $_GET['parent'] ))
     {
+        $dbname = alias( $retdb, CONF_PREFIX.'_' );
         $parent = (int)get( 'parent' );
         $qwhere = $db->parse( 'where t.`_parent`=?s', $parent );
         $crumbs = array();

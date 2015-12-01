@@ -47,6 +47,7 @@ geapp
           .when('/settings',    'settings' )
           .when('/edittable',   'index.edittable' )
           .when('/table',       'table' )
+          .when('/webpage',     'webpage' )
           .when('/set',         'set' )
           .when('/import',      'import' )
           .segment('settings', {
@@ -57,6 +58,10 @@ geapp
           .segment('table', {
             templateUrl: tpl('table.html'),
             controller: TableCtrl,
+            dependencies: ['id'] })
+          .segment('webpage', {
+            templateUrl: tpl('webpage.html'),
+            controller: WebpageCtrl,
             dependencies: ['id'] })
           .segment('set', {
             templateUrl: tpl('set.html'),

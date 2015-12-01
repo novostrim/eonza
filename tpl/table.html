@@ -1,6 +1,6 @@
 <h1>{{db.title}}</h1>
 
-<a href='' class="flatbtn" ng-show="isaccess( cnt.A_CREATE )" ng-click="setmode( cnt.M_NEW )" ng-class="{flatcur:mode==cnt.M_NEW}"><i class="fa fa-plus-circle fa-lg"></i>&nbsp;&nbsp;{{lng.newitem}}</a> <a href="" ng-if="allcount" ng-class="{flatcur:mode==cnt.M_VIEW || mode==cnt.M_EDIT}" ng-click="setmode( cnt.M_VIEW )" class="flatbtn"><i class="fa fa-list-alt fa-lg"></i>&nbsp;&nbsp;{{lng.card}}</a> <a href="" ng-click="setmode( cnt.M_LIST )" class="flatbtn" ng-class="{flatcur:mode==cnt.M_LIST}"><i class="fa fa-table fa-lg"></i>&nbsp;&nbsp;{{lng.spreadsheet}}</a> <a href="" ng-click="update()" class="flatbtn"><i class="fa fa-refresh fa-lg"></i>&nbsp;&nbsp;{{lng.refresh}}</a> <a href="#/edittable?id={{::params.id}}" class="flatbtn" title="{{::lng.settings}}" ng-show="cfg.user.id==1"><i class="fa fa-cog fa-lg"></i></a><!--a class="flatbtn" ng-if="cfg.showhelp && helplink" target="_blank" href="{{helplink}}" title="{{::lng.help}}"><i class="fa fa-question fa-lg"></i></a-->
+<a href='' class="flatbtn" ng-show="isaccess( cnt.A_CREATE )" ng-click="setmode( cnt.M_NEW )" ng-class="{flatcur:mode==cnt.M_NEW}"><i class="fa fa-plus-circle fa-lg"></i>&nbsp;&nbsp;{{lng.newitem}}</a> <a href="" ng-if="allcount" ng-class="{flatcur:mode==cnt.M_VIEW || mode==cnt.M_EDIT}" ng-click="setmode( cnt.M_VIEW )" class="flatbtn"><i class="fa fa-list-alt fa-lg"></i>&nbsp;&nbsp;{{lng.card}}</a> <a href="" ng-click="setmode( cnt.M_LIST )" class="flatbtn" ng-class="{flatcur:mode==cnt.M_LIST}"><i class="fa fa-table fa-lg"></i>&nbsp;&nbsp;{{lng.spreadsheet}}</a> <a href="" ng-click="update()" class="flatbtn"><i class="fa fa-refresh fa-lg"></i>&nbsp;&nbsp;{{lng.refresh}}</a> <a class="flatbtn" ng-if="help"  ng-class="{flatcur:mode==cnt.M_HELP}" target="_blank" onclick="return js_helplink()" href="{{help.link}}" title="{{help.title}}"><i class="fa fa-question fa-lg"></i>{{help.title}}</a> <a href="#/edittable?id={{::params.id}}" class="flatbtn" title="{{::lng.settings}}" ng-show="cfg.user.id==1"><i class="fa fa-cog fa-lg"></i></a>
 <div class="crumbs"><a href="#/?id={{crumb.id}}" ng-class="crumb" ng-repeat-start="crumb in crumbs">{{crumb.title}}</a> <i ng-repeat-end class="fa fa-angle-double-right" ng-if="!$last"></i> </div>
 
 <div id="card" style="display: none;">
@@ -102,3 +102,7 @@
     </table>
     </div>
 </div>
+<div id="helplink" class="workarea" style="display:none">
+    <webpage>
+    </webpage>
+</div> 

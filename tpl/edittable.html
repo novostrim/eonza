@@ -6,10 +6,11 @@
 
   <form class="form" ng-submit="submit()">
     <table class="formtbl">
-        <tr><td class="formtxt">{{lng.name}}: </td><td class="formval"><input type="text" ng-model="form.title" required class="form-control"></td></tr>
-        <tr><td class="formtxt">{{lng.commentjs}}: </td><td class="formval"><input type="text" ng-model="form.comment" class="form-control wbig"></td></tr>
+        <tr><td class="formtxt">{{::lng.name}}: </td><td class="formval"><input type="text" ng-model="form.title" required class="form-control"></td></tr>
         <tr ng-show="isalias"><td class="formtxt">{{lng.alias}}: </td><td class="formval"><input type="text" ng-model="form.alias" class="form-control"></td></tr>
-        <tr ><td class="formtxt">{{lng.hierdata}}: </td><td class="formval">
+        <tr><td class="formtxt">{{::lng.commentjs}}: </td><td class="formval"><input type="text" ng-model="form.comment" class="form-control wbig"></td></tr>
+        <tr><td class="formtxt">{{::lng.helplink}}: </td><td class="formval"><input type="text" ng-model="form.help" class="form-control wbig"></td></tr>
+        <tr ><td class="formtxt">{{::lng.hierdata}}: </td><td class="formval">
             <div ge-check="form.istree" ge-func="istree" ></div>
         </td></tr>
         <tr><td colspan="2">

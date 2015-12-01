@@ -82,7 +82,7 @@ if ( ANSWER::is_success() && ANSWER::is_access())
 //    print_r( $tables );
     if ( !$idi )
     {
-        ANSWER::success( $db->insert( ENZ_TABLES, pars_list( 'comment,title,alias,idparent,istree', $pars['form'] ), 
+        ANSWER::success( $db->insert( ENZ_TABLES, pars_list( 'comment,title,help,alias,idparent,istree', $pars['form'] ), 
                      GS::owner(), true )); 
         if ( ANSWER::is_success())
         {
@@ -173,7 +173,7 @@ if ( ANSWER::is_success() && ANSWER::is_access())
             {
                 if ( $curtbl['idparent'] != SYS_ID )
                     ANSWER::success( $db->update( ENZ_TABLES, 
-                        pars_list( 'comment,title,istree', $pars['form'] ), '', $idi )); 
+                        pars_list( 'comment,help,title,istree', $pars['form'] ), '', $idi )); 
                 if ( ANSWER::is_success())
                 {
                     api_log( $idi, 0, 'edit' );

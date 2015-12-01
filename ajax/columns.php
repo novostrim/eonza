@@ -6,6 +6,14 @@ $id = get( 'id' );
 if ( $id && ANSWER::is_success())
 {
     $table = $db->getrow("select * from ?n where id=?s", ENZ_TABLES, $id );
+    if ( !empty( $table['help'] )) {
+        $pars = explode( '=', $table['help'] );
+        $help = array( 'link' => $pars[0] );
+        if ( count($pars) > 1 ) {
+            $help['title'] = $pars[1];
+        }
+        $table['help'] = $help;
+    }
     ANSWER::set( 'db', $table );
 
     if ( $table )

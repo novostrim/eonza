@@ -11,6 +11,7 @@ var cnt = {
     M_EDIT: 2,
     M_NEW: 3,
     M_CARD: 4,
+    M_HELP: 5,
 
 //  After Insert Update
     M_NEXT: 10,
@@ -1042,5 +1043,13 @@ function js_multidel( obj )
             $(obj).parent().remove();
             break;
         }
+    return false;
+}
+
+function js_helplink() {
+    var link = Scope.help.link;
+    if ( (typeof link === 'string' || link instanceof String) && link.length > 4 && link.substr( 0, 4 ) == 'http') 
+        return true;
+    Scope.helplink();
     return false;
 }

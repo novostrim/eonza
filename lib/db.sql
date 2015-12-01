@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS `xxx_tables` (
   `idparent` int(10) unsigned NOT NULL,
   `isfolder` tinyint(3) unsigned NOT NULL,
   `istree` tinyint(3) unsigned NOT NULL,
+  `help` varchar(128) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `idparent` (`idparent`,`isfolder`,`title`)  
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -191,4 +192,17 @@ CREATE TABLE IF NOT EXISTS `xxx_onemany` (
   PRIMARY KEY (`id`),
   KEY `idcolumn` (`idcolumn`,`iditem`),
   KEY `idcolumn_2` (`idcolumn`,`idmulti`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+##
+CREATE TABLE IF NOT EXISTS `xxx_webpages` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `_uptime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `_owner` smallint(5) unsigned NOT NULL,
+  `title` varchar(128) NOT NULL,
+  `alias` varchar(64) NOT NULL,
+  `content` text NOT NULL,
+  `options` text NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `_uptime` (`_uptime`),
+  KEY `alias` (`alias`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;

@@ -18,7 +18,7 @@ function extuptime( $dbname )
     $db->query( "alter table ?n add index ( `_uptime` )", $dbname );
 }
 
-function addcolumn( $idtype, $title, $extend, $alias = '' )
+function addcolumn( $idtype, $title, $extend, $alias = '', $visible = 1 )
 {
     $sort = GS::get('sort') + 1;
     if ( !$alias )
@@ -31,7 +31,7 @@ function addcolumn( $idtype, $title, $extend, $alias = '' )
     $ret = DB::insert( ENZ_COLUMNS, array( 'idtable' => GS::get('idcoltable'), 
                     'idtype' => $idtype, 'title' => $title, 'alias' => $alias,
                     'align' => GS::get('align'),
-                    'visible' => 1, 'sort' => $sort, 'extend' => $extend ), '', true );
+                    'visible' => $visible, 'sort' => $sort, 'extend' => $extend ), '', true );
     GS::set('sort', $sort );
     return $ret;
 }
@@ -51,5 +51,6 @@ function addset( $list )
 
 function init_update()
 {
-    init_v1();   
+    init_v1();
+    init_v4();
 }

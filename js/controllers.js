@@ -103,10 +103,12 @@ geapp.controller('UploadCtrl', function ($scope, FileUploader) {
 
 geapp.controller( 'IndexCtrl', function IndexCtrl($scope, $http, $routeSegment ) {
     $scope.isroot = cfg.user.id == 1;
+    $scope.html = {};
     if ( $scope.isroot )
         $scope.menu = [
             { title: lng.tables, icon: 'table', href: '#/', name: 'tables'},
             { title: lng.sets, icon: 'list-alt', href: '#/sets', name: 'sets'},
+            { title: lng.webpages, icon: 'file-text', href: '#/table?id='+cfg.idwebpages, name: 'webpages'},
             { title: lng.menu, icon: 'th-list', href: '#/menu', name: 'menu'},
             { title: lng.backup, icon: 'database', href: '#/backup', name: 'backup'},
             { title: lng.admin, icon: 'wrench', href: '#/appsettings', name: 'admin'},
@@ -115,6 +117,7 @@ geapp.controller( 'IndexCtrl', function IndexCtrl($scope, $http, $routeSegment )
     else
         $scope.menu = [];
     $scope.$routeSegment = $routeSegment;
+    riot.mount('webpage');
 //    $state.transitionTo('index.menu');
 //    $state.go('index.menu');
 });
@@ -303,6 +306,13 @@ function TablesCtrl($scope, $rootScope, $routeSegment, DbApi ) {
     });
 }
 
+function WebpageCtrl( $scope, $routeSegment, $rootScope ) {
+    $scope.$routeSegment = $routeSegment;
+    $scope.page = $routeSegment.$routeParams.id ? $routeSegment.$routeParams.id : $routeSegment.$routeParams.name;
+    riot.mount('webpage', {page: $scope.page} );
+}
+
+
 function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/ ) {
     $scope.$routeSegment = $routeSegment;
     $scope.allselect = false;
@@ -490,6 +500,15 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
         var ind = colindex(id);
         return ind >=0 ? $scope.columns[ ind ].alias : '';
     }
+    $scope.helplink = function() {
+        $scope.mode = cnt.M_HELP;
+        $("#cardedit").hide();
+        $("#cardview").hide();        
+        $("#list").hide();    
+        $("#helplink").show();
+        $scope.$apply();
+        riot.mount('webpage', {page: $scope.help.link});
+    }
     $scope.columns = function() {
         DbApi( 'columns', $scope.params, function( data ) {
             if ( data.success )
@@ -498,6 +517,11 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
                     data.db.title = lng[ data.db.title.substr( 1 ) ];
 
                 $scope.db = data.db;
+                if ( $scope.db.help ) {
+                    if ( $scope.db.help.title )
+                        $scope.db.help.title = '   ' + $scope.db.help.title;
+                    $scope.help = $scope.db.help;
+                }
                 $scope.columns = data.columns;
                 var i = 0;
                 $scope.collist = [];
@@ -964,6 +988,8 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
     $scope.setmode = function( mode ) { 
         if ( $scope.mode == mode )
             return;
+        $("#helplink").hide();
+
         if ( $scope.mode == cnt.M_CARD )
             $scope.cardback();
         $scope.mode = mode;
