@@ -16,7 +16,7 @@ function init_v4()
     {
         $idwebpages = $db->insert( ENZ_TABLES, 
                     array( 'idparent' => SYS_ID, 'alias' => ENZ_WEBPAGES,
-                           'title' => ':webpages', 'helplink' => 'http://www.eonza.org/web-pages.html' ), '', true );
+                           'title' => ':webpages', 'help' => 'http://www.eonza.org/web-pages.html' ), '', true );
         $confupd['idwebpages'] = $idwebpages;      
         GS::set( 'idcoltable', $idwebpages );
 

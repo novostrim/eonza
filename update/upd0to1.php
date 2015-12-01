@@ -18,7 +18,7 @@ function init_v1()
 
         $idgroups = $db->insert( ENZ_TABLES, 
                     array( 'idparent' => SYS_ID, 'alias' => ENZ_GROUP,
-                           'title' => ':usrgroups', 'helplink' => 'http://www.eonza.org/user-groups.html' ), '', true );
+                           'title' => ':usrgroups', 'help' => 'http://www.eonza.org/user-groups.html' ), '', true );
         $confupd['idgroups'] = $idgroups;      
         GS::set( 'idcoltable', $idgroups );
         $groupcol = addcolumn( FT_VAR, ':name', 32 );
@@ -27,7 +27,7 @@ function init_v1()
 
         $idusers = $db->insert( ENZ_TABLES, 
                     array( 'idparent' => SYS_ID, 'alias' => ENZ_USERS,
-                           'title' => ':users', 'helplink' => 'http://www.eonza.org/users-table.html' ), '', true );
+                           'title' => ':users', 'help' => 'http://www.eonza.org/users-table.html' ), '', true );
         $confupd['idusers'] = $idusers;
         GS::set( 'idcoltable', $idusers );
         addcolumn( FT_VAR, ':name', 64 );
@@ -52,7 +52,7 @@ function init_v1()
 
         $idaccess = $db->insert( ENZ_TABLES, 
                     array( 'idparent' => SYS_ID, 'alias' => ENZ_ACCESS,
-                           'title' => ':accrights', 'helplink' => 'http://www.eonza.org/access-rights.html' ), '', true );
+                           'title' => ':accrights', 'help' => 'http://www.eonza.org/access-rights.html' ), '', true );
         $confupd['idaccess'] = $idaccess;
         GS::set( 'idcoltable', $idaccess );
 
