@@ -25,6 +25,16 @@ function init_v4()
         addcolumn( FT_TEXT, ':contentjs', '{"weditor":"2","bigtext":"0"}', 'content', 0 );
         addcolumn( FT_TEXT, ':moreoptions', '{"weditor":"1","bigtext":"0"}', 'options', 0 );
     }
+    if ( isset( $conf['idgroups'] ))
+        $db->update( ENZ_TABLES, array( 'help' => 'http://www.eonza.org/user-groups.html' ), '', 
+                                         $conf['idgroups'] );
+    if ( isset( $conf['idusers'] ))
+        $db->update( ENZ_TABLES, array( 'help' => 'http://www.eonza.org/users-table.html' ), '', 
+                                         $conf['idusers'] );
+    if ( isset( $conf['idaccess'] ))
+        $db->update( ENZ_TABLES, array( 'help' => 'http://www.eonza.org/access-rights.html' ), '', 
+                                         $conf['idaccess'] );
+
     GS::set( 'confupd', $confupd );
 } 
 
