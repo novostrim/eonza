@@ -378,7 +378,8 @@ function js_list( item )
                 switch ( parseInt( colnames[key].extend.type ))
                 {
                     case cnt.FTM_WEBSITE:
-                        var url = ( item[key].substr( 0, 4 ) == 'http' ? '' : 'http://' ) + item[key];
+                        var off = item[key].indexOf(':');
+                        var url = ( off > 0 && off < 10 ? '' : 'http://' ) + item[key];
                         item[key] = '<a href="'+ url +'" >' + item[key] + '</a>';
                         break;
                     case cnt.FTM_EMAIL:
