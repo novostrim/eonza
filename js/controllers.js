@@ -856,7 +856,8 @@ function TableCtrl($scope, $routeSegment, DbApi, $rootScope, $sce /*, $cookies*/
                     switch ( parseInt( icol.extend.type ))
                     {
                         case cnt.FTM_WEBSITE:
-                            var url = ( $scope.form[ alias ].substr( 0, 4 ) == 'http' ? '' : 'http://' ) + $scope.form[ alias ];
+                            var off = $scope.form[ alias ].indexOf(':');
+                            var url = ( off > 0 && off < 10 ? '' : 'http://' ) + $scope.form[ alias ];
                             $scope.view[ alias ] = '<a href="'+ url +'" >' + $scope.form[ alias ] + '</a>';
                             break;
                         case cnt.FTM_EMAIL:
