@@ -242,7 +242,7 @@ function special_save( &$out, $form, $icol, &$outext )
     $extend = json_decode( $icol['extend'], true );
     switch ( $extend['type'] ) {
         case FTM_WEBSITE: 
-            $val = utf_lower( $val );
+//            $val = utf_lower( $val );
             if ( substr( $val, 0, 5 ) == 'http:' )
                 $val = substr( $val, 7 ); 
             break;
