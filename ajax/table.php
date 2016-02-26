@@ -78,7 +78,9 @@ function treefilter( $retdb, $columns, $names, &$retfilter, $field2ind = array()
     {
         $flt = explode( '!', $filter );
         if ( !$qwhere )
-            $qwhere .= $db->parse("where 1");                
+            $qwhere .= $db->parse("where 1"); 
+        $flttmp = '';
+        $brack = 0;
         foreach ( $flt as $ifilter )
         {
             $logic = hexdec( $ifilter[0] );
@@ -110,11 +112,42 @@ function treefilter( $retdb, $columns, $names, &$retfilter, $field2ind = array()
             {
                 if ( $append )
                     $fout = "($fout $append)";
-                $qwhere .= $db->parse(" ?p ?p", $logic == 1 ? '||' : '&&', $fout );
+                switch ($logic) {
+                    case 1: 
+                        $lchar = '||'; break;
+                    case 3: $lchar = '|| ('; $brack++; break;
+                    case 4: $lchar = '&& ('; $brack++; break;
+                    case 5: $lchar = ') || ('; 
+                        if (!$brack) {
+                            $flttmp = substr( $flttmp, 0, 4 ).'( '.substr( $flttmp, 4 );
+                            $brack = 1;
+                        }
+                        break;
+                    case 6: $lchar = ') && ('; 
+                        if (!$brack) {
+                            $flttmp = substr( $flttmp, 0, 4 ).'( '.substr( $flttmp, 4 );
+                            $brack = 1;
+                        }
+                        break;
+                    case 7: $lchar = ') ||'; 
+                        $brack--;
+                        break;
+                    case 8: $lchar = ') &&'; 
+                        $brack--;
+                        break;
+                    default: 
+                        $lchar = '&&';
+                }
+                $flttmp .= $db->parse(" ?p ?p", $lchar, $fout );
                 $retfilter[] = array( 'logic' => $logic, 'field' => $field, 'not' => $not ? true : false,
                                'compare' => $compare, 'value' => $value );
             }
         }
+        if ( $brack > 0 )
+            $flttmp .= str_repeat(')', $brack );
+        if ( $brack < 0 )
+            $flttmp = substr( $flttmp, 0, 4 ).str_repeat('(', -$brack ).substr( $flttmp, 4 );
+        $qwhere .= $flttmp;
     }
     if ( ANSWER::is_own())
        $qwhere .=  $db->parse( (!$qwhere ? "where 1":'')." && _owner =?s", GS::userid());

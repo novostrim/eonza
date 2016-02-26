@@ -24,8 +24,8 @@ define( 'ENZ_TAGLIST', ENZ_PREFIX.'taglist' );
 define( 'ENZ_USERS', ENZ_PREFIX.'users' );
 define( 'ENZ_WEBPAGES', ENZ_PREFIX.'webpages' );
 
-define( 'APP_VERSION', '4.0.6' );
-define( 'APP_DATE', '2015/12/21' );
+define( 'APP_VERSION', '4.1.0' );
+define( 'APP_DATE', '2016/02/26' );
 define( 'APP_STORAGE', 'storage' ); // Default name of the storage folder
 define( 'CONF_HOST', $_SERVER['HTTP_HOST'] );
 define( 'APP_DOCROOT', rtrim( $_SERVER['DOCUMENT_ROOT'], '/' ));

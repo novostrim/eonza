@@ -75,6 +75,12 @@ var cfgdefault = {
 var logic = [
     { title: lng.or, id: 1 },
     { title: lng.and, id: 2 },
+    { title: lng.or + ' (', id: 3 },
+    { title: lng.and + ' (', id: 4 },
+    { title: ') ' + lng.or + ' (', id: 5 },
+    { title: ') ' + lng.and + ' (', id: 6 },
+    { title: ') ' + lng.or, id: 7 },
+    { title: ') ' + lng.and, id: 8 },
 ];
 
 var compare = [
