@@ -150,7 +150,7 @@ function treefilter( $retdb, $columns, $names, &$retfilter, $field2ind = array()
         $qwhere .= $flttmp;
     }
     if ( ANSWER::is_own())
-       $qwhere .=  $db->parse( (!$qwhere ? "where 1":'')." && _owner =?s", GS::userid());
+       $qwhere .=  $db->parse( (!$qwhere ? "where 1":'')." && t._owner =?s", GS::userid());
     
     return $qwhere;    
 }
